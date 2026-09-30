@@ -246,6 +246,7 @@
             <p class="text-xs text-slate-500">Unggah 3 File Excel Asli dari Aplikasi Lab (Section 1 Listening, Section 2 Structure, Section 3 Reading) untuk membaca jumlah jawaban benar secara presisi.</p>
           </div>
 
+          <!-- FORM INPUT UPLOAD 3 FILE EXCEL REAL -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2">
               <span class="text-xs font-bold text-slate-700 block">1. Excel Section 1 (Listening)</span>
@@ -279,6 +280,7 @@
             <strong>Peringatan Auto-Mapping:</strong> Ditemukan data komputer cadangan / mahasiswa susulan yang belum terikat di jadwal. Gunakan fitur <i>Fast-Add</i> di bawah ini!
           </div>
 
+          <!-- TABEL HASIL AUTOMAPPING (KOSONG DI AWAL) -->
           <div class="overflow-x-auto rounded-xl border border-slate-200">
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
@@ -387,7 +389,7 @@
 
   </main>
 
-  <!-- JAVASCRIPT LOGIKA ENGINE TER-PERSISTENT -->
+  <!-- JAVASCRIPT LOGIKA ENGINE MODUL 2 KOSONG DI AWAL -->
   <script>
     const SUPABASE_URL = 'https://ztgjmyjrtrlyrgntvtny.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_GGh8txjx_3OFYwmTGdccjQ_zkxRYqep';
@@ -401,6 +403,7 @@
     let modeFokusPlotting = false;
 
     let realExcelScores = {};
+    let hasExcelUploaded = false; // Penanda apakah file Excel sudah diunggah
 
     const tableC = {
       50: { l: 68, s: 68, r: 67 }, 49: { l: 67, s: 68, r: 66 }, 48: { l: 66, s: 68, r: 65 },
@@ -421,16 +424,13 @@
     let selectedPlotting = [];
     let parsedHasilUjian = [];
 
-    // FUNGSI PERSISTENSI DATA (FETCH DARI SUPABASE SAAT REFRESH)
     async function initPersistentData() {
       try {
-        // 1. Cek LocalStorage
         const localMaster = localStorage.getItem('masterMahasiswaCache');
         if (localMaster) {
           masterMahasiswa = JSON.parse(localMaster);
         }
 
-        // 2. Fetch Data Master dari Supabase
         const { data, error } = await _supabase.from('master_mahasiswa').select('*');
         if (data && data.length > 0) {
           masterMahasiswa = data;
@@ -438,6 +438,7 @@
         }
 
         filterMahasiswa();
+        renderModul2();
       } catch (err) {
         console.error('Error Syncing Persistent Data:', err);
       }
@@ -469,7 +470,7 @@
       document.getElementById('tab-' + tabId).classList.add('bg-polnes-main', 'text-white');
     }
 
-    // MODUL 1: MASTER DATA & PENJADWALAN
+    // MODUL 1
     async function uploadMasterMahasiswa(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -525,7 +526,6 @@
               return { nim: nimVal, nama: namaVal, prodi: prodiVal };
             }).filter(m => m.nim !== '' && m.nama !== '');
 
-            // Simpan ke Cache Lokal dulu
             localStorage.setItem('masterMahasiswaCache', JSON.stringify(masterMahasiswa));
 
             progressBar.style.width = '40%';
@@ -679,15 +679,13 @@
       document.getElementById('actionPrintContainer').classList.remove('hidden');
 
       filterMahasiswa();
-      initParsedData();
 
       alert(`Sesi Ujian Berhasil Dikunci!\n- Tanggal: ${tgl}\n- Sesi: ${jam}\n- Lokasi: ${lab}\n- Total Plotting: ${selectedPlotting.length} Mahasiswa Utama.\n\nTampilan tabel sekarang difokuskan pada mahasiswa terpilih saja & Siap Dicetak!`);
     }
 
-    // ALUR PINTAR: JADWALKAN SESI BERIKUTNYA (OTOMATIS KOSONGKAN CENTANG DENGAN AMAN)
     function jadwalkanSesiBerikutnya() {
       modeFokusPlotting = false;
-      selectedPlotting = []; // Lepas semua centang secara otomatis untuk penataan sesi selanjutnya!
+      selectedPlotting = [];
 
       document.getElementById('btnKunciSesi').classList.remove('hidden');
       document.getElementById('btnResetFilter').classList.add('hidden');
@@ -698,7 +696,7 @@
       alert('Sesi sebelumnya telah selesai. Centang dikosongkan secara otomatis untuk penataan jadwal sesi selanjutnya!');
     }
 
-    // MODUL 2: PARSER 3 FILE EXCEL REAL
+    // MODUL 2: UPLOAD 3 FILE EXCEL REAL (HANYA MUNCUL JIKA ADA FILE)
     function handleExcelSectionUpload(event, secNum) {
       const file = event.target.files[0];
       if (!file) return;
@@ -731,6 +729,8 @@
             }
           });
 
+          hasExcelUploaded = true;
+
           document.getElementById(`statusS1`).classList.toggle('text-green-600', secNum === 1);
           document.getElementById(`statusS2`).classList.toggle('text-green-600', secNum === 2);
           document.getElementById(`statusS3`).classList.toggle('text-green-600', secNum === 3);
@@ -751,6 +751,7 @@
     function initParsedData() {
       parsedHasilUjian = [];
 
+      // 1. Cocokkan ID Meja dengan Mahasiswa yang Di-Plot Resmi
       selectedPlotting.forEach((nim, index) => {
         const meja = `STUDENT${(index + 1) < 10 ? '0' + (index + 1) : (index + 1)}`;
         const realData = realExcelScores[meja] || { s1: 0, s2: 0, s3: 0 };
@@ -765,14 +766,20 @@
         });
       });
 
-      const cadanganData = realExcelScores['STUDENT26'] || { s1: 0, s2: 0, s3: 0 };
-      parsedHasilUjian.push({
-        meja: 'STUDENT26',
-        nim: null,
-        s1: cadanganData.s1,
-        s2: cadanganData.s2,
-        s3: cadanganData.s3,
-        statusMapping: 'UNMAPPED'
+      // 2. CEK DINAMIS: Cek Apakah Ada ID Meja Tambahan di File Excel yang Belum Terikat (Unmapped)
+      Object.keys(realExcelScores).forEach(mejaKey => {
+        const isMapped = parsedHasilUjian.some(p => p.meja === mejaKey);
+        if (!isMapped) {
+          const uData = realExcelScores[mejaKey];
+          parsedHasilUjian.push({
+            meja: mejaKey,
+            nim: null,
+            s1: uData.s1,
+            s2: uData.s2,
+            s3: uData.s3,
+            statusMapping: 'UNMAPPED'
+          });
+        }
       });
 
       renderModul2();
@@ -781,6 +788,22 @@
     function renderModul2() {
       const tbody = document.getElementById('tableMapping');
       tbody.innerHTML = '';
+
+      // JIKA BELUM ADA FILE EXCEL YANG DIUNGGAH -> TAMPILAN KOSONG / PLACEHOLDER
+      if (!hasExcelUploaded || parsedHasilUjian.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="p-8 text-center text-slate-400">
+              <div class="text-2xl mb-1">📑</div>
+              <p class="font-bold text-slate-600">Belum Ada Data Hasil Ujian</p>
+              <p class="text-xs text-slate-400 mt-1">Silakan unggah minimal 1 file Excel hasil ujian (Section 1, 2, atau 3) di atas untuk menampilkan auto-mapping.</p>
+            </td>
+          </tr>
+        `;
+        document.getElementById('mappingStatusAlert').classList.add('hidden');
+        return;
+      }
+
       let hasUnmapped = false;
 
       parsedHasilUjian.forEach((item, idx) => {
@@ -830,6 +853,18 @@
       const tbody = document.getElementById('tableKalkulasi');
       tbody.innerHTML = '';
 
+      if (parsedHasilUjian.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="p-8 text-center text-slate-400">
+              <p class="font-bold text-slate-600">Belum Ada Data Hasil Ujian untuk Dikalkulasi</p>
+              <p class="text-xs text-slate-400 mt-1">Harap unggah hasil file Excel di Modul 2 terlebih dahulu.</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
       parsedHasilUjian.forEach(item => {
         if(!item.nim) return;
         const mInfo = masterMahasiswa.find(m => m.nim === item.nim);
@@ -860,6 +895,17 @@
     function renderModul4() {
       const tbody = document.getElementById('tableApproval');
       tbody.innerHTML = '';
+
+      if (parsedHasilUjian.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="p-8 text-center text-slate-400">
+              <p class="font-bold text-slate-600">Belum Ada Data Nilai Siap Approval</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
 
       parsedHasilUjian.forEach((item, idx) => {
         if(!item.nim || !item.totalScore) return;
@@ -1000,7 +1046,7 @@
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('inputTanggalUjian').value = today;
 
-      initPersistentData(); // Panggil fungsi persisiten saat pertama dibuka/refresh
+      initPersistentData();
 
       document.getElementById('tab-modul3').addEventListener('click', prosesKalkulasiSemua);
       document.getElementById('tab-modul4').addEventListener('click', renderModul4);
