@@ -34,9 +34,7 @@
 </head>
 <body class="bg-[#f4f7f6] font-sans text-slate-800 min-h-screen">
 
-  <!-- ==================================================================== -->
   <!-- HEADER PANEL DASHBOARD STAFF -->
-  <!-- ==================================================================== -->
   <header class="bg-polnes-dark text-white py-3.5 px-8 shadow-md flex justify-between items-center sticky top-0 z-50">
     <div class="flex items-center gap-3">
       <div id="logoContainer" class="bg-amber-500 text-slate-900 font-extrabold px-3 py-1.5 rounded-lg text-sm shadow-sm flex items-center justify-center">
@@ -48,7 +46,6 @@
       </div>
     </div>
 
-    <!-- UTILITY NAVIGASI & USER PROFILE -->
     <div class="flex items-center gap-4 text-xs">
       <div class="hidden sm:block text-right">
         <span class="text-slate-200">Petugas:</span>
@@ -67,9 +64,7 @@
 
   <main class="max-w-7xl mx-auto py-6 px-4">
 
-    <!-- ==================================================================== -->
-    <!-- 1. TAMPILAN DASHBOARD STAFF (MODUL OPERASIONAL 1 - 4) -->
-    <!-- ==================================================================== -->
+    <!-- 1. TAMPILAN DASHBOARD STAFF -->
     <div id="viewStaf" class="space-y-6">
 
       <!-- PILL TABS MODUL -->
@@ -100,7 +95,6 @@
               <p class="text-xs text-slate-500 mt-0.5">Filter data master mahasiswa dan penguncian 25 Kuota Utama + 5 Cadangan per Sesi.</p>
             </div>
 
-            <!-- TOMBOL UPLOAD MASTER DATA MAHASISWA -->
             <div class="flex items-center gap-3">
               <label class="bg-polnes-main hover:bg-polnes-dark text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer shadow-sm transition-all flex items-center gap-2">
                 <span>📂 Upload Master Mahasiswa (Excel)</span>
@@ -114,7 +108,7 @@
             </div>
           </div>
 
-          <!-- PROGRESS BAR LOADING UPLOAD LARGE DATA -->
+          <!-- PROGRESS BAR LOADING -->
           <div id="uploadProgressContainer" class="hidden mb-6 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
             <div class="flex justify-between text-xs font-bold text-slate-700 mb-1.5">
               <span id="uploadProgressText">Memproses & Menyimpan Data ke Database...</span>
@@ -145,7 +139,7 @@
             </div>
           </div>
 
-          <!-- TABEL DATA MAHASISWA MASTER (DENGAN PAGINATION) -->
+          <!-- TABEL DATA MAHASISWA MASTER -->
           <div class="overflow-x-auto rounded-xl border border-slate-200">
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
@@ -161,7 +155,7 @@
             </table>
           </div>
 
-          <!-- FOOTER PAGINATION CONTROL -->
+          <!-- FOOTER PAGINATION -->
           <div id="paginationContainer" class="flex flex-col sm:flex-row justify-between items-center mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500 gap-3">
             <div id="paginationInfo">Menampilkan 0 data</div>
             <div class="flex items-center gap-2">
@@ -265,9 +259,7 @@
 
     </div>
 
-    <!-- ==================================================================== -->
     <!-- 2. TAMPILAN PUBLIK: CEK SKOR MANDIRI -->
-    <!-- ==================================================================== -->
     <div id="viewPublik" class="hidden space-y-6">
       <div class="bg-gradient-to-r from-[#0a8a40] to-emerald-800 text-white rounded-2xl p-8 shadow-sm text-center">
         <h2 class="text-2xl font-extrabold mb-2">Portal Cek Skor & E-Sertifikat Publik</h2>
@@ -293,21 +285,17 @@
 
   </main>
 
-  <!-- JAVASCRIPT ENGINE & HIGH-PERFORMANCE LARGE DATA ENGINE -->
+  <!-- JAVASCRIPT ENGINE -->
   <script>
-    // ====================================================================
-    // INISIALISASI KONEKSI SUPABASE
-    // ====================================================================
     const SUPABASE_URL = 'https://ztgjmyjrtrlyrgntvtny.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_GGh8txjx_3OFYwmTGdccjQ_zkxRYqep';
     
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // STATE ENGINE
     let masterMahasiswa = [];
     let filteredMaster = [];
     let currentPage = 1;
-    const pageSize = 20; // Menampilkan 20 baris per halaman agar ringan
+    const pageSize = 20;
 
     const tableC = {
       50: { l: 68, s: 68, r: 67 }, 49: { l: 67, s: 68, r: 66 }, 48: { l: 66, s: 68, r: 65 },
@@ -328,7 +316,6 @@
     let selectedPlotting = [];
     let parsedHasilUjian = [];
 
-    // ROUTING HALAMAN
     function switchView(target) {
       if(target === 'staf') {
         document.getElementById('viewPublik').classList.add('hidden');
@@ -355,7 +342,7 @@
       document.getElementById('tab-' + tabId).classList.add('bg-polnes-main', 'text-white');
     }
 
-    // MODUL 1: PARSER LARGE EXCEL & CHUNKING SUPABASE INSERT
+    // MODUL 1: PARSER EXCEL MASTER MAHASISWA
     async function uploadMasterMahasiswa(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -368,9 +355,8 @@
       progressContainer.classList.remove('hidden');
       progressBar.style.width = '10%';
       progressPercent.innerText = '10%';
-      progressText.innerText = 'Membaca dan menguraikan file Excel...';
+      progressText.innerText = 'Membaca file Excel...';
 
-      // Menggunakan setTimeout agar UI sempat merender progress bar
       setTimeout(() => {
         const reader = new FileReader();
         reader.onload = async function(e) {
@@ -387,25 +373,39 @@
               return;
             }
 
-            // Parsing Fleksibel
+            const firstRowKeys = Object.keys(json[0]);
+            
+            const nimKey = firstRowKeys.find(k => /^(nim|npm|no_induk|id_mahasiswa|id)$/i.test(k.trim().toLowerCase())) 
+                          || firstRowKeys.find(k => /nim|npm|id/i.test(k.trim().toLowerCase())) 
+                          || firstRowKeys[0];
+
+            const namaKey = firstRowKeys.find(k => /^(nama|nama_mahasiswa|student_name|nama_lengkap)$/i.test(k.trim().toLowerCase())) 
+                          || firstRowKeys.find(k => /nama|student/i.test(k.trim().toLowerCase()) && !/prodi|studi|jurusan/i.test(k.trim().toLowerCase())) 
+                          || firstRowKeys[1];
+
+            const prodiKey = firstRowKeys.find(k => /^(prodi|program_studi|program studi|jurusan|kelas|proglat)$/i.test(k.trim().toLowerCase())) 
+                           || firstRowKeys.find(k => /prodi|studi|jurusan|program/i.test(k.trim().toLowerCase()));
+
             masterMahasiswa = json.map(row => {
-              const keys = Object.keys(row);
-              const nimKey = keys.find(k => /nim|npm|no_induk|id/i.test(k.trim())) || keys[0];
-              const namaKey = keys.find(k => /nama|student_name|mahasiswa/i.test(k.trim())) || keys[1];
-              const prodiKey = keys.find(k => /prodi|program_studi|jurusan|class/i.test(k.trim())) || keys[2];
+              const nimVal = String(row[nimKey] || '').trim();
+              const namaVal = String(row[namaKey] || '').trim();
+              
+              let prodiVal = prodiKey ? String(row[prodiKey] || '').trim() : '';
+              if (!prodiVal || prodiVal.toLowerCase() === namaVal.toLowerCase()) {
+                prodiVal = 'D3 / D4 POLNES';
+              }
 
               return {
-                nim: String(row[nimKey] || '').trim(),
-                nama: String(row[namaKey] || '').trim(),
-                prodi: String(row[prodiKey] || 'POLNES').trim()
+                nim: nimVal,
+                nama: namaVal,
+                prodi: prodiVal
               };
             }).filter(m => m.nim !== '' && m.nama !== '');
 
             progressBar.style.width = '40%';
             progressPercent.innerText = '40%';
-            progressText.innerText = `Mengunggah ${masterMahasiswa.length} data ke Supabase (Batch Mode)...`;
+            progressText.innerText = `Mengunggah ${masterMahasiswa.length} data ke Supabase...`;
 
-            // BATCH CHUNKING INSERT KE SUPABASE (PER 100 ITEM) AGAR SERVER TIDAK TIMEOUT
             const chunkSize = 100;
             const totalChunks = Math.ceil(masterMahasiswa.length / chunkSize);
 
@@ -422,10 +422,10 @@
               progressPercent.innerText = `${currentPct}%`;
             }
 
-            progressText.innerText = 'Selesai! Memuat data ke tampilan...';
+            progressText.innerText = 'Selesai!';
             setTimeout(() => {
               progressContainer.classList.add('hidden');
-              alert(`Sukses! ${masterMahasiswa.length} Data Master Mahasiswa Berhasil Diunggah & Dimuat!`);
+              alert(`Sukses! ${masterMahasiswa.length} Data Master Mahasiswa Berhasil Diunggah secara Akurat!`);
               selectedPlotting = [];
               currentPage = 1;
               filterMahasiswa();
@@ -441,7 +441,6 @@
       }, 50);
     }
 
-    // HIGH-PERFORMANCE VIRTUAL PAGINATION RENDER
     function renderModul1() {
       const tbody = document.getElementById('tableMahasiswa');
       tbody.innerHTML = '';
@@ -464,7 +463,6 @@
         return;
       }
 
-      // Hitung slice pagination
       const totalPages = Math.ceil(filteredMaster.length / pageSize) || 1;
       if (currentPage > totalPages) currentPage = totalPages;
       if (currentPage < 1) currentPage = 1;
@@ -493,7 +491,6 @@
         `;
       });
 
-      // Update Pagination UI Info
       document.getElementById('selectedCount').innerText = selectedPlotting.length;
       document.getElementById('paginationInfo').innerText = `Menampilkan ${startIndex + 1} - ${endIndex} dari total ${filteredMaster.length} data`;
       document.getElementById('pageIndicator').innerText = `Hal ${currentPage} / ${totalPages}`;
