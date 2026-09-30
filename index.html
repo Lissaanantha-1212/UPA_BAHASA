@@ -243,13 +243,13 @@
           
           <div>
             <h2 class="text-base font-bold text-slate-800 mb-1">Modul 2: Upload Excel Hasil Ujian Lab & Auto-Mapping Engine</h2>
-            <p class="text-xs text-slate-500">Unggah 3 File Excel Asli dari Aplikasi Lab (Section 1 Listening, Section 2 Structure, Section 3 Reading) untuk membaca jumlah jawaban benar secara presisi.</p>
+            <p class="text-xs text-slate-500">Unggah 3 File Excel Asli dari Aplikasi Lab (A01 Listening, A02 Structure, A03 Reading) untuk membaca jumlah jawaban benar secara presisi.</p>
           </div>
 
           <!-- FORM INPUT UPLOAD 3 FILE EXCEL REAL -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2">
-              <span class="text-xs font-bold text-slate-700 block">1. Excel Section 1 (Listening)</span>
+              <span class="text-xs font-bold text-slate-700 block">1. Excel Section 1 / A01 (Listening)</span>
               <label class="block bg-white hover:bg-emerald-50 border border-polnes-main text-polnes-dark text-xs font-bold py-2 px-3 rounded-lg cursor-pointer transition-all">
                 <span id="labelS1">Pilih File S1 (.xlsx)</span>
                 <input type="file" id="fileSection1" accept=".xlsx, .xls" onchange="handleExcelSectionUpload(event, 1)" class="hidden">
@@ -258,7 +258,7 @@
             </div>
 
             <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2">
-              <span class="text-xs font-bold text-slate-700 block">2. Excel Section 2 (Structure)</span>
+              <span class="text-xs font-bold text-slate-700 block">2. Excel Section 2 / A02 (Structure)</span>
               <label class="block bg-white hover:bg-emerald-50 border border-polnes-main text-polnes-dark text-xs font-bold py-2 px-3 rounded-lg cursor-pointer transition-all">
                 <span id="labelS2">Pilih File S2 (.xlsx)</span>
                 <input type="file" id="fileSection2" accept=".xlsx, .xls" onchange="handleExcelSectionUpload(event, 2)" class="hidden">
@@ -267,7 +267,7 @@
             </div>
 
             <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2">
-              <span class="text-xs font-bold text-slate-700 block">3. Excel Section 3 (Reading)</span>
+              <span class="text-xs font-bold text-slate-700 block">3. Excel Section 3 / A03 (Reading)</span>
               <label class="block bg-white hover:bg-emerald-50 border border-polnes-main text-polnes-dark text-xs font-bold py-2 px-3 rounded-lg cursor-pointer transition-all">
                 <span id="labelS3">Pilih File S3 (.xlsx)</span>
                 <input type="file" id="fileSection3" accept=".xlsx, .xls" onchange="handleExcelSectionUpload(event, 3)" class="hidden">
@@ -280,7 +280,7 @@
             <strong>Peringatan Auto-Mapping:</strong> Ditemukan data komputer cadangan / mahasiswa susulan yang belum terikat di jadwal. Gunakan fitur <i>Fast-Add</i> di bawah ini!
           </div>
 
-          <!-- TABEL HASIL AUTOMAPPING (KOSONG DI AWAL) -->
+          <!-- TABEL HASIL AUTOMAPPING -->
           <div class="overflow-x-auto rounded-xl border border-slate-200">
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
@@ -389,7 +389,7 @@
 
   </main>
 
-  <!-- JAVASCRIPT LOGIKA ENGINE MODUL 2 KOSONG DI AWAL -->
+  <!-- JAVASCRIPT PARSER KHUSUS FORMAT PECAHAN (e.g. "19 / 50") -->
   <script>
     const SUPABASE_URL = 'https://ztgjmyjrtrlyrgntvtny.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_GGh8txjx_3OFYwmTGdccjQ_zkxRYqep';
@@ -403,7 +403,7 @@
     let modeFokusPlotting = false;
 
     let realExcelScores = {};
-    let hasExcelUploaded = false; // Penanda apakah file Excel sudah diunggah
+    let hasExcelUploaded = false;
 
     const tableC = {
       50: { l: 68, s: 68, r: 67 }, 49: { l: 67, s: 68, r: 66 }, 48: { l: 66, s: 68, r: 65 },
@@ -696,7 +696,7 @@
       alert('Sesi sebelumnya telah selesai. Centang dikosongkan secara otomatis untuk penataan jadwal sesi selanjutnya!');
     }
 
-    // MODUL 2: UPLOAD 3 FILE EXCEL REAL (HANYA MUNCUL JIKA ADA FILE)
+    // MODUL 2: PARSER SPESIFIK FORMAT ASLI LAB (SCORE: "19 / 50")
     function handleExcelSectionUpload(event, secNum) {
       const file = event.target.files[0];
       if (!file) return;
@@ -708,24 +708,42 @@
           const workbook = XLSX.read(data, { type: 'array' });
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
-          const json = XLSX.utils.sheet_to_json(worksheet);
+          
+          // Konversi worksheet ke JSON dengan header di baris ke-4 (Student name, Answered Count, Score:)
+          const rawRows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
 
           let countParsed = 0;
 
-          json.forEach(row => {
-            const keys = Object.keys(row);
-            const idKey = keys.find(k => /student|user_id|id_meja|username|peserta/i.test(k.trim().toLowerCase())) || keys[0];
-            const scoreKey = keys.find(k => /benar|correct|score|nilai|total/i.test(k.trim().toLowerCase())) || keys[1];
+          rawRows.forEach(row => {
+            if (!row || row.length === 0) return;
 
-            const rawId = String(row[idKey] || '').trim().toUpperCase();
-            const rawScore = parseInt(row[scoreKey] || 0);
+            // Ambil isi setiap sel
+            const colA = String(row[0] || "").trim().toUpperCase(); // Student Name (STUDENT01)
+            const colD = String(row[3] || "").trim();               // Score (19 / 50)
 
-            if (rawId.includes('STUDENT') || rawId.length >= 7) {
-              if (!realExcelScores[rawId]) {
-                realExcelScores[rawId] = { s1: 0, s2: 0, s3: 0 };
+            if (colA.includes("STUDENT")) {
+              // Normalisasi ID Meja Komputer (e.g., "STUDENT11" -> "STUDENT11")
+              const matchNum = colA.match(/\d+/);
+              if (matchNum) {
+                const num = parseInt(matchNum[0]);
+                const mejaKey = `STUDENT${num < 10 ? '0' + num : num}`;
+
+                // PARSE SCORE FORMAT PECASAN "19 / 50" -> Ambil 19
+                let scoreVal = 0;
+                if (colD.includes("/")) {
+                  const parts = colD.split("/");
+                  scoreVal = parseInt(parts[0].trim()) || 0;
+                } else if (/^\d+$/.test(colD)) {
+                  scoreVal = parseInt(colD) || 0;
+                }
+
+                if (!realExcelScores[mejaKey]) {
+                  realExcelScores[mejaKey] = { s1: 0, s2: 0, s3: 0 };
+                }
+
+                realExcelScores[mejaKey][`s${secNum}`] = scoreVal;
+                countParsed++;
               }
-              realExcelScores[rawId][`s${secNum}`] = rawScore;
-              countParsed++;
             }
           });
 
@@ -735,7 +753,7 @@
           document.getElementById(`statusS2`).classList.toggle('text-green-600', secNum === 2);
           document.getElementById(`statusS3`).classList.toggle('text-green-600', secNum === 3);
 
-          document.getElementById(`statusS${secNum}`).innerText = `✓ Sukses (${countParsed} Meja)`;
+          document.getElementById(`statusS${secNum}`).innerText = `✓ Sukses (${countParsed} Meja Dibaca)`;
           document.getElementById(`labelS${secNum}`).innerText = file.name.substring(0, 15) + '...';
 
           initParsedData();
@@ -751,7 +769,6 @@
     function initParsedData() {
       parsedHasilUjian = [];
 
-      // 1. Cocokkan ID Meja dengan Mahasiswa yang Di-Plot Resmi
       selectedPlotting.forEach((nim, index) => {
         const meja = `STUDENT${(index + 1) < 10 ? '0' + (index + 1) : (index + 1)}`;
         const realData = realExcelScores[meja] || { s1: 0, s2: 0, s3: 0 };
@@ -766,7 +783,7 @@
         });
       });
 
-      // 2. CEK DINAMIS: Cek Apakah Ada ID Meja Tambahan di File Excel yang Belum Terikat (Unmapped)
+      // Cek ID Meja Ekstra di File Excel (Unmapped / Susulan)
       Object.keys(realExcelScores).forEach(mejaKey => {
         const isMapped = parsedHasilUjian.some(p => p.meja === mejaKey);
         if (!isMapped) {
@@ -789,14 +806,13 @@
       const tbody = document.getElementById('tableMapping');
       tbody.innerHTML = '';
 
-      // JIKA BELUM ADA FILE EXCEL YANG DIUNGGAH -> TAMPILAN KOSONG / PLACEHOLDER
       if (!hasExcelUploaded || parsedHasilUjian.length === 0) {
         tbody.innerHTML = `
           <tr>
             <td colspan="5" class="p-8 text-center text-slate-400">
               <div class="text-2xl mb-1">📑</div>
               <p class="font-bold text-slate-600">Belum Ada Data Hasil Ujian</p>
-              <p class="text-xs text-slate-400 mt-1">Silakan unggah minimal 1 file Excel hasil ujian (Section 1, 2, atau 3) di atas untuk menampilkan auto-mapping.</p>
+              <p class="text-xs text-slate-400 mt-1">Silakan unggah minimal 1 file Excel hasil ujian (A01, A02, atau A03) di atas untuk menampilkan auto-mapping.</p>
             </td>
           </tr>
         `;
@@ -813,7 +829,7 @@
         tbody.innerHTML += `
           <tr class="${item.statusMapping === 'UNMAPPED' ? 'bg-amber-50/70' : ''}">
             <td class="p-3 font-bold text-slate-700">${item.meja}</td>
-            <td class="p-3">S1: <b class="text-polnes-dark">${item.s1}</b> | S2: <b class="text-polnes-dark">${item.s2}</b> | S3: <b class="text-polnes-dark">${item.s3}</b></td>
+            <td class="p-3">S1: <b class="text-polnes-dark font-extrabold text-sm">${item.s1}</b> | S2: <b class="text-polnes-dark font-extrabold text-sm">${item.s2}</b> | S3: <b class="text-polnes-dark font-extrabold text-sm">${item.s3}</b></td>
             <td class="p-3">
               ${item.statusMapping === 'MATCHED' 
                 ? '<span class="bg-emerald-100 text-emerald-800 text-[11px] px-2 py-0.5 rounded font-bold">Terikat Otomatis</span>' 
