@@ -22,7 +22,7 @@
           fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
           colors: {
             polnes: {
-              main: '#10C35D',    // Warna Hijau Utama (#10C35D)
+              main: '#10C35D',    // Warna Hijau Utama
               dark: '#0a8a40',    // Hijau Tua Aksen Header/Hover
               light: '#eafbf0'   // Hijau Soft Latar Belakang
             }
@@ -92,7 +92,7 @@
       <section id="modul1" class="tab-content">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
           
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 mb-6 border-b border-slate-100 gap-4">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 mb-4 border-b border-slate-100 gap-4">
             <div>
               <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
                 <span>Modul 1: Penjadwalan & Kuota Lab</span>
@@ -111,6 +111,17 @@
                 <span id="selectedCount" class="text-xl font-extrabold text-polnes-dark">0</span>
                 <span class="text-slate-400 text-xs"> / 25 Terplot</span>
               </div>
+            </div>
+          </div>
+
+          <!-- PROGRESS BAR LOADING UPLOAD LARGE DATA -->
+          <div id="uploadProgressContainer" class="hidden mb-6 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+            <div class="flex justify-between text-xs font-bold text-slate-700 mb-1.5">
+              <span id="uploadProgressText">Memproses & Menyimpan Data ke Database...</span>
+              <span id="uploadProgressPercent">0%</span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+              <div id="uploadProgressBar" class="bg-polnes-main h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
             </div>
           </div>
 
@@ -134,7 +145,7 @@
             </div>
           </div>
 
-          <!-- TABEL DATA MAHASISWA MASTER -->
+          <!-- TABEL DATA MAHASISWA MASTER (DENGAN PAGINATION) -->
           <div class="overflow-x-auto rounded-xl border border-slate-200">
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
@@ -149,6 +160,17 @@
               <tbody id="tableMahasiswa" class="divide-y divide-slate-100"></tbody>
             </table>
           </div>
+
+          <!-- FOOTER PAGINATION CONTROL -->
+          <div id="paginationContainer" class="flex flex-col sm:flex-row justify-between items-center mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500 gap-3">
+            <div id="paginationInfo">Menampilkan 0 data</div>
+            <div class="flex items-center gap-2">
+              <button onclick="changePage(-1)" id="btnPrevPage" class="px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-slate-50 font-bold disabled:opacity-40 disabled:cursor-not-allowed">&larr; SBLM</button>
+              <span id="pageIndicator" class="font-bold text-slate-700 px-2">Hal 1 / 1</span>
+              <button onclick="changePage(1)" id="btnNextPage" class="px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-slate-50 font-bold disabled:opacity-40 disabled:cursor-not-allowed">SLJT &rarr;</button>
+            </div>
+          </div>
+
         </div>
       </section>
 
@@ -271,7 +293,7 @@
 
   </main>
 
-  <!-- JAVASCRIPT ENGINE & SUPABASE INTEGRATION -->
+  <!-- JAVASCRIPT ENGINE & HIGH-PERFORMANCE LARGE DATA ENGINE -->
   <script>
     // ====================================================================
     // INISIALISASI KONEKSI SUPABASE
@@ -279,11 +301,13 @@
     const SUPABASE_URL = 'https://ztgjmyjrtrlyrgntvtny.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_GGh8txjx_3OFYwmTGdccjQ_zkxRYqep';
     
-    // Inisialisasi Supabase Client
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // DATA MASTER AWAL (KOSONG, MENUNGGU UPLOAD EXCEL / LOAD DARI SUPABASE)
+    // STATE ENGINE
     let masterMahasiswa = [];
+    let filteredMaster = [];
+    let currentPage = 1;
+    const pageSize = 20; // Menampilkan 20 baris per halaman agar ringan
 
     const tableC = {
       50: { l: 68, s: 68, r: 67 }, 49: { l: 67, s: 68, r: 66 }, 48: { l: 66, s: 68, r: 65 },
@@ -311,7 +335,7 @@
         document.getElementById('viewStaf').classList.remove('hidden');
         document.getElementById('btnToStaff').classList.add('hidden');
         document.getElementById('btnToPublik').classList.remove('hidden');
-        renderModul1(masterMahasiswa);
+        filterMahasiswa();
       } else {
         document.getElementById('viewStaf').classList.add('hidden');
         document.getElementById('viewPublik').classList.remove('hidden');
@@ -331,78 +355,125 @@
       document.getElementById('tab-' + tabId).classList.add('bg-polnes-main', 'text-white');
     }
 
-    // MODUL 1: PARSER FLEKSIBEL EXCEL MASTER MAHASISWA
+    // MODUL 1: PARSER LARGE EXCEL & CHUNKING SUPABASE INSERT
     async function uploadMasterMahasiswa(event) {
       const file = event.target.files[0];
       if (!file) return;
 
-      const reader = new FileReader();
-      reader.onload = async function(e) {
-        try {
-          const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: 'array' });
-          const sheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[sheetName];
-          const json = XLSX.utils.sheet_to_json(worksheet);
+      const progressContainer = document.getElementById('uploadProgressContainer');
+      const progressBar = document.getElementById('uploadProgressBar');
+      const progressPercent = document.getElementById('uploadProgressPercent');
+      const progressText = document.getElementById('uploadProgressText');
 
-          if (json.length === 0) {
-            alert('File Excel kosong atau format tidak sesuai!');
-            return;
-          }
+      progressContainer.classList.remove('hidden');
+      progressBar.style.width = '10%';
+      progressPercent.innerText = '10%';
+      progressText.innerText = 'Membaca dan menguraikan file Excel...';
 
-          // Parser otomatis mencocokkan berbagai variasi judul header kolom
-          masterMahasiswa = json.map(row => {
-            const keys = Object.keys(row);
-            
-            const nimKey = keys.find(k => /nim|npm|no_induk|id/i.test(k.trim())) || keys[0];
-            const namaKey = keys.find(k => /nama|student_name|mahasiswa/i.test(k.trim())) || keys[1];
-            const prodiKey = keys.find(k => /prodi|program_studi|jurusan|class/i.test(k.trim())) || keys[2];
-
-            return {
-              nim: String(row[nimKey] || '').trim(),
-              nama: String(row[namaKey] || '').trim(),
-              prodi: String(row[prodiKey] || 'POLNES').trim()
-            };
-          }).filter(m => m.nim !== '' && m.nama !== '');
-
-          // Simpan ke Supabase (Tabel master_mahasiswa)
+      // Menggunakan setTimeout agar UI sempat merender progress bar
+      setTimeout(() => {
+        const reader = new FileReader();
+        reader.onload = async function(e) {
           try {
-            await _supabase.from('master_mahasiswa').upsert(masterMahasiswa);
-          } catch(err) {
-            console.log('Mode Lokal Active');
+            const data = new Uint8Array(e.target.result);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const worksheet = workbook.Sheets[sheetName];
+            const json = XLSX.utils.sheet_to_json(worksheet);
+
+            if (json.length === 0) {
+              alert('File Excel kosong!');
+              progressContainer.classList.add('hidden');
+              return;
+            }
+
+            // Parsing Fleksibel
+            masterMahasiswa = json.map(row => {
+              const keys = Object.keys(row);
+              const nimKey = keys.find(k => /nim|npm|no_induk|id/i.test(k.trim())) || keys[0];
+              const namaKey = keys.find(k => /nama|student_name|mahasiswa/i.test(k.trim())) || keys[1];
+              const prodiKey = keys.find(k => /prodi|program_studi|jurusan|class/i.test(k.trim())) || keys[2];
+
+              return {
+                nim: String(row[nimKey] || '').trim(),
+                nama: String(row[namaKey] || '').trim(),
+                prodi: String(row[prodiKey] || 'POLNES').trim()
+              };
+            }).filter(m => m.nim !== '' && m.nama !== '');
+
+            progressBar.style.width = '40%';
+            progressPercent.innerText = '40%';
+            progressText.innerText = `Mengunggah ${masterMahasiswa.length} data ke Supabase (Batch Mode)...`;
+
+            // BATCH CHUNKING INSERT KE SUPABASE (PER 100 ITEM) AGAR SERVER TIDAK TIMEOUT
+            const chunkSize = 100;
+            const totalChunks = Math.ceil(masterMahasiswa.length / chunkSize);
+
+            for (let i = 0; i < totalChunks; i++) {
+              const chunk = masterMahasiswa.slice(i * chunkSize, (i + 1) * chunkSize);
+              try {
+                await _supabase.from('master_mahasiswa').upsert(chunk);
+              } catch(e) {
+                console.log('Syncing chunk offline...');
+              }
+
+              const currentPct = Math.round(40 + ((i + 1) / totalChunks) * 60);
+              progressBar.style.width = `${currentPct}%`;
+              progressPercent.innerText = `${currentPct}%`;
+            }
+
+            progressText.innerText = 'Selesai! Memuat data ke tampilan...';
+            setTimeout(() => {
+              progressContainer.classList.add('hidden');
+              alert(`Sukses! ${masterMahasiswa.length} Data Master Mahasiswa Berhasil Diunggah & Dimuat!`);
+              selectedPlotting = [];
+              currentPage = 1;
+              filterMahasiswa();
+            }, 300);
+
+          } catch (err) {
+            alert('Gagal membaca file Excel. Pastikan format file .xlsx atau .xls!');
+            progressContainer.classList.add('hidden');
+            console.error(err);
           }
-
-          alert(`Sukses! ${masterMahasiswa.length} Data Master Mahasiswa Berhasil Diunggah & Dimuat.`);
-          selectedPlotting = [];
-          renderModul1(masterMahasiswa);
-
-        } catch (err) {
-          alert('Gagal membaca file Excel. Pastikan format file .xlsx atau .xls!');
-          console.error(err);
-        }
-      };
-      reader.readAsArrayBuffer(file);
+        };
+        reader.readAsArrayBuffer(file);
+      }, 50);
     }
 
-    function renderModul1(data) {
+    // HIGH-PERFORMANCE VIRTUAL PAGINATION RENDER
+    function renderModul1() {
       const tbody = document.getElementById('tableMahasiswa');
       tbody.innerHTML = '';
 
-      if (data.length === 0) {
+      if (filteredMaster.length === 0) {
         tbody.innerHTML = `
           <tr>
             <td colspan="5" class="p-8 text-center text-slate-400">
               <div class="text-2xl mb-1">📂</div>
-              <p class="font-bold text-slate-600">Belum ada data master mahasiswa.</p>
-              <p class="text-xs text-slate-400 mt-1">Silakan klik tombol <b>Upload Master Mahasiswa (Excel)</b> di pojok kanan atas untuk memuat data.</p>
+              <p class="font-bold text-slate-600">Belum ada data mahasiswa yang cocok.</p>
+              <p class="text-xs text-slate-400 mt-1">Gunakan tombol <b>Upload Master Mahasiswa (Excel)</b> di pojok kanan atas untuk memuat data.</p>
             </td>
           </tr>
         `;
+        document.getElementById('paginationInfo').innerText = 'Menampilkan 0 data';
+        document.getElementById('pageIndicator').innerText = 'Hal 1 / 1';
+        document.getElementById('btnPrevPage').disabled = true;
+        document.getElementById('btnNextPage').disabled = true;
         document.getElementById('selectedCount').innerText = '0';
         return;
       }
 
-      data.forEach(m => {
+      // Hitung slice pagination
+      const totalPages = Math.ceil(filteredMaster.length / pageSize) || 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+      if (currentPage < 1) currentPage = 1;
+
+      const startIndex = (currentPage - 1) * pageSize;
+      const endIndex = Math.min(startIndex + pageSize, filteredMaster.length);
+      const pageData = filteredMaster.slice(startIndex, endIndex);
+
+      pageData.forEach(m => {
         const isPlot = selectedPlotting.includes(m.nim);
         const idx = selectedPlotting.indexOf(m.nim) + 1;
         const meja = isPlot ? `STUDENT${idx < 10 ? '0' + idx : idx}` : '-';
@@ -421,7 +492,18 @@
           </tr>
         `;
       });
+
+      // Update Pagination UI Info
       document.getElementById('selectedCount').innerText = selectedPlotting.length;
+      document.getElementById('paginationInfo').innerText = `Menampilkan ${startIndex + 1} - ${endIndex} dari total ${filteredMaster.length} data`;
+      document.getElementById('pageIndicator').innerText = `Hal ${currentPage} / ${totalPages}`;
+      document.getElementById('btnPrevPage').disabled = (currentPage === 1);
+      document.getElementById('btnNextPage').disabled = (currentPage === totalPages);
+    }
+
+    function changePage(direction) {
+      currentPage += direction;
+      renderModul1();
     }
 
     function togglePlotting(nim) {
@@ -434,13 +516,18 @@
         }
         selectedPlotting.push(nim);
       }
-      filterMahasiswa();
+      renderModul1();
     }
 
     function filterMahasiswa() {
-      const q = document.getElementById('searchInput').value.toLowerCase();
-      const res = masterMahasiswa.filter(m => m.nama.toLowerCase().includes(q) || m.nim.includes(q) || m.prodi.toLowerCase().includes(q));
-      renderModul1(res);
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      filteredMaster = masterMahasiswa.filter(m => 
+        m.nama.toLowerCase().includes(q) || 
+        m.nim.toLowerCase().includes(q) || 
+        m.prodi.toLowerCase().includes(q)
+      );
+      currentPage = 1;
+      renderModul1();
     }
 
     function simpanPlottingJadwal() {
@@ -595,7 +682,6 @@
     async function approveSemua() {
       parsedHasilUjian.forEach(i => i.statusApproval = 'PUBLISHED');
       
-      // Kirim hasil approval ke database Supabase
       try {
         const payload = parsedHasilUjian.filter(i => i.nim).map(i => ({
           nim: i.nim,
@@ -620,16 +706,14 @@
       alert('Seluruh Skor TOEFL Resmi Dipublikasikan ke Web Utama & Supabase!');
     }
 
-    // PUBLIK: CEK SKOR MANDIRI
+    // PUBLIK
     async function cariSkorPublik() {
       const input = document.getElementById('cekNimInput').value.trim();
       const container = document.getElementById('hasilCekSkor');
 
-      // 1. Cek di memori lokal dulu
       let match = parsedHasilUjian.find(i => i.nim === input && i.statusApproval === 'PUBLISHED');
       let mInfo = masterMahasiswa.find(m => m.nim === input);
 
-      // 2. Jika tidak ada di lokal, query langsung ke Supabase
       if (!match) {
         try {
           const { data, error } = await _supabase
@@ -661,7 +745,7 @@
       }
 
       if(!match) {
-        alert('Data Nilai Tidak Ditemukan / Belum Dipublikasikan oleh Kepala UPA!');
+        alert('Data Nilai Tidak Ditemukan / Belum Dipublikasikan!');
         container.classList.add('hidden');
         return;
       }
@@ -697,7 +781,7 @@
 
     // INITIAL LOAD
     document.addEventListener('DOMContentLoaded', () => {
-      renderModul1(masterMahasiswa);
+      filterMahasiswa();
       document.getElementById('tab-modul3').addEventListener('click', prosesKalkulasiSemua);
       document.getElementById('tab-modul4').addEventListener('click', renderModul4);
     });
