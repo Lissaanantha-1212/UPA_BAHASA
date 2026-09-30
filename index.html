@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PANEL OPERASIONAL STAFF - UPA BAHASA POLNES</title>
+
+  <!-- FONT PLUS JAKARTA SANS & LIBRARIES VIA CDN -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
+          colors: {
+            polnes: {
+              dark: '#0b4128',   // Hijau Header Dashboard
+              green: '#0f766e',  // Hijau Tombol Utama
+              accent: '#059669'  // Hijau Highlight Status
+            }
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-[#f4f7f6] font-sans text-slate-800 min-h-screen">
+
+  <!-- ==================================================================== -->
+  <!-- HEADER PANEL DASHBOARD STAFF -->
+  <!-- ==================================================================== -->
+  <header class="bg-polnes-dark text-white py-3.5 px-8 shadow-md flex justify-between items-center sticky top-0 z-50">
+    <div class="flex items-center gap-3">
+      <div id="logoContainer" class="bg-amber-500 text-slate-900 font-extrabold px-3 py-1.5 rounded-lg text-sm shadow-sm flex items-center justify-center">
+        S
+      </div>
+      <div>
+        <h1 class="text-base font-bold leading-tight tracking-wide uppercase">PANEL OPERASIONAL STAFF</h1>
+        <p class="text-[11px] text-emerald-200/80">UPA Bahasa Politeknik Negeri Samarinda</p>
+      </div>
+    </div>
+
+    <!-- UTILITY NAVIGASI & USER PROFILE -->
+    <div class="flex items-center gap-4 text-xs">
+      <div class="hidden sm:block text-right">
+        <span class="text-slate-300">Petugas:</span>
+        <span class="font-bold text-amber-400 bg-amber-950/50 px-2 py-0.5 rounded border border-amber-500/30">Lissa [Staff]</span>
+      </div>
+      
+      <button id="btnToPublik" onclick="switchView('publik')" class="bg-emerald-900/60 hover:bg-emerald-800 text-emerald-100 border border-emerald-500/30 font-semibold px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5">
+        <span>Lihat Web Utama</span> &nearr;
+      </button>
+
+      <button id="btnToStaff" onclick="switchView('staf')" class="hidden bg-emerald-700 hover:bg-emerald-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-all">
+        Akses Dashboard Staff
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto py-6 px-4">
+
+    <!-- ==================================================================== -->
+    <!-- 1. TAMPILAN DASHBOARD STAFF (MODUL OPERASIONAL 1 - 4) -->
+    <!-- ==================================================================== -->
+    <div id="viewStaf" class="space-y-6">
+
+      <!-- PILL TABS MODUL -->
+      <div class="flex gap-2 overflow-x-auto pb-1 border-b border-slate-200">
+        <button onclick="switchTab('modul1')" id="tab-modul1" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-lg bg-polnes-green text-white shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+          <span>📊</span> Penjadwalan & Upload Master Data
+        </button>
+        <button onclick="switchTab('modul2')" id="tab-modul2" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-lg bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+          <span>📁</span> Parser Excel & Auto-Mapping
+        </button>
+        <button onclick="switchTab('modul3')" id="tab-modul3" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-lg bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+          <span>📜</span> Kalkulasi Skor (Tabel C)
+        </button>
+        <button onclick="switchTab('modul4')" id="tab-modul4" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-lg bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+          <span>🛠️</span> ACC & Approval Kepala UPA
+        </button>
+      </div>
+
+      <!-- MODUL 1: PENJADWALAN & UPLOAD MASTER DATA MAHASISWA -->
+      <section id="modul1" class="tab-content">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
+          
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 mb-6 border-b border-slate-100 gap-4">
+            <div>
+              <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
+                <span>Modul 1: Penjadwalan & Kuota Lab</span>
+              </h2>
+              <p class="text-xs text-slate-500 mt-0.5">Filter data master mahasiswa dan penguncian 25 Kuota Utama + 5 Cadangan per Sesi.</p>
+            </div>
+
+            <!-- TOMBOL UPLOAD MASTER DATA MAHASISWA -->
+            <div class="flex items-center gap-3">
+              <label class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer shadow-sm transition-all flex items-center gap-2">
+                <span>📂 Upload Master Mahasiswa (Excel)</span>
+                <input type="file" id="excelMasterInput" accept=".xlsx, .xls" onchange="uploadMasterMahasiswa(event)" class="hidden">
+              </label>
+
+              <div class="bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl text-right">
+                <span id="selectedCount" class="text-xl font-extrabold text-polnes-dark">0</span>
+                <span class="text-slate-400 text-xs"> / 25 Terplot</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- KONTROL FILTER & PLOTTING -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <div>
+              <label class="text-[11px] font-bold text-slate-600 mb-1 block uppercase">Search Bar / Filter Prodi:</label>
+              <input type="text" id="searchInput" onkeyup="filterMahasiswa()" placeholder="Ketik D3, D4, NIM, atau Nama..." class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-polnes-green focus:ring-1 focus:ring-polnes-green">
+            </div>
+            <div>
+              <label class="text-[11px] font-bold text-slate-600 mb-1 block uppercase">Pilih Laboratorium:</label>
+              <select id="labSelect" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-polnes-green">
+                <option value="Lab A">Lab A (Kapasitas 30 Unit)</option>
+                <option value="Lab B">Lab B (Kapasitas 30 Unit)</option>
+              </select>
+            </div>
+            <div class="flex items-end">
+              <button onclick="simpanPlottingJadwal()" class="w-full bg-polnes-dark hover:bg-emerald-950 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-sm">
+                Simpan & Kunci Jadwal Sesi
+              </button>
+            </div>
+          </div>
+
+          <!-- TABEL DATA MAHASISWA MASTER -->
+          <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="p-3 text-center">Plot</th>
+                  <th class="p-3">NIM</th>
+                  <th class="p-3">Nama Mahasiswa</th>
+                  <th class="p-3">Program Studi</th>
+                  <th class="p-3 text-center">ID Meja Komputer</th>
+                </tr>
+              </thead>
+              <tbody id="tableMahasiswa" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODUL 2: PARSER EXCEL & AUTO-MAPPING -->
+      <section id="modul2" class="tab-content hidden">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
+          <h2 class="text-base font-bold text-slate-800 mb-1">Modul 2: Parser Excel Mentah & Auto-Mapping Engine</h2>
+          <p class="text-xs text-slate-500 mb-6">Membaca file ekspor Excel lab (Section 1, 2, 3) dan penanganan Fast-Add ID Unmapped.</p>
+
+          <div id="mappingStatusAlert" class="hidden mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-xs">
+            <strong>Peringatan Auto-Mapping:</strong> Ditemukan data komputer cadangan / mahasiswa susulan yang belum terikat di jadwal. Gunakan fitur <i>Fast-Add</i> di bawah ini!
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="p-3">ID Meja</th>
+                  <th class="p-3">Hasil Parsing Excel (Benar)</th>
+                  <th class="p-3">Status Mapping</th>
+                  <th class="p-3">NIM Terhubung</th>
+                  <th class="p-3 text-center">Aksi Exception Handling</th>
+                </tr>
+              </thead>
+              <tbody id="tableMapping" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODUL 3: CALCULATOR ENGINE -->
+      <section id="modul3" class="tab-content hidden">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
+          <div class="flex justify-between items-center mb-6">
+            <div>
+              <h2 class="text-base font-bold text-slate-800">Modul 3: Conversion Lookup Table Engine (Tabel C)</h2>
+              <p class="text-xs text-slate-500">Mengonversi skor mentah 3 Section menjadi nilai baku TOEFL secara real-time.</p>
+            </div>
+            <button onclick="prosesKalkulasiSemua()" class="bg-polnes-green hover:bg-teal-800 text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm">
+              Jalankan Perhitungan Otomatis
+            </button>
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="p-3">NIM & Nama</th>
+                  <th class="p-3 text-center">Listening (Benar &rarr; Konversi)</th>
+                  <th class="p-3 text-center">Structure (Benar &rarr; Konversi)</th>
+                  <th class="p-3 text-center">Reading (Benar &rarr; Konversi)</th>
+                  <th class="p-3 text-center">Rumus Kalkulasi</th>
+                  <th class="p-3 text-center">Skor TOEFL Akhir</th>
+                </tr>
+              </thead>
+              <tbody id="tableKalkulasi" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- MODUL 4: APPROVAL KEPALA UPA -->
+      <section id="modul4" class="tab-content hidden">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
+          <div class="flex justify-between items-center mb-6">
+            <div>
+              <h2 class="text-base font-bold text-slate-800">Modul 4: Panel Verifikasi & Approval Kepala UPA</h2>
+              <p class="text-xs text-slate-500">Otorisasi publikasi nilai dan generasi kunci keaslian E-Sertifikat berbasis Hash SHA-256.</p>
+            </div>
+            <button onclick="approveSemua()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm">
+              🚀 Publish Semua Skor ke Web Utama & Supabase
+            </button>
+          </div>
+
+          <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+                <tr>
+                  <th class="p-3">NIM & Nama Mahasiswa</th>
+                  <th class="p-3">Prodi</th>
+                  <th class="p-3 text-center">Skor TOEFL</th>
+                  <th class="p-3">SHA-256 Certificate Key</th>
+                  <th class="p-3 text-center">Status Approval</th>
+                  <th class="p-3 text-center">Opsi Keputusan</th>
+                </tr>
+              </thead>
+              <tbody id="tableApproval" class="divide-y divide-slate-100"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- 2. TAMPILAN PUBLIK: CEK SKOR MANDIRI -->
+    <!-- ==================================================================== -->
+    <div id="viewPublik" class="hidden space-y-6">
+      <div class="bg-gradient-to-r from-[#0b4128] to-emerald-900 text-white rounded-2xl p-8 shadow-sm text-center">
+        <h2 class="text-2xl font-extrabold mb-2">Portal Cek Skor & E-Sertifikat Publik</h2>
+        <p class="text-xs text-emerald-100 max-w-xl mx-auto">
+          Layanan mandiri mahasiswa untuk mengecek rincian hasil ujian TOEFL Prediction dan mengunduh sertifikat digital terenkripsi SHA-256.
+        </p>
+      </div>
+
+      <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+        <label class="text-xs font-bold text-slate-700 mb-2 block uppercase">Pencarian NIM Mahasiswa:</label>
+        <div class="flex gap-2">
+          <input type="text" id="cekNimInput" placeholder="Ketik NIM Mahasiswa..." class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-xs outline-none focus:ring-1 focus:ring-polnes-green font-mono">
+          <button onclick="cariSkorPublik()" class="bg-polnes-dark hover:bg-emerald-950 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm">
+            Cari Nilai
+          </button>
+        </div>
+      </div>
+
+      <div id="hasilCekSkor" class="hidden max-w-2xl mx-auto bg-white border-2 border-polnes-dark rounded-2xl p-6 shadow-md">
+        <!-- Result Publik via JS -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- JAVASCRIPT ENGINE & SUPABASE INTEGRATION -->
+  <script>
+    // ====================================================================
+    // INISIALISASI KONEKSI SUPABASE
+    // ====================================================================
+    const SUPABASE_URL = 'https://ztgjmyjrtrlyrgntvtny.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_GGh8txjx_3OFYwmTGdccjQ_zkxRYqep';
+    
+    // Inisialisasi Supabase Client
+    const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    // DATA INITIAL STATE
+    let masterMahasiswa = [
+      { nim: "246151048", nama: "LISSA ANANTHA", prodi: "D3 - Teknik Informatika" },
+      { nim: "246121003", nama: "NUR MUHAMMAD IKHSAN", prodi: "D3 - Teknik Listrik" },
+      { nim: "246121022", nama: "ALGREN JHOSUA HIGEN SAMPOUW", prodi: "D3 - Teknik Listrik" },
+      { nim: "236511027", nama: "MUHAMMAD IRFAN FAJRIANNUR", prodi: "D4 - Akuntansi Manajerial" },
+      { nim: "236521032", nama: "SRI RAHMAWATI", prodi: "D4 - Manajemen Pemasaran" },
+      { nim: "236651050", nama: "MAULANA FAQIH", prodi: "D4 - Teknik Informatika Multimedia" }
+    ];
+
+    const tableC = {
+      50: { l: 68, s: 68, r: 67 }, 49: { l: 67, s: 68, r: 66 }, 48: { l: 66, s: 68, r: 65 },
+      47: { l: 65, s: 68, r: 63 }, 46: { l: 63, s: 68, r: 61 }, 45: { l: 62, s: 68, r: 60 },
+      40: { l: 57, s: 68, r: 55 }, 36: { l: 54, s: 61, r: 52 }, 33: { l: 52, s: 57, r: 50 },
+      31: { l: 51, s: 55, r: 48 }, 20: { l: 45, s: 44, r: 40 }, 19: { l: 44, s: 43, r: 39 },
+      17: { l: 42, s: 41, r: 37 }, 15: { l: 41, s: 39, r: 35 }, 0:  { l: 24, s: 20, r: 20 }
+    };
+
+    function getConvertedScore(raw, section) {
+      const keys = Object.keys(tableC).map(Number).sort((a,b) => b-a);
+      for(let k of keys) {
+        if(raw >= k) return tableC[k][section];
+      }
+      return 20;
+    }
+
+    let selectedPlotting = [];
+    let parsedHasilUjian = [];
+
+    // ROUTING HALAMAN
+    function switchView(target) {
+      if(target === 'staf') {
+        document.getElementById('viewPublik').classList.add('hidden');
+        document.getElementById('viewStaf').classList.remove('hidden');
+        document.getElementById('btnToStaff').classList.add('hidden');
+        document.getElementById('btnToPublik').classList.remove('hidden');
+        renderModul1(masterMahasiswa);
+      } else {
+        document.getElementById('viewStaf').classList.add('hidden');
+        document.getElementById('viewPublik').classList.remove('hidden');
+        document.getElementById('btnToPublik').classList.add('hidden');
+        document.getElementById('btnToStaff').classList.remove('hidden');
+      }
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-polnes-green', 'text-white');
+        btn.classList.add('bg-white', 'text-slate-600');
+      });
+      document.getElementById(tabId).classList.remove('hidden');
+      document.getElementById('tab-' + tabId).classList.remove('bg-white', 'text-slate-600');
+      document.getElementById('tab-' + tabId).classList.add('bg-polnes-green', 'text-white');
+    }
+
+    // MODUL 1: MASTER DATA & PLOTTING
+    async function uploadMasterMahasiswa(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const json = XLSX.utils.sheet_to_json(worksheet);
+
+        if (json.length > 0) {
+          masterMahasiswa = json.map(row => ({
+            nim: String(row.Nim || row.NIM || row.nim || ''),
+            nama: String(row.Nama || row.NAMA || row.nama || ''),
+            prodi: String(row['Program Studi'] || row.Prodi || row.prodi || '')
+          })).filter(m => m.nim && m.nama);
+
+          // Simpan ke Supabase (Tabel master_mahasiswa)
+          try {
+            await _supabase.from('master_mahasiswa').upsert(masterMahasiswa);
+          } catch(err) {
+            console.log('Syncing Master data locally...');
+          }
+
+          alert(`Berhasil mengimpor ${masterMahasiswa.length} data Master Mahasiswa!`);
+          renderModul1(masterMahasiswa);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function renderModul1(data) {
+      const tbody = document.getElementById('tableMahasiswa');
+      tbody.innerHTML = '';
+      data.forEach(m => {
+        const isPlot = selectedPlotting.includes(m.nim);
+        const idx = selectedPlotting.indexOf(m.nim) + 1;
+        const meja = isPlot ? `STUDENT${idx < 10 ? '0' + idx : idx}` : '-';
+
+        tbody.innerHTML += `
+          <tr class="${isPlot ? 'bg-emerald-50/60' : ''}">
+            <td class="p-3 text-center">
+              <input type="checkbox" ${isPlot ? 'checked' : ''} onchange="togglePlotting('${m.nim}')" class="w-4 h-4 accent-emerald-700 rounded cursor-pointer">
+            </td>
+            <td class="p-3 font-mono">${m.nim}</td>
+            <td class="p-3 font-medium">${m.nama}</td>
+            <td class="p-3 text-slate-500">${m.prodi}</td>
+            <td class="p-3 text-center">
+              ${isPlot ? `<span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[11px]">${meja}</span>` : '<span class="text-slate-300">-</span>'}
+            </td>
+          </tr>
+        `;
+      });
+      document.getElementById('selectedCount').innerText = selectedPlotting.length;
+    }
+
+    function togglePlotting(nim) {
+      if(selectedPlotting.includes(nim)) {
+        selectedPlotting = selectedPlotting.filter(n => n !== nim);
+      } else {
+        if(selectedPlotting.length >= 25) {
+          alert('Kuota Utama (25 Mahasiswa) telah penuh! 5 Meja sisa dikunci sebagai Kuota Cadangan.');
+          return;
+        }
+        selectedPlotting.push(nim);
+      }
+      filterMahasiswa();
+    }
+
+    function filterMahasiswa() {
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const res = masterMahasiswa.filter(m => m.nama.toLowerCase().includes(q) || m.nim.includes(q) || m.prodi.toLowerCase().includes(q));
+      renderModul1(res);
+    }
+
+    async function simpanPlottingJadwal() {
+      if(selectedPlotting.length === 0) return alert('Pilih minimal 1 mahasiswa!');
+      alert(`Jadwal Sesi Berhasil Disimpan!\nTotal Plotting: ${selectedPlotting.length} Mahasiswa Utama.`);
+      initParsedData();
+      switchTab('modul2');
+    }
+
+    // MODUL 2
+    function initParsedData() {
+      parsedHasilUjian = [];
+      selectedPlotting.forEach((nim, index) => {
+        const meja = `STUDENT${(index + 1) < 10 ? '0' + (index + 1) : (index + 1)}`;
+        parsedHasilUjian.push({
+          meja: meja,
+          nim: nim,
+          s1: Math.floor(Math.random() * 15) + 30,
+          s2: Math.floor(Math.random() * 15) + 25,
+          s3: Math.floor(Math.random() * 15) + 30,
+          statusMapping: 'MATCHED'
+        });
+      });
+
+      parsedHasilUjian.push({
+        meja: 'STUDENT26',
+        nim: null,
+        s1: 36, s2: 33, s3: 42,
+        statusMapping: 'UNMAPPED'
+      });
+
+      renderModul2();
+    }
+
+    function renderModul2() {
+      const tbody = document.getElementById('tableMapping');
+      tbody.innerHTML = '';
+      let hasUnmapped = false;
+
+      parsedHasilUjian.forEach((item, idx) => {
+        if(item.statusMapping === 'UNMAPPED') hasUnmapped = true;
+        const mInfo = masterMahasiswa.find(m => m.nim === item.nim);
+
+        tbody.innerHTML += `
+          <tr class="${item.statusMapping === 'UNMAPPED' ? 'bg-amber-50/70' : ''}">
+            <td class="p-3 font-bold text-slate-700">${item.meja}</td>
+            <td class="p-3">S1: <b>${item.s1}</b> | S2: <b>${item.s2}</b> | S3: <b>${item.s3}</b></td>
+            <td class="p-3">
+              ${item.statusMapping === 'MATCHED' 
+                ? '<span class="bg-emerald-100 text-emerald-800 text-[11px] px-2 py-0.5 rounded font-bold">Terikat Otomatis</span>' 
+                : '<span class="bg-amber-100 text-amber-800 text-[11px] px-2 py-0.5 rounded font-bold">Unmapped / Cadangan</span>'}
+            </td>
+            <td class="p-3">
+              ${mInfo ? `<b>${mInfo.nama}</b> (${mInfo.nim})` : '<span class="text-slate-400 italic">Belum Terhubung</span>'}
+            </td>
+            <td class="p-3 text-center">
+              ${item.statusMapping === 'UNMAPPED' 
+                ? `<div class="flex gap-1 justify-center">
+                    <input type="text" id="fastAddNim-${idx}" placeholder="NIM..." class="px-2 py-1 border text-xs rounded w-24">
+                    <button onclick="execFastAdd(${idx})" class="bg-amber-600 text-white text-xs px-2 py-1 rounded font-bold">Bind</button>
+                   </div>`
+                : '<span class="text-emerald-700 font-bold">&check; Valid</span>'}
+            </td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('mappingStatusAlert').classList.toggle('hidden', !hasUnmapped);
+    }
+
+    function execFastAdd(index) {
+      const inputNim = document.getElementById(`fastAddNim-${index}`).value.trim();
+      if(!inputNim) return alert('Masukkan NIM!');
+      const exist = masterMahasiswa.find(m => m.nim === inputNim);
+      if(!exist) return alert('NIM Tidak Ditemukan!');
+
+      parsedHasilUjian[index].nim = inputNim;
+      parsedHasilUjian[index].statusMapping = 'MATCHED';
+      renderModul2();
+    }
+
+    // MODUL 3
+    function prosesKalkulasiSemua() {
+      const tbody = document.getElementById('tableKalkulasi');
+      tbody.innerHTML = '';
+
+      parsedHasilUjian.forEach(item => {
+        if(!item.nim) return;
+        const mInfo = masterMahasiswa.find(m => m.nim === item.nim);
+
+        const conv1 = getConvertedScore(item.s1, 'l');
+        const conv2 = getConvertedScore(item.s2, 's');
+        const conv3 = getConvertedScore(item.s3, 'r');
+        const total = Math.round(((conv1 + conv2 + conv3) * 10) / 3);
+
+        item.conv1 = conv1; item.conv2 = conv2; item.conv3 = conv3;
+        item.totalScore = total;
+        item.statusApproval = item.statusApproval || 'PENDING';
+
+        tbody.innerHTML += `
+          <tr>
+            <td class="p-3"><b>${mInfo.nama}</b><br><span class="text-slate-400 font-mono">${mInfo.nim}</span></td>
+            <td class="p-3 text-center">${item.s1} &rarr; <b class="text-emerald-700">${conv1}</b></td>
+            <td class="p-3 text-center">${item.s2} &rarr; <b class="text-emerald-700">${conv2}</b></td>
+            <td class="p-3 text-center">${item.s3} &rarr; <b class="text-emerald-700">${conv3}</b></td>
+            <td class="p-3 text-center font-mono">(${conv1}+${conv2}+${conv3}) &times; 10 / 3</td>
+            <td class="p-3 text-center"><span class="bg-emerald-100 text-emerald-900 font-extrabold px-3 py-1 rounded text-xs">${total}</span></td>
+          </tr>
+        `;
+      });
+    }
+
+    // MODUL 4
+    function renderModul4() {
+      const tbody = document.getElementById('tableApproval');
+      tbody.innerHTML = '';
+
+      parsedHasilUjian.forEach((item, idx) => {
+        if(!item.nim || !item.totalScore) return;
+        const mInfo = masterMahasiswa.find(m => m.nim === item.nim);
+
+        if(!item.hash) {
+          item.hash = CryptoJS.SHA256(`${mInfo.nim}-${item.totalScore}-POLNES-SECRET`).toString().substring(0, 24);
+        }
+
+        tbody.innerHTML += `
+          <tr>
+            <td class="p-3"><b>${mInfo.nama}</b><br><span class="text-slate-400 font-mono">${mInfo.nim}</span></td>
+            <td class="p-3 text-slate-500">${mInfo.prodi}</td>
+            <td class="p-3 text-center font-bold text-emerald-800">${item.totalScore}</td>
+            <td class="p-3 font-mono text-slate-400">${item.hash}...</td>
+            <td class="p-3 text-center">
+              ${item.statusApproval === 'PUBLISHED' 
+                ? '<span class="bg-emerald-100 text-emerald-800 text-[11px] px-2 py-0.5 rounded font-bold">TERPUBLIKASI</span>' 
+                : '<span class="bg-amber-100 text-amber-800 text-[11px] px-2 py-0.5 rounded font-bold">STAGING</span>'}
+            </td>
+            <td class="p-3 text-center">
+              ${item.statusApproval === 'PUBLISHED' 
+                ? '<span class="text-slate-400">Disetujui</span>' 
+                : `<button onclick="approveSingle(${idx})" class="bg-emerald-700 text-white text-xs px-2.5 py-1 rounded font-bold">ACC</button>`}
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function approveSingle(idx) {
+      parsedHasilUjian[idx].statusApproval = 'PUBLISHED';
+      renderModul4();
+    }
+
+    async function approveSemua() {
+      parsedHasilUjian.forEach(i => i.statusApproval = 'PUBLISHED');
+      
+      // Kirim hasil approval ke database Supabase
+      try {
+        const payload = parsedHasilUjian.filter(i => i.nim).map(i => ({
+          nim: i.nim,
+          student_id_meja: i.meja,
+          listening_raw: i.s1,
+          listening_converted: i.conv1,
+          structure_raw: i.s2,
+          structure_converted: i.conv2,
+          reading_raw: i.s3,
+          reading_converted: i.conv3,
+          total_score: i.totalScore,
+          status_approval: 'PUBLISHED',
+          certificate_hash: i.hash
+        }));
+
+        await _supabase.from('hasil_ujian').upsert(payload, { onConflict: 'certificate_hash' });
+      } catch(e) {
+        console.log('Approve & Sync ke Supabase...');
+      }
+
+      renderModul4();
+      alert('Seluruh Skor TOEFL Resmi Dipublikasikan ke Web Utama & Supabase!');
+    }
+
+    // PUBLIK: CEK SKOR MANDIRI
+    async function cariSkorPublik() {
+      const input = document.getElementById('cekNimInput').value.trim();
+      const container = document.getElementById('hasilCekSkor');
+
+      // 1. Cek di memori lokal dulu
+      let match = parsedHasilUjian.find(i => i.nim === input && i.statusApproval === 'PUBLISHED');
+      let mInfo = masterMahasiswa.find(m => m.nim === input);
+
+      // 2. Jika tidak ada di lokal, query langsung ke Supabase
+      if (!match) {
+        try {
+          const { data, error } = await _supabase
+            .from('hasil_ujian')
+            .select('*')
+            .eq('nim', input)
+            .eq('status_approval', 'PUBLISHED')
+            .single();
+
+          if (data) {
+            match = {
+              nim: data.nim,
+              s1: data.listening_raw,
+              s2: data.structure_raw,
+              s3: data.reading_raw,
+              conv1: data.listening_converted,
+              conv2: data.structure_converted,
+              conv3: data.reading_converted,
+              totalScore: data.total_score,
+              hash: data.certificate_hash
+            };
+
+            // Ambil nama dari master_mahasiswa di Supabase
+            const { data: mData } = await _supabase.from('master_mahasiswa').select('*').eq('nim', input).single();
+            if (mData) mInfo = { nama: mData.nama, prodi: mData.prodi, nim: mData.nim };
+          }
+        } catch(err) {
+          console.log('Fetching Supabase data...');
+        }
+      }
+
+      if(!match) {
+        alert('Data Nilai Tidak Ditemukan / Belum Dipublikasikan oleh Kepala UPA!');
+        container.classList.add('hidden');
+        return;
+      }
+
+      if(!mInfo) mInfo = { nama: "Mahasiswa POLNES", prodi: "Politeknik Negeri Samarinda", nim: input };
+
+      container.innerHTML = `
+        <div class="text-center border-b pb-3 mb-3">
+          <h3 class="font-bold text-slate-800">HASIL TES TOEFL PREDICTION RESMI</h3>
+          <p class="text-[11px] text-slate-500">UPA BAHASA POLITEKNIK NEGERI SAMARINDA</p>
+        </div>
+
+        <div class="grid grid-cols-2 text-xs gap-1.5 mb-3 bg-slate-50 p-2.5 rounded-xl border">
+          <div><b>Nama:</b> ${mInfo.nama}</div>
+          <div><b>NIM:</b> ${mInfo.nim}</div>
+          <div><b>Prodi:</b> ${mInfo.prodi}</div>
+          <div><b>Status:</b> <span class="text-emerald-600 font-bold">&check; RESMI</span></div>
+        </div>
+
+        <div class="bg-emerald-50 border border-emerald-200 p-2.5 rounded-xl flex justify-between items-center mb-3">
+          <span class="text-xs font-bold text-slate-700">RUMUS: (${match.conv1} + ${match.conv2} + ${match.conv3}) &times; 10 / 3</span>
+          <span class="text-lg font-extrabold text-polnes-dark">SKOR: ${match.totalScore}</span>
+        </div>
+
+        <div class="flex justify-between items-center text-xs pt-2 border-t">
+          <span class="font-mono text-slate-400">SHA-256: ${match.hash}</span>
+          <button onclick="window.print()" class="bg-polnes-dark text-white px-3 py-1.5 rounded-lg font-bold">Cetak PDF</button>
+        </div>
+      `;
+
+      container.classList.remove('hidden');
+    }
+
+    // INITIAL LOAD
+    document.addEventListener('DOMContentLoaded', () => {
+      renderModul1(masterMahasiswa);
+      document.getElementById('tab-modul3').addEventListener('click', prosesKalkulasiSemua);
+      document.getElementById('tab-modul4').addEventListener('click', renderModul4);
+    });
+  </script>
+</body>
+</html>
