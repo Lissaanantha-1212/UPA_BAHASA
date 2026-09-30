@@ -299,13 +299,13 @@
         </div>
       </section>
 
-      <!-- MODUL 3: CALCULATOR ENGINE -->
+      <!-- MODUL 3: CALCULATOR ENGINE DENGAN TABEL BAKU PRESISI -->
       <section id="modul3" class="tab-content hidden">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
           <div class="flex justify-between items-center mb-6">
             <div>
-              <h2 class="text-base font-bold text-slate-800">Modul 3: Conversion Lookup Table Engine (Tabel C Baku)</h2>
-              <p class="text-xs text-slate-500">Mengonversi skor jawaban benar mentah (S1, S2, S3) menjadi Nilai Baku TOEFL secara otomatis.</p>
+              <h2 class="text-base font-bold text-slate-800">Modul 3: Conversion Lookup Table Engine (Tabel C Baku Resmi)</h2>
+              <p class="text-xs text-slate-500">Mengonversi skor jawaban benar mentah (S1, S2, S3) menjadi Nilai Baku TOEFL secara otomatis sesuai tabel standar UPA Bahasa.</p>
             </div>
             <button onclick="prosesKalkulasiSemua()" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm">
               Jalankan Perhitungan Otomatis
@@ -389,7 +389,7 @@
 
   </main>
 
-  <!-- JAVASCRIPT PARSER KHUSUS FORMAT PECAHAN (e.g. "19 / 50") -->
+  <!-- JAVASCRIPT TABEL BAKU LENGKAP PRESISI (SKOR 0 - 50) -->
   <script>
     const SUPABASE_URL = 'https://ztgjmyjrtrlyrgntvtny.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_GGh8txjx_3OFYwmTGdccjQ_zkxRYqep';
@@ -405,18 +405,66 @@
     let realExcelScores = {};
     let hasExcelUploaded = false;
 
+    // TABEL KONVERSI BAKU LENGKAP 100% PERSIS SESUAI GAMBAR RESMI (0 - 50)
     const tableC = {
-      50: { l: 68, s: 68, r: 67 }, 49: { l: 67, s: 68, r: 66 }, 48: { l: 66, s: 68, r: 65 },
-      47: { l: 65, s: 68, r: 63 }, 46: { l: 63, s: 68, r: 61 }, 45: { l: 62, s: 68, r: 60 },
-      40: { l: 57, s: 68, r: 55 }, 36: { l: 54, s: 61, r: 52 }, 33: { l: 52, s: 57, r: 50 },
-      31: { l: 51, s: 55, r: 48 }, 20: { l: 45, s: 44, r: 40 }, 19: { l: 44, s: 43, r: 39 },
-      17: { l: 42, s: 41, r: 37 }, 15: { l: 41, s: 39, r: 35 }, 0:  { l: 24, s: 20, r: 20 }
+      50: { l: 68, s: 68, r: 67 },
+      49: { l: 67, s: 68, r: 66 },
+      48: { l: 66, s: 68, r: 65 },
+      47: { l: 65, s: 68, r: 63 },
+      46: { l: 63, s: 68, r: 61 },
+      45: { l: 62, s: 68, r: 60 },
+      44: { l: 61, s: 67, r: 59 },
+      43: { l: 60, s: 65, r: 58 },
+      42: { l: 59, s: 63, r: 57 },
+      41: { l: 58, s: 62, r: 56 },
+      40: { l: 57, s: 68, r: 55 },
+      39: { l: 57, s: 67, r: 54 },
+      38: { l: 56, s: 65, r: 54 },
+      37: { l: 55, s: 63, r: 53 },
+      36: { l: 54, s: 61, r: 52 },
+      35: { l: 54, s: 60, r: 52 },
+      34: { l: 53, s: 58, r: 51 },
+      33: { l: 52, s: 57, r: 50 },
+      32: { l: 52, s: 56, r: 49 },
+      31: { l: 51, s: 55, r: 48 },
+      30: { l: 51, s: 54, r: 48 },
+      29: { l: 50, s: 53, r: 47 },
+      28: { l: 49, s: 52, r: 46 },
+      27: { l: 49, s: 51, r: 46 },
+      26: { l: 48, s: 50, r: 45 },
+      25: { l: 48, s: 49, r: 44 },
+      24: { l: 47, s: 48, r: 43 },
+      23: { l: 47, s: 47, r: 43 },
+      22: { l: 46, s: 46, r: 42 },
+      21: { l: 45, s: 45, r: 41 },
+      20: { l: 45, s: 44, r: 40 },
+      19: { l: 44, s: 43, r: 39 },
+      18: { l: 43, s: 42, r: 38 },
+      17: { l: 42, s: 41, r: 37 },
+      16: { l: 41, s: 40, r: 36 },
+      15: { l: 41, s: 40, r: 35 },
+      14: { l: 39, s: 38, r: 34 },
+      13: { l: 38, s: 37, r: 32 },
+      12: { l: 37, s: 36, r: 31 },
+      11: { l: 35, s: 35, r: 30 },
+      10: { l: 33, s: 33, r: 29 },
+      9:  { l: 32, s: 31, r: 28 },
+      8:  { l: 32, s: 29, r: 28 },
+      7:  { l: 31, s: 27, r: 27 },
+      6:  { l: 30, s: 26, r: 26 },
+      5:  { l: 29, s: 25, r: 25 },
+      4:  { l: 28, s: 23, r: 24 },
+      3:  { l: 27, s: 22, r: 23 },
+      2:  { l: 26, s: 21, r: 23 },
+      1:  { l: 25, s: 20, r: 22 },
+      0:  { l: 24, s: 20, r: 21 }
     };
 
     function getConvertedScore(raw, section) {
-      const keys = Object.keys(tableC).map(Number).sort((a,b) => b-a);
-      for(let k of keys) {
-        if(raw >= k) return tableC[k][section];
+      if (raw > 50) raw = 50;
+      if (raw < 0) raw = 0;
+      if (tableC[raw]) {
+        return tableC[raw][section];
       }
       return 20;
     }
@@ -696,7 +744,7 @@
       alert('Sesi sebelumnya telah selesai. Centang dikosongkan secara otomatis untuk penataan jadwal sesi selanjutnya!');
     }
 
-    // MODUL 2: PARSER SPESIFIK FORMAT ASLI LAB (SCORE: "19 / 50")
+    // MODUL 2: PARSER SPESIFIK FORMAT ASLI LAB
     function handleExcelSectionUpload(event, secNum) {
       const file = event.target.files[0];
       if (!file) return;
@@ -709,7 +757,6 @@
           const sheetName = workbook.SheetNames[0];
           const worksheet = workbook.Sheets[sheetName];
           
-          // Konversi worksheet ke JSON dengan header di baris ke-4 (Student name, Answered Count, Score:)
           const rawRows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
 
           let countParsed = 0;
@@ -717,18 +764,15 @@
           rawRows.forEach(row => {
             if (!row || row.length === 0) return;
 
-            // Ambil isi setiap sel
-            const colA = String(row[0] || "").trim().toUpperCase(); // Student Name (STUDENT01)
-            const colD = String(row[3] || "").trim();               // Score (19 / 50)
+            const colA = String(row[0] || "").trim().toUpperCase();
+            const colD = String(row[3] || "").trim();
 
             if (colA.includes("STUDENT")) {
-              // Normalisasi ID Meja Komputer (e.g., "STUDENT11" -> "STUDENT11")
               const matchNum = colA.match(/\d+/);
               if (matchNum) {
                 const num = parseInt(matchNum[0]);
                 const mejaKey = `STUDENT${num < 10 ? '0' + num : num}`;
 
-                // PARSE SCORE FORMAT PECASAN "19 / 50" -> Ambil 19
                 let scoreVal = 0;
                 if (colD.includes("/")) {
                   const parts = colD.split("/");
@@ -783,7 +827,6 @@
         });
       });
 
-      // Cek ID Meja Ekstra di File Excel (Unmapped / Susulan)
       Object.keys(realExcelScores).forEach(mejaKey => {
         const isMapped = parsedHasilUjian.some(p => p.meja === mejaKey);
         if (!isMapped) {
@@ -864,7 +907,7 @@
       renderModul2();
     }
 
-    // MODUL 3: CALCULATOR TABEL C
+    // MODUL 3: CALCULATOR TABEL C DENGAN LOOKUP BAKU AKURAT
     function prosesKalkulasiSemua() {
       const tbody = document.getElementById('tableKalkulasi');
       tbody.innerHTML = '';
@@ -897,11 +940,11 @@
         tbody.innerHTML += `
           <tr>
             <td class="p-3"><b>${mInfo.nama}</b><br><span class="text-slate-400 font-mono">${mInfo.nim}</span></td>
-            <td class="p-3 text-center">${item.s1} &rarr; <b class="text-emerald-700">${conv1}</b></td>
-            <td class="p-3 text-center">${item.s2} &rarr; <b class="text-emerald-700">${conv2}</b></td>
-            <td class="p-3 text-center">${item.s3} &rarr; <b class="text-emerald-700">${conv3}</b></td>
-            <td class="p-3 text-center font-mono">(${conv1}+${conv2}+${conv3}) &times; 10 / 3</td>
-            <td class="p-3 text-center"><span class="bg-emerald-100 text-emerald-900 font-extrabold px-3 py-1 rounded text-xs">${total}</span></td>
+            <td class="p-3 text-center">${item.s1} &rarr; <b class="text-emerald-700 font-extrabold text-sm">${conv1}</b></td>
+            <td class="p-3 text-center">${item.s2} &rarr; <b class="text-emerald-700 font-extrabold text-sm">${conv2}</b></td>
+            <td class="p-3 text-center">${item.s3} &rarr; <b class="text-emerald-700 font-extrabold text-sm">${conv3}</b></td>
+            <td class="p-3 text-center font-mono text-slate-500">(${conv1}+${conv2}+${conv3}) &times; 10 / 3</td>
+            <td class="p-3 text-center"><span class="bg-emerald-100 text-emerald-900 font-extrabold px-3 py-1 rounded text-sm border border-emerald-300">${total}</span></td>
           </tr>
         `;
       });
