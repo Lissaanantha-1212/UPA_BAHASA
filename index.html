@@ -22,9 +22,9 @@
           fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
           colors: {
             polnes: {
-              dark: '#0b4128',   // Hijau Header Dashboard
-              green: '#0f766e',  // Hijau Tombol Utama
-              accent: '#059669'  // Hijau Highlight Status
+              main: '#10C35D',    // Warna Hijau Utama (#10C35D)
+              dark: '#0a8a40',    // Hijau Tua Aksen Header/Hover
+              light: '#eafbf0'   // Hijau Soft Latar Belakang
             }
           }
         }
@@ -44,22 +44,22 @@
       </div>
       <div>
         <h1 class="text-base font-bold leading-tight tracking-wide uppercase">PANEL OPERASIONAL STAFF</h1>
-        <p class="text-[11px] text-emerald-200/80">UPA Bahasa Politeknik Negeri Samarinda</p>
+        <p class="text-[11px] text-green-100/90">UPA Bahasa Politeknik Negeri Samarinda</p>
       </div>
     </div>
 
     <!-- UTILITY NAVIGASI & USER PROFILE -->
     <div class="flex items-center gap-4 text-xs">
       <div class="hidden sm:block text-right">
-        <span class="text-slate-300">Petugas:</span>
-        <span class="font-bold text-amber-400 bg-amber-950/50 px-2 py-0.5 rounded border border-amber-500/30">Lissa [Staff]</span>
+        <span class="text-slate-200">Petugas:</span>
+        <span class="font-bold text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-400/40">Staff UPA</span>
       </div>
       
-      <button id="btnToPublik" onclick="switchView('publik')" class="bg-emerald-900/60 hover:bg-emerald-800 text-emerald-100 border border-emerald-500/30 font-semibold px-3 py-1.5 rounded-lg transition-all flex items-center gap-1.5">
+      <button id="btnToPublik" onclick="switchView('publik')" class="bg-white/10 hover:bg-white/20 text-white border border-white/30 font-semibold px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5">
         <span>Lihat Web Utama</span> &nearr;
       </button>
 
-      <button id="btnToStaff" onclick="switchView('staf')" class="hidden bg-emerald-700 hover:bg-emerald-600 text-white font-semibold px-3 py-1.5 rounded-lg transition-all">
+      <button id="btnToStaff" onclick="switchView('staf')" class="hidden bg-polnes-main hover:bg-polnes-dark text-white font-semibold px-3.5 py-1.5 rounded-lg transition-all">
         Akses Dashboard Staff
       </button>
     </div>
@@ -74,7 +74,7 @@
 
       <!-- PILL TABS MODUL -->
       <div class="flex gap-2 overflow-x-auto pb-1 border-b border-slate-200">
-        <button onclick="switchTab('modul1')" id="tab-modul1" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-lg bg-polnes-green text-white shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+        <button onclick="switchTab('modul1')" id="tab-modul1" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-lg bg-polnes-main text-white shadow-sm flex items-center gap-1.5 whitespace-nowrap">
           <span>📊</span> Penjadwalan & Upload Master Data
         </button>
         <button onclick="switchTab('modul2')" id="tab-modul2" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-lg bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
@@ -102,12 +102,12 @@
 
             <!-- TOMBOL UPLOAD MASTER DATA MAHASISWA -->
             <div class="flex items-center gap-3">
-              <label class="bg-emerald-800 hover:bg-emerald-900 text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer shadow-sm transition-all flex items-center gap-2">
+              <label class="bg-polnes-main hover:bg-polnes-dark text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer shadow-sm transition-all flex items-center gap-2">
                 <span>📂 Upload Master Mahasiswa (Excel)</span>
-                <input type="file" id="excelMasterInput" accept=".xlsx, .xls" onchange="uploadMasterMahasiswa(event)" class="hidden">
+                <input type="file" id="excelMasterInput" accept=".xlsx, .xls, .csv" onchange="uploadMasterMahasiswa(event)" class="hidden">
               </label>
 
-              <div class="bg-emerald-50 border border-emerald-200 px-3 py-1.5 rounded-xl text-right">
+              <div class="bg-polnes-light border border-green-200 px-3 py-1.5 rounded-xl text-right">
                 <span id="selectedCount" class="text-xl font-extrabold text-polnes-dark">0</span>
                 <span class="text-slate-400 text-xs"> / 25 Terplot</span>
               </div>
@@ -118,11 +118,11 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
             <div>
               <label class="text-[11px] font-bold text-slate-600 mb-1 block uppercase">Search Bar / Filter Prodi:</label>
-              <input type="text" id="searchInput" onkeyup="filterMahasiswa()" placeholder="Ketik D3, D4, NIM, atau Nama..." class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-polnes-green focus:ring-1 focus:ring-polnes-green">
+              <input type="text" id="searchInput" onkeyup="filterMahasiswa()" placeholder="Ketik D3, D4, NIM, atau Nama..." class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-polnes-main focus:ring-1 focus:ring-polnes-main">
             </div>
             <div>
               <label class="text-[11px] font-bold text-slate-600 mb-1 block uppercase">Pilih Laboratorium:</label>
-              <select id="labSelect" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-polnes-green">
+              <select id="labSelect" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-polnes-main">
                 <option value="Lab A">Lab A (Kapasitas 30 Unit)</option>
                 <option value="Lab B">Lab B (Kapasitas 30 Unit)</option>
               </select>
@@ -187,7 +187,7 @@
               <h2 class="text-base font-bold text-slate-800">Modul 3: Conversion Lookup Table Engine (Tabel C)</h2>
               <p class="text-xs text-slate-500">Mengonversi skor mentah 3 Section menjadi nilai baku TOEFL secara real-time.</p>
             </div>
-            <button onclick="prosesKalkulasiSemua()" class="bg-polnes-green hover:bg-teal-800 text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm">
+            <button onclick="prosesKalkulasiSemua()" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm">
               Jalankan Perhitungan Otomatis
             </button>
           </div>
@@ -218,7 +218,7 @@
               <h2 class="text-base font-bold text-slate-800">Modul 4: Panel Verifikasi & Approval Kepala UPA</h2>
               <p class="text-xs text-slate-500">Otorisasi publikasi nilai dan generasi kunci keaslian E-Sertifikat berbasis Hash SHA-256.</p>
             </div>
-            <button onclick="approveSemua()" class="bg-emerald-700 hover:bg-emerald-800 text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm">
+            <button onclick="approveSemua()" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm">
               🚀 Publish Semua Skor ke Web Utama & Supabase
             </button>
           </div>
@@ -247,7 +247,7 @@
     <!-- 2. TAMPILAN PUBLIK: CEK SKOR MANDIRI -->
     <!-- ==================================================================== -->
     <div id="viewPublik" class="hidden space-y-6">
-      <div class="bg-gradient-to-r from-[#0b4128] to-emerald-900 text-white rounded-2xl p-8 shadow-sm text-center">
+      <div class="bg-gradient-to-r from-[#0a8a40] to-emerald-800 text-white rounded-2xl p-8 shadow-sm text-center">
         <h2 class="text-2xl font-extrabold mb-2">Portal Cek Skor & E-Sertifikat Publik</h2>
         <p class="text-xs text-emerald-100 max-w-xl mx-auto">
           Layanan mandiri mahasiswa untuk mengecek rincian hasil ujian TOEFL Prediction dan mengunduh sertifikat digital terenkripsi SHA-256.
@@ -257,7 +257,7 @@
       <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
         <label class="text-xs font-bold text-slate-700 mb-2 block uppercase">Pencarian NIM Mahasiswa:</label>
         <div class="flex gap-2">
-          <input type="text" id="cekNimInput" placeholder="Ketik NIM Mahasiswa..." class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-xs outline-none focus:ring-1 focus:ring-polnes-green font-mono">
+          <input type="text" id="cekNimInput" placeholder="Ketik NIM Mahasiswa..." class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-xs outline-none focus:ring-1 focus:ring-polnes-main font-mono">
           <button onclick="cariSkorPublik()" class="bg-polnes-dark hover:bg-emerald-950 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm">
             Cari Nilai
           </button>
@@ -282,15 +282,8 @@
     // Inisialisasi Supabase Client
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    // DATA INITIAL STATE
-    let masterMahasiswa = [
-      { nim: "246151048", nama: "LISSA ANANTHA", prodi: "D3 - Teknik Informatika" },
-      { nim: "246121003", nama: "NUR MUHAMMAD IKHSAN", prodi: "D3 - Teknik Listrik" },
-      { nim: "246121022", nama: "ALGREN JHOSUA HIGEN SAMPOUW", prodi: "D3 - Teknik Listrik" },
-      { nim: "236511027", nama: "MUHAMMAD IRFAN FAJRIANNUR", prodi: "D4 - Akuntansi Manajerial" },
-      { nim: "236521032", nama: "SRI RAHMAWATI", prodi: "D4 - Manajemen Pemasaran" },
-      { nim: "236651050", nama: "MAULANA FAQIH", prodi: "D4 - Teknik Informatika Multimedia" }
-    ];
+    // DATA MASTER AWAL (KOSONG, MENUNGGU UPLOAD EXCEL / LOAD DARI SUPABASE)
+    let masterMahasiswa = [];
 
     const tableC = {
       50: { l: 68, s: 68, r: 67 }, 49: { l: 67, s: 68, r: 66 }, 48: { l: 66, s: 68, r: 65 },
@@ -330,43 +323,62 @@
     function switchTab(tabId) {
       document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
       document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('bg-polnes-green', 'text-white');
+        btn.classList.remove('bg-polnes-main', 'text-white');
         btn.classList.add('bg-white', 'text-slate-600');
       });
       document.getElementById(tabId).classList.remove('hidden');
       document.getElementById('tab-' + tabId).classList.remove('bg-white', 'text-slate-600');
-      document.getElementById('tab-' + tabId).classList.add('bg-polnes-green', 'text-white');
+      document.getElementById('tab-' + tabId).classList.add('bg-polnes-main', 'text-white');
     }
 
-    // MODUL 1: MASTER DATA & PLOTTING
+    // MODUL 1: PARSER FLEKSIBEL EXCEL MASTER MAHASISWA
     async function uploadMasterMahasiswa(event) {
       const file = event.target.files[0];
       if (!file) return;
 
       const reader = new FileReader();
       reader.onload = async function(e) {
-        const data = new Uint8Array(e.target.result);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const json = XLSX.utils.sheet_to_json(worksheet);
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          const json = XLSX.utils.sheet_to_json(worksheet);
 
-        if (json.length > 0) {
-          masterMahasiswa = json.map(row => ({
-            nim: String(row.Nim || row.NIM || row.nim || ''),
-            nama: String(row.Nama || row.NAMA || row.nama || ''),
-            prodi: String(row['Program Studi'] || row.Prodi || row.prodi || '')
-          })).filter(m => m.nim && m.nama);
+          if (json.length === 0) {
+            alert('File Excel kosong atau format tidak sesuai!');
+            return;
+          }
+
+          // Parser otomatis mencocokkan berbagai variasi judul header kolom
+          masterMahasiswa = json.map(row => {
+            const keys = Object.keys(row);
+            
+            const nimKey = keys.find(k => /nim|npm|no_induk|id/i.test(k.trim())) || keys[0];
+            const namaKey = keys.find(k => /nama|student_name|mahasiswa/i.test(k.trim())) || keys[1];
+            const prodiKey = keys.find(k => /prodi|program_studi|jurusan|class/i.test(k.trim())) || keys[2];
+
+            return {
+              nim: String(row[nimKey] || '').trim(),
+              nama: String(row[namaKey] || '').trim(),
+              prodi: String(row[prodiKey] || 'POLNES').trim()
+            };
+          }).filter(m => m.nim !== '' && m.nama !== '');
 
           // Simpan ke Supabase (Tabel master_mahasiswa)
           try {
             await _supabase.from('master_mahasiswa').upsert(masterMahasiswa);
           } catch(err) {
-            console.log('Syncing Master data locally...');
+            console.log('Mode Lokal Active');
           }
 
-          alert(`Berhasil mengimpor ${masterMahasiswa.length} data Master Mahasiswa!`);
+          alert(`Sukses! ${masterMahasiswa.length} Data Master Mahasiswa Berhasil Diunggah & Dimuat.`);
+          selectedPlotting = [];
           renderModul1(masterMahasiswa);
+
+        } catch (err) {
+          alert('Gagal membaca file Excel. Pastikan format file .xlsx atau .xls!');
+          console.error(err);
         }
       };
       reader.readAsArrayBuffer(file);
@@ -375,21 +387,36 @@
     function renderModul1(data) {
       const tbody = document.getElementById('tableMahasiswa');
       tbody.innerHTML = '';
+
+      if (data.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="5" class="p-8 text-center text-slate-400">
+              <div class="text-2xl mb-1">📂</div>
+              <p class="font-bold text-slate-600">Belum ada data master mahasiswa.</p>
+              <p class="text-xs text-slate-400 mt-1">Silakan klik tombol <b>Upload Master Mahasiswa (Excel)</b> di pojok kanan atas untuk memuat data.</p>
+            </td>
+          </tr>
+        `;
+        document.getElementById('selectedCount').innerText = '0';
+        return;
+      }
+
       data.forEach(m => {
         const isPlot = selectedPlotting.includes(m.nim);
         const idx = selectedPlotting.indexOf(m.nim) + 1;
         const meja = isPlot ? `STUDENT${idx < 10 ? '0' + idx : idx}` : '-';
 
         tbody.innerHTML += `
-          <tr class="${isPlot ? 'bg-emerald-50/60' : ''}">
+          <tr class="${isPlot ? 'bg-polnes-light' : 'hover:bg-slate-50'} transition-all">
             <td class="p-3 text-center">
-              <input type="checkbox" ${isPlot ? 'checked' : ''} onchange="togglePlotting('${m.nim}')" class="w-4 h-4 accent-emerald-700 rounded cursor-pointer">
+              <input type="checkbox" ${isPlot ? 'checked' : ''} onchange="togglePlotting('${m.nim}')" class="w-4 h-4 accent-emerald-600 rounded cursor-pointer">
             </td>
-            <td class="p-3 font-mono">${m.nim}</td>
-            <td class="p-3 font-medium">${m.nama}</td>
+            <td class="p-3 font-mono font-semibold text-slate-700">${m.nim}</td>
+            <td class="p-3 font-medium text-slate-800">${m.nama}</td>
             <td class="p-3 text-slate-500">${m.prodi}</td>
             <td class="p-3 text-center">
-              ${isPlot ? `<span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[11px]">${meja}</span>` : '<span class="text-slate-300">-</span>'}
+              ${isPlot ? `<span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded text-[11px] border border-emerald-300">${meja}</span>` : '<span class="text-slate-300">-</span>'}
             </td>
           </tr>
         `;
@@ -416,8 +443,8 @@
       renderModul1(res);
     }
 
-    async function simpanPlottingJadwal() {
-      if(selectedPlotting.length === 0) return alert('Pilih minimal 1 mahasiswa!');
+    function simpanPlottingJadwal() {
+      if(selectedPlotting.length === 0) return alert('Pilih minimal 1 mahasiswa dari tabel!');
       alert(`Jadwal Sesi Berhasil Disimpan!\nTotal Plotting: ${selectedPlotting.length} Mahasiswa Utama.`);
       initParsedData();
       switchTab('modul2');
@@ -553,7 +580,7 @@
             <td class="p-3 text-center">
               ${item.statusApproval === 'PUBLISHED' 
                 ? '<span class="text-slate-400">Disetujui</span>' 
-                : `<button onclick="approveSingle(${idx})" class="bg-emerald-700 text-white text-xs px-2.5 py-1 rounded font-bold">ACC</button>`}
+                : `<button onclick="approveSingle(${idx})" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-2.5 py-1 rounded font-bold">ACC</button>`}
             </td>
           </tr>
         `;
@@ -625,7 +652,6 @@
               hash: data.certificate_hash
             };
 
-            // Ambil nama dari master_mahasiswa di Supabase
             const { data: mData } = await _supabase.from('master_mahasiswa').select('*').eq('nim', input).single();
             if (mData) mInfo = { nama: mData.nama, prodi: mData.prodi, nim: mData.nim };
           }
