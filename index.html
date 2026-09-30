@@ -60,6 +60,10 @@
         border: 1px solid #334155 !important;
         font-weight: 800 !important;
       }
+      /* Menampilkan seluruh data tercentang tanpa pagination saat di-print */
+      .print-all-rows {
+        display: table-row !important;
+      }
     }
   </style>
 </head>
@@ -110,7 +114,7 @@
           <span>📜</span> Kalkulasi Skor (Tabel C)
         </button>
         <button onclick="switchTab('modul4')" id="tab-modul4" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-lg bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
-          <span>🛠️</span> ACC & Approval Kepala UPA
+          <span>🛠️️</span> ACC & Approval Kepala UPA
         </button>
       </div>
 
@@ -299,7 +303,7 @@
         </div>
       </section>
 
-      <!-- MODUL 3: CALCULATOR ENGINE DENGAN TABEL BAKU PRESISI -->
+      <!-- MODUL 3: CALCULATOR ENGINE -->
       <section id="modul3" class="tab-content hidden">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
           <div class="flex justify-between items-center mb-6">
@@ -389,7 +393,7 @@
 
   </main>
 
-  <!-- JAVASCRIPT TABEL BAKU LENGKAP PRESISI (SKOR 0 - 50) -->
+  <!-- JAVASCRIPT SYSTEM ENGINE LOGIC -->
   <script>
     const SUPABASE_URL = 'https://ztgjmyjrtrlyrgntvtny.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_GGh8txjx_3OFYwmTGdccjQ_zkxRYqep';
@@ -407,57 +411,23 @@
 
     // TABEL KONVERSI BAKU LENGKAP 100% PERSIS SESUAI GAMBAR RESMI (0 - 50)
     const tableC = {
-      50: { l: 68, s: 68, r: 67 },
-      49: { l: 67, s: 68, r: 66 },
-      48: { l: 66, s: 68, r: 65 },
-      47: { l: 65, s: 68, r: 63 },
-      46: { l: 63, s: 68, r: 61 },
-      45: { l: 62, s: 68, r: 60 },
-      44: { l: 61, s: 67, r: 59 },
-      43: { l: 60, s: 65, r: 58 },
-      42: { l: 59, s: 63, r: 57 },
-      41: { l: 58, s: 62, r: 56 },
-      40: { l: 57, s: 68, r: 55 },
-      39: { l: 57, s: 67, r: 54 },
-      38: { l: 56, s: 65, r: 54 },
-      37: { l: 55, s: 63, r: 53 },
-      36: { l: 54, s: 61, r: 52 },
-      35: { l: 54, s: 60, r: 52 },
-      34: { l: 53, s: 58, r: 51 },
-      33: { l: 52, s: 57, r: 50 },
-      32: { l: 52, s: 56, r: 49 },
-      31: { l: 51, s: 55, r: 48 },
-      30: { l: 51, s: 54, r: 48 },
-      29: { l: 50, s: 53, r: 47 },
-      28: { l: 49, s: 52, r: 46 },
-      27: { l: 49, s: 51, r: 46 },
-      26: { l: 48, s: 50, r: 45 },
-      25: { l: 48, s: 49, r: 44 },
-      24: { l: 47, s: 48, r: 43 },
-      23: { l: 47, s: 47, r: 43 },
-      22: { l: 46, s: 46, r: 42 },
-      21: { l: 45, s: 45, r: 41 },
-      20: { l: 45, s: 44, r: 40 },
-      19: { l: 44, s: 43, r: 39 },
-      18: { l: 43, s: 42, r: 38 },
-      17: { l: 42, s: 41, r: 37 },
-      16: { l: 41, s: 40, r: 36 },
-      15: { l: 41, s: 40, r: 35 },
-      14: { l: 39, s: 38, r: 34 },
-      13: { l: 38, s: 37, r: 32 },
-      12: { l: 37, s: 36, r: 31 },
-      11: { l: 35, s: 35, r: 30 },
-      10: { l: 33, s: 33, r: 29 },
-      9:  { l: 32, s: 31, r: 28 },
-      8:  { l: 32, s: 29, r: 28 },
-      7:  { l: 31, s: 27, r: 27 },
-      6:  { l: 30, s: 26, r: 26 },
-      5:  { l: 29, s: 25, r: 25 },
-      4:  { l: 28, s: 23, r: 24 },
-      3:  { l: 27, s: 22, r: 23 },
-      2:  { l: 26, s: 21, r: 23 },
-      1:  { l: 25, s: 20, r: 22 },
-      0:  { l: 24, s: 20, r: 21 }
+      50: { l: 68, s: 68, r: 67 }, 49: { l: 67, s: 68, r: 66 }, 48: { l: 66, s: 68, r: 65 },
+      47: { l: 65, s: 68, r: 63 }, 46: { l: 63, s: 68, r: 61 }, 45: { l: 62, s: 68, r: 60 },
+      44: { l: 61, s: 67, r: 59 }, 43: { l: 60, s: 65, r: 58 }, 42: { l: 59, s: 63, r: 57 },
+      41: { l: 58, s: 62, r: 56 }, 40: { l: 57, s: 68, r: 55 }, 39: { l: 57, s: 67, r: 54 },
+      38: { l: 56, s: 65, r: 54 }, 37: { l: 55, s: 63, r: 53 }, 36: { l: 54, s: 61, r: 52 },
+      35: { l: 54, s: 60, r: 52 }, 34: { l: 53, s: 58, r: 51 }, 33: { l: 52, s: 57, r: 50 },
+      32: { l: 52, s: 56, r: 49 }, 31: { l: 51, s: 55, r: 48 }, 30: { l: 51, s: 54, r: 48 },
+      29: { l: 50, s: 53, r: 47 }, 28: { l: 49, s: 52, r: 46 }, 27: { l: 49, s: 51, r: 46 },
+      26: { l: 48, s: 50, r: 45 }, 25: { l: 48, s: 49, r: 44 }, 24: { l: 47, s: 48, r: 43 },
+      23: { l: 47, s: 47, r: 43 }, 22: { l: 46, s: 46, r: 42 }, 21: { l: 45, s: 45, r: 41 },
+      20: { l: 45, s: 44, r: 40 }, 19: { l: 44, s: 43, r: 39 }, 18: { l: 43, s: 42, r: 38 },
+      17: { l: 42, s: 41, r: 37 }, 16: { l: 41, s: 40, r: 36 }, 15: { l: 41, s: 40, r: 35 },
+      14: { l: 39, s: 38, r: 34 }, 13: { l: 38, s: 37, r: 32 }, 12: { l: 37, s: 36, r: 31 },
+      11: { l: 35, s: 35, r: 30 }, 10: { l: 33, s: 33, r: 29 }, 9:  { l: 32, s: 31, r: 28 },
+      8:  { l: 32, s: 29, r: 28 }, 7:  { l: 31, s: 27, r: 27 }, 6:  { l: 30, s: 26, r: 26 },
+      5:  { l: 29, s: 25, r: 25 }, 4:  { l: 28, s: 23, r: 24 }, 3:  { l: 27, s: 22, r: 23 },
+      2:  { l: 26, s: 21, r: 23 }, 1:  { l: 25, s: 20, r: 22 }, 0:  { l: 24, s: 20, r: 21 }
     };
 
     function getConvertedScore(raw, section) {
@@ -636,6 +606,31 @@
         return;
       }
 
+      // JIKA SEDANG CETAK / PRINT DOKUMEN -> RENDER SELURUH MAHASISWA YANG DITERCENTANG TANPA PAGINATION
+      if (modeFokusPlotting) {
+        const selectedData = masterMahasiswa.filter(m => selectedPlotting.includes(m.nim));
+        selectedData.forEach((m, idx) => {
+          const meja = `STUDENT${(idx + 1) < 10 ? '0' + (idx + 1) : (idx + 1)}`;
+          tbody.innerHTML += `
+            <tr class="bg-polnes-light print-all-rows">
+              <td class="p-3 text-center no-print">
+                <input type="checkbox" checked onchange="togglePlotting('${m.nim}')" class="w-4 h-4 accent-emerald-600 rounded cursor-pointer">
+              </td>
+              <td class="p-3 font-mono font-semibold text-slate-700">${m.nim}</td>
+              <td class="p-3 font-medium text-slate-800">${m.nama}</td>
+              <td class="p-3 text-slate-500">${m.prodi}</td>
+              <td class="p-3 text-center">
+                <span class="badge-meja-print bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded text-[11px] border border-emerald-300">${meja}</span>
+              </td>
+            </tr>
+          `;
+        });
+        document.getElementById('selectedCount').innerText = selectedPlotting.length;
+        document.getElementById('paginationInfo').innerText = `Menampilkan seluruh ${selectedData.length} data terplot (Siap Cetak)`;
+        return;
+      }
+
+      // MODE NORMAL DENGAN PAGINATION
       const totalPages = Math.ceil(filteredMaster.length / pageSize) || 1;
       if (currentPage > totalPages) currentPage = totalPages;
       if (currentPage < 1) currentPage = 1;
@@ -827,6 +822,7 @@
         });
       });
 
+      // Cek ID Meja Ekstra di File Excel (Unmapped / Susulan)
       Object.keys(realExcelScores).forEach(mejaKey => {
         const isMapped = parsedHasilUjian.some(p => p.meja === mejaKey);
         if (!isMapped) {
@@ -842,7 +838,30 @@
         }
       });
 
+      cleanDuplicateAndZeroEntries();
       renderModul2();
+    }
+
+    // LOGIKA PINTAR: MEMBERSIHKAN DATA GANDA (TETAPKAN NAMA DENGAN SKOR AKTIF, HAPUS NILAI 0 BEKAS KOMPUTER RUSAK)
+    function cleanDuplicateAndZeroEntries() {
+      // 1. Cari NIM yang terikat pada meja yang memproduksi nilai > 0
+      const validNimsWithScore = new Set();
+      parsedHasilUjian.forEach(item => {
+        if (item.nim && (item.s1 > 0 || item.s2 > 0 || item.s3 > 0)) {
+          validNimsWithScore.add(item.nim);
+        }
+      });
+
+      // 2. Jika mahasiswa tersebut punya record baru dengan nilai di meja lain, copot NIM-nya dari meja lama yang nilainya 0 0 0
+      parsedHasilUjian.forEach(item => {
+        if (item.nim && (item.s1 === 0 && item.s2 === 0 && item.s3 === 0)) {
+          // Jika NIM ini sudah ada di meja baru dengan nilai valid, lepaskan ikatan dari meja lama
+          if (validNimsWithScore.has(item.nim)) {
+            item.nim = null;
+            item.statusMapping = 'UNMAPPED';
+          }
+        }
+      });
     }
 
     function renderModul2() {
@@ -869,20 +888,28 @@
         if(item.statusMapping === 'UNMAPPED') hasUnmapped = true;
         const mInfo = masterMahasiswa.find(m => m.nim === item.nim);
 
+        const isZeroScore = (item.s1 === 0 && item.s2 === 0 && item.s3 === 0);
+
         tbody.innerHTML += `
-          <tr class="${item.statusMapping === 'UNMAPPED' ? 'bg-amber-50/70' : ''}">
+          <tr class="${isZeroScore ? 'bg-red-50/80 border-l-4 border-l-red-500' : (item.statusMapping === 'UNMAPPED' ? 'bg-amber-50/70' : '')}">
             <td class="p-3 font-bold text-slate-700">${item.meja}</td>
-            <td class="p-3">S1: <b class="text-polnes-dark font-extrabold text-sm">${item.s1}</b> | S2: <b class="text-polnes-dark font-extrabold text-sm">${item.s2}</b> | S3: <b class="text-polnes-dark font-extrabold text-sm">${item.s3}</b></td>
             <td class="p-3">
-              ${item.statusMapping === 'MATCHED' 
-                ? '<span class="bg-emerald-100 text-emerald-800 text-[11px] px-2 py-0.5 rounded font-bold">Terikat Otomatis</span>' 
-                : '<span class="bg-amber-100 text-amber-800 text-[11px] px-2 py-0.5 rounded font-bold">Unmapped / Cadangan</span>'}
+              S1: <b class="${item.s1 === 0 ? 'text-red-500' : 'text-polnes-dark'} font-extrabold text-sm">${item.s1}</b> | 
+              S2: <b class="${item.s2 === 0 ? 'text-red-500' : 'text-polnes-dark'} font-extrabold text-sm">${item.s2}</b> | 
+              S3: <b class="${item.s3 === 0 ? 'text-red-500' : 'text-polnes-dark'} font-extrabold text-sm">${item.s3}</b>
+            </td>
+            <td class="p-3">
+              ${isZeroScore 
+                ? '<span class="bg-red-100 text-red-800 text-[11px] px-2 py-0.5 rounded font-bold border border-red-300">Komputer Rusak / Kosong</span>' 
+                : (item.statusMapping === 'MATCHED' 
+                  ? '<span class="bg-emerald-100 text-emerald-800 text-[11px] px-2 py-0.5 rounded font-bold">Terikat Otomatis</span>' 
+                  : '<span class="bg-amber-100 text-amber-800 text-[11px] px-2 py-0.5 rounded font-bold">Unmapped / Cadangan</span>')}
             </td>
             <td class="p-3">
               ${mInfo ? `<b>${mInfo.nama}</b> (${mInfo.nim})` : '<span class="text-slate-400 italic">Belum Terhubung</span>'}
             </td>
             <td class="p-3 text-center">
-              ${item.statusMapping === 'UNMAPPED' 
+              ${item.statusMapping === 'UNMAPPED' || isZeroScore
                 ? `<div class="flex gap-1 justify-center">
                     <input type="text" id="fastAddNim-${idx}" placeholder="NIM..." class="px-2 py-1 border text-xs rounded w-24">
                     <button onclick="execFastAdd(${idx})" class="bg-amber-600 text-white text-xs px-2 py-1 rounded font-bold">Bind</button>
@@ -900,14 +927,17 @@
       const inputNim = document.getElementById(`fastAddNim-${index}`).value.trim();
       if(!inputNim) return alert('Masukkan NIM!');
       const exist = masterMahasiswa.find(m => m.nim === inputNim);
-      if(!exist) return alert('NIM Tidak Ditemukan!');
+      if(!exist) return alert('NIM Tidak Ditemukan di Data Master!');
 
       parsedHasilUjian[index].nim = inputNim;
       parsedHasilUjian[index].statusMapping = 'MATCHED';
+
+      // Jalankan otomatis pembersihan nama ganda & nilai 0
+      cleanDuplicateAndZeroEntries();
       renderModul2();
     }
 
-    // MODUL 3: CALCULATOR TABEL C DENGAN LOOKUP BAKU AKURAT
+    // MODUL 3: CALCULATOR TABEL C DENGAN FILTER OTOMATIS NILAI NON-ZERO
     function prosesKalkulasiSemua() {
       const tbody = document.getElementById('tableKalkulasi');
       tbody.innerHTML = '';
@@ -924,8 +954,21 @@
         return;
       }
 
-      parsedHasilUjian.forEach(item => {
-        if(!item.nim) return;
+      // OLAHI HANYA MAHASISWA YANG PUNYA NIM DAN MEMILIKI SKOR VALID (>0)
+      const validEntries = parsedHasilUjian.filter(item => item.nim && (item.s1 > 0 || item.s2 > 0 || item.s3 > 0));
+
+      if (validEntries.length === 0) {
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="6" class="p-8 text-center text-slate-400">
+              <p class="font-bold text-slate-600">Tidak ada data peserta aktif dengan skor valid (>0)</p>
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      validEntries.forEach(item => {
         const mInfo = masterMahasiswa.find(m => m.nim === item.nim);
 
         const conv1 = getConvertedScore(item.s1, 'l');
@@ -955,7 +998,9 @@
       const tbody = document.getElementById('tableApproval');
       tbody.innerHTML = '';
 
-      if (parsedHasilUjian.length === 0) {
+      const validEntries = parsedHasilUjian.filter(item => item.nim && (item.s1 > 0 || item.s2 > 0 || item.s3 > 0));
+
+      if (validEntries.length === 0) {
         tbody.innerHTML = `
           <tr>
             <td colspan="6" class="p-8 text-center text-slate-400">
@@ -966,8 +1011,8 @@
         return;
       }
 
-      parsedHasilUjian.forEach((item, idx) => {
-        if(!item.nim || !item.totalScore) return;
+      validEntries.forEach((item, idx) => {
+        if(!item.totalScore) return;
         const mInfo = masterMahasiswa.find(m => m.nim === item.nim);
 
         if(!item.hash) {
@@ -1004,7 +1049,7 @@
       parsedHasilUjian.forEach(i => i.statusApproval = 'PUBLISHED');
       
       try {
-        const payload = parsedHasilUjian.filter(i => i.nim).map(i => ({
+        const payload = parsedHasilUjian.filter(i => i.nim && (i.s1 > 0 || i.s2 > 0 || i.s3 > 0)).map(i => ({
           nim: i.nim,
           student_id_meja: i.meja,
           listening_raw: i.s1,
