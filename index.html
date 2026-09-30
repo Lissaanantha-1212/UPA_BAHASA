@@ -144,11 +144,6 @@
                 <input type="file" id="excelMasterInput" accept=".xlsx, .xls, .csv" onchange="uploadMasterMahasiswa(event)" class="hidden">
               </label>
 
-              <!-- TOMBOL BERSIHKAN CENTANG DENGAN 1 KLIK -->
-              <button onclick="bersihkanPilihan()" class="bg-rose-100 hover:bg-rose-200 text-rose-700 border border-rose-300 text-xs font-bold px-3 py-2.5 rounded-xl transition-all shadow-sm">
-                🧹 Bersihkan Centang
-              </button>
-
               <div class="bg-polnes-light border border-green-200 px-3 py-1.5 rounded-xl text-right">
                 <span id="selectedCount" class="text-xl font-extrabold text-polnes-dark">0</span>
                 <span class="text-slate-400 text-xs"> / 25 Terplot</span>
@@ -192,11 +187,11 @@
             </div>
 
             <div class="flex items-end gap-2">
-              <button onclick="kunciDanFokusJadwal()" class="flex-1 bg-polnes-dark hover:bg-emerald-950 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-sm">
+              <button id="btnKunciSesi" onclick="kunciDanFokusJadwal()" class="flex-1 bg-polnes-dark hover:bg-emerald-950 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-sm">
                 Kunci Plotting Sesi
               </button>
-              <button id="btnResetFilter" onclick="resetFokusTabel()" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-3 py-2.5 rounded-xl text-xs transition-all">
-                🔓 Selesai & Buka Pilihan
+              <button id="btnResetFilter" onclick="jadwalkanSesiBerikutnya()" class="hidden bg-slate-700 hover:bg-slate-900 text-white font-bold px-3 py-2.5 rounded-xl text-xs transition-all">
+                🔓 Jadwalkan Sesi Berikutnya
               </button>
             </div>
           </div>
@@ -392,7 +387,7 @@
 
   </main>
 
-  <!-- JAVASCRIPT LOGIKA ENGINE LENGKAP -->
+  <!-- JAVASCRIPT LOGIKA ENGINE TER-PERSISTENT -->
   <script>
     const SUPABASE_URL = 'https://ztgjmyjrtrlyrgntvtny.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_GGh8txjx_3OFYwmTGdccjQ_zkxRYqep';
@@ -425,6 +420,28 @@
 
     let selectedPlotting = [];
     let parsedHasilUjian = [];
+
+    // FUNGSI PERSISTENSI DATA (FETCH DARI SUPABASE SAAT REFRESH)
+    async function initPersistentData() {
+      try {
+        // 1. Cek LocalStorage
+        const localMaster = localStorage.getItem('masterMahasiswaCache');
+        if (localMaster) {
+          masterMahasiswa = JSON.parse(localMaster);
+        }
+
+        // 2. Fetch Data Master dari Supabase
+        const { data, error } = await _supabase.from('master_mahasiswa').select('*');
+        if (data && data.length > 0) {
+          masterMahasiswa = data;
+          localStorage.setItem('masterMahasiswaCache', JSON.stringify(data));
+        }
+
+        filterMahasiswa();
+      } catch (err) {
+        console.error('Error Syncing Persistent Data:', err);
+      }
+    }
 
     function switchView(target) {
       if(target === 'staf') {
@@ -508,6 +525,9 @@
               return { nim: nimVal, nama: namaVal, prodi: prodiVal };
             }).filter(m => m.nim !== '' && m.nama !== '');
 
+            // Simpan ke Cache Lokal dulu
+            localStorage.setItem('masterMahasiswaCache', JSON.stringify(masterMahasiswa));
+
             progressBar.style.width = '40%';
             progressPercent.innerText = '40%';
             progressText.innerText = `Mengunggah ${masterMahasiswa.length} data ke Supabase...`;
@@ -531,7 +551,7 @@
             progressText.innerText = 'Selesai!';
             setTimeout(() => {
               progressContainer.classList.add('hidden');
-              alert(`Sukses! ${masterMahasiswa.length} Data Master Mahasiswa Berhasil Diunggah secara Akurat!`);
+              alert(`Sukses! ${masterMahasiswa.length} Data Master Mahasiswa Berhasil Diunggah & Tersimpan Permanen!`);
               selectedPlotting = [];
               currentPage = 1;
               filterMahasiswa();
@@ -622,15 +642,6 @@
       else renderModul1();
     }
 
-    // FUNGSI KOSONGKAN CENTANG MANUAL
-    function bersihkanPilihan() {
-      if (selectedPlotting.length === 0) return;
-      if (confirm('Bersihkan semua centang pilihan mahasiswa?')) {
-        selectedPlotting = [];
-        filterMahasiswa();
-      }
-    }
-
     function filterMahasiswa() {
       const q = document.getElementById('searchInput').value.toLowerCase().trim();
       
@@ -662,6 +673,7 @@
       document.getElementById('printLab').innerText = lab;
 
       modeFokusPlotting = true;
+      document.getElementById('btnKunciSesi').classList.add('hidden');
       document.getElementById('btnResetFilter').classList.remove('hidden');
       document.getElementById('printHeaderTemplate').classList.remove('hidden');
       document.getElementById('actionPrintContainer').classList.remove('hidden');
@@ -672,17 +684,18 @@
       alert(`Sesi Ujian Berhasil Dikunci!\n- Tanggal: ${tgl}\n- Sesi: ${jam}\n- Lokasi: ${lab}\n- Total Plotting: ${selectedPlotting.length} Mahasiswa Utama.\n\nTampilan tabel sekarang difokuskan pada mahasiswa terpilih saja & Siap Dicetak!`);
     }
 
-    // RESET SESI (OTOMATIS KOSONGKAN CENTANG UNTUK SESI BERIKUTNYA)
-    function resetFokusTabel() {
+    // ALUR PINTAR: JADWALKAN SESI BERIKUTNYA (OTOMATIS KOSONGKAN CENTANG DENGAN AMAN)
+    function jadwalkanSesiBerikutnya() {
       modeFokusPlotting = false;
-      selectedPlotting = []; // Lepas semua centang secara otomatis!
+      selectedPlotting = []; // Lepas semua centang secara otomatis untuk penataan sesi selanjutnya!
 
+      document.getElementById('btnKunciSesi').classList.remove('hidden');
       document.getElementById('btnResetFilter').classList.add('hidden');
       document.getElementById('printHeaderTemplate').classList.add('hidden');
       document.getElementById('actionPrintContainer').classList.add('hidden');
       
       filterMahasiswa();
-      alert('Sesi sebelumnya selesai. Centang dikosongkan otomatis untuk penataan jadwal sesi selanjutnya!');
+      alert('Sesi sebelumnya telah selesai. Centang dikosongkan secara otomatis untuk penataan jadwal sesi selanjutnya!');
     }
 
     // MODUL 2: PARSER 3 FILE EXCEL REAL
@@ -987,7 +1000,8 @@
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('inputTanggalUjian').value = today;
 
-      filterMahasiswa();
+      initPersistentData(); // Panggil fungsi persisiten saat pertama dibuka/refresh
+
       document.getElementById('tab-modul3').addEventListener('click', prosesKalkulasiSemua);
       document.getElementById('tab-modul4').addEventListener('click', renderModul4);
     });
