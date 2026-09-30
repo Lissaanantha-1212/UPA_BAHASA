@@ -22,20 +22,30 @@
           fontFamily: { sans: ['Plus Jakarta Sans', 'sans-serif'] },
           colors: {
             polnes: {
-              main: '#10C35D',    // Warna Hijau Utama
-              dark: '#0a8a40',    // Hijau Tua Aksen Header/Hover
-              light: '#eafbf0'   // Hijau Soft Latar Belakang
+              main: '#10C35D',    // Hijau Utama
+              dark: '#0a8a40',    // Hijau Header
+              light: '#eafbf0'   // Hijau Soft
             }
           }
         }
       }
     }
   </script>
+
+  <style>
+    /* CSS Khusus Cetak Dokumen / Print PDF Template Jadwal */
+    @media print {
+      body * { visibility: hidden; }
+      #printableJadwalArea, #printableJadwalArea * { visibility: visible; }
+      #printableJadwalArea { position: absolute; left: 0; top: 0; width: 100%; padding: 20px; }
+      .no-print { display: none !important; }
+    }
+  </style>
 </head>
 <body class="bg-[#f4f7f6] font-sans text-slate-800 min-h-screen">
 
-  <!-- HEADER PANEL DASHBOARD STAFF -->
-  <header class="bg-polnes-dark text-white py-3.5 px-8 shadow-md flex justify-between items-center sticky top-0 z-50">
+  <!-- HEADER DASHBOARD STAFF -->
+  <header class="bg-polnes-dark text-white py-3.5 px-8 shadow-md flex justify-between items-center sticky top-0 z-50 no-print">
     <div class="flex items-center gap-3">
       <div id="logoContainer" class="bg-amber-500 text-slate-900 font-extrabold px-3 py-1.5 rounded-lg text-sm shadow-sm flex items-center justify-center">
         S
@@ -68,12 +78,12 @@
     <div id="viewStaf" class="space-y-6">
 
       <!-- PILL TABS MODUL -->
-      <div class="flex gap-2 overflow-x-auto pb-1 border-b border-slate-200">
+      <div class="flex gap-2 overflow-x-auto pb-1 border-b border-slate-200 no-print">
         <button onclick="switchTab('modul1')" id="tab-modul1" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-lg bg-polnes-main text-white shadow-sm flex items-center gap-1.5 whitespace-nowrap">
-          <span>📊</span> Penjadwalan & Upload Master Data
+          <span>📊</span> Penjadwalan & Plotting Sesi
         </button>
         <button onclick="switchTab('modul2')" id="tab-modul2" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-lg bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
-          <span>📁</span> Parser Excel & Auto-Mapping
+          <span>📁</span> Upload Excel S1, S2, S3 & Mapping
         </button>
         <button onclick="switchTab('modul3')" id="tab-modul3" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-lg bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
           <span>📜</span> Kalkulasi Skor (Tabel C)
@@ -83,21 +93,21 @@
         </button>
       </div>
 
-      <!-- MODUL 1: PENJADWALAN & UPLOAD MASTER DATA MAHASISWA -->
+      <!-- MODUL 1: PENJADWALAN, PLOTTING & PRINT TEMPLATE JADWAL -->
       <section id="modul1" class="tab-content">
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
+        <div id="printableJadwalArea" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
           
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 mb-4 border-b border-slate-100 gap-4">
             <div>
               <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                <span>Modul 1: Penjadwalan & Kuota Lab</span>
+                <span>Modul 1: Penjadwalan & Penguncian Sesi Ujian</span>
               </h2>
-              <p class="text-xs text-slate-500 mt-0.5">Filter data master mahasiswa dan penguncian 25 Kuota Utama + 5 Cadangan per Sesi.</p>
+              <p class="text-xs text-slate-500 mt-0.5">Pengaturan jadwal, waktu sesi, serta plotting 25 Meja Utama + 5 Meja Cadangan.</p>
             </div>
 
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-3 no-print">
               <label class="bg-polnes-main hover:bg-polnes-dark text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer shadow-sm transition-all flex items-center gap-2">
-                <span>📂 Upload Master Mahasiswa (Excel)</span>
+                <span>📂 Upload Master Mahasiswa</span>
                 <input type="file" id="excelMasterInput" accept=".xlsx, .xls, .csv" onchange="uploadMasterMahasiswa(event)" class="hidden">
               </label>
 
@@ -109,9 +119,9 @@
           </div>
 
           <!-- PROGRESS BAR LOADING -->
-          <div id="uploadProgressContainer" class="hidden mb-6 bg-slate-50 p-3.5 rounded-xl border border-slate-200">
+          <div id="uploadProgressContainer" class="hidden mb-6 bg-slate-50 p-3.5 rounded-xl border border-slate-200 no-print">
             <div class="flex justify-between text-xs font-bold text-slate-700 mb-1.5">
-              <span id="uploadProgressText">Memproses & Menyimpan Data ke Database...</span>
+              <span id="uploadProgressText">Memproses data...</span>
               <span id="uploadProgressPercent">0%</span>
             </div>
             <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
@@ -119,32 +129,62 @@
             </div>
           </div>
 
-          <!-- KONTROL FILTER & PLOTTING -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <!-- KONTROL INPUT PENJADWALAN (TANGGAL & JAM SESI) -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200/80">
             <div>
-              <label class="text-[11px] font-bold text-slate-600 mb-1 block uppercase">Search Bar / Filter Prodi:</label>
-              <input type="text" id="searchInput" onkeyup="filterMahasiswa()" placeholder="Ketik D3, D4, NIM, atau Nama..." class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-polnes-main focus:ring-1 focus:ring-polnes-main">
+              <label class="text-[11px] font-bold text-slate-700 mb-1 block uppercase">Tanggal Pelaksanaan Ujian:</label>
+              <input type="date" id="inputTanggalUjian" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none bg-white font-semibold">
             </div>
+
             <div>
-              <label class="text-[11px] font-bold text-slate-600 mb-1 block uppercase">Pilih Laboratorium:</label>
-              <select id="labSelect" class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-polnes-main">
-                <option value="Lab A">Lab A (Kapasitas 30 Unit)</option>
-                <option value="Lab B">Lab B (Kapasitas 30 Unit)</option>
+              <label class="text-[11px] font-bold text-slate-700 mb-1 block uppercase">Sesi & Jam Ujian:</label>
+              <select id="selectJamSesi" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none bg-white font-semibold">
+                <option value="Sesi 1 (Pagi) | 08.00 - 10.00 WITA">Sesi 1 (Pagi) - 08.00 s/d 10.00 WITA</option>
+                <option value="Sesi 2 (Siang) | 11.00 - 13.00 WITA">Sesi 2 (Siang) - 11.00 s/d 13.00 WITA</option>
+                <option value="Sesi 3 (Sore) | 14.00 - 16.00 WITA">Sesi 3 (Sore) - 14.00 s/d 16.00 WITA</option>
               </select>
             </div>
-            <div class="flex items-end">
-              <button onclick="simpanPlottingJadwal()" class="w-full bg-polnes-dark hover:bg-emerald-950 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-sm">
-                Simpan & Kunci Jadwal Sesi
+
+            <div>
+              <label class="text-[11px] font-bold text-slate-700 mb-1 block uppercase">Lokasi Laboratorium:</label>
+              <select id="labSelect" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none bg-white font-semibold">
+                <option value="Lab Komputer Bahasa A">Lab Komputer Bahasa A (30 Unit)</option>
+                <option value="Lab Komputer Bahasa B">Lab Komputer Bahasa B (30 Unit)</option>
+              </select>
+            </div>
+
+            <div class="flex items-end gap-2 no-print">
+              <button onclick="kunciDanFokusJadwal()" class="flex-1 bg-polnes-dark hover:bg-emerald-950 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-sm">
+                Kunci Plotting Sesi
+              </button>
+              <button id="btnResetFilter" onclick="resetFokusTabel()" class="hidden bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-3 py-2.5 rounded-xl text-xs transition-all">
+                Buka Pilihan
               </button>
             </div>
           </div>
 
-          <!-- TABEL DATA MAHASISWA MASTER -->
+          <!-- PANEL APLIKASI HEADER UNTUK HASIL CETAK PDF/PRINT -->
+          <div id="printHeaderTemplate" class="hidden mb-6 border-b-2 border-slate-900 pb-4 text-center">
+            <h1 class="text-base font-extrabold tracking-wider uppercase text-slate-900">UPA BAHASA POLITEKNIK NEGERI SAMARINDA</h1>
+            <h2 class="text-sm font-bold uppercase text-slate-800">DAFTAR HADIR & JADWAL RESMI TES TOEFL PREDICTION</h2>
+            <div class="grid grid-cols-3 text-xs text-left mt-4 border p-3 rounded-lg bg-slate-50 gap-2 font-mono">
+              <div><b>Tanggal Ujian:</b> <span id="printTanggal">-</span></div>
+              <div><b>Waktu / Sesi:</b> <span id="printJamSesi">-</span></div>
+              <div><b>Lokasi Ruangan:</b> <span id="printLab">-</span></div>
+            </div>
+          </div>
+
+          <!-- FILTER SEARCH BAR (NO-PRINT) -->
+          <div id="searchBarContainer" class="mb-4 no-print">
+            <input type="text" id="searchInput" onkeyup="filterMahasiswa()" placeholder="Cari berdasarkan NIM, Nama, atau Prodi..." class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-polnes-main">
+          </div>
+
+          <!-- TABEL DATA MAHASISWA MASTER / TERPLOT -->
           <div class="overflow-x-auto rounded-xl border border-slate-200">
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
                 <tr>
-                  <th class="p-3 text-center">Plot</th>
+                  <th class="p-3 text-center no-print">Plot</th>
                   <th class="p-3">NIM</th>
                   <th class="p-3">Nama Mahasiswa</th>
                   <th class="p-3">Program Studi</th>
@@ -155,53 +195,100 @@
             </table>
           </div>
 
-          <!-- FOOTER PAGINATION -->
+          <!-- FOOTER PAGINATION & TOMBOL CETAK JADWAL -->
           <div id="paginationContainer" class="flex flex-col sm:flex-row justify-between items-center mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500 gap-3">
-            <div id="paginationInfo">Menampilkan 0 data</div>
-            <div class="flex items-center gap-2">
-              <button onclick="changePage(-1)" id="btnPrevPage" class="px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-slate-50 font-bold disabled:opacity-40 disabled:cursor-not-allowed">&larr; SBLM</button>
+            <div id="paginationInfo" class="no-print">Menampilkan 0 data</div>
+            
+            <div id="actionPrintContainer" class="hidden">
+              <button onclick="window.print()" class="bg-polnes-main hover:bg-polnes-dark text-white font-bold px-5 py-2 rounded-xl text-xs shadow-sm flex items-center gap-1.5">
+                <span>🖨️ Cetak Berita Acara Jadwal (PDF/Word)</span>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2 no-print">
+              <button onclick="changePage(-1)" id="btnPrevPage" class="px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-slate-50 font-bold disabled:opacity-40">&larr; SBLM</button>
               <span id="pageIndicator" class="font-bold text-slate-700 px-2">Hal 1 / 1</span>
-              <button onclick="changePage(1)" id="btnNextPage" class="px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-slate-50 font-bold disabled:opacity-40 disabled:cursor-not-allowed">SLJT &rarr;</button>
+              <button onclick="changePage(1)" id="btnNextPage" class="px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-slate-50 font-bold disabled:opacity-40">SLJT &rarr;</button>
             </div>
           </div>
 
         </div>
       </section>
 
-      <!-- MODUL 2: PARSER EXCEL & AUTO-MAPPING -->
+      <!-- MODUL 2: UPLOAD 3 FILE EXCEL REAL (SECTION 1, 2, 3) & AUTO MAPPING -->
       <section id="modul2" class="tab-content hidden">
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
-          <h2 class="text-base font-bold text-slate-800 mb-1">Modul 2: Parser Excel Mentah & Auto-Mapping Engine</h2>
-          <p class="text-xs text-slate-500 mb-6">Membaca file ekspor Excel lab (Section 1, 2, 3) dan penanganan Fast-Add ID Unmapped.</p>
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 space-y-6">
+          
+          <div>
+            <h2 class="text-base font-bold text-slate-800 mb-1">Modul 2: Upload Excel Hasil Ujian Lab & Auto-Mapping Engine</h2>
+            <p class="text-xs text-slate-500">Unggah 3 File Excel Asli dari Aplikasi Lab (Section 1 Listening, Section 2 Structure, Section 3 Reading) untuk membaca jumlah jawaban benar secara presisi.</p>
+          </div>
 
-          <div id="mappingStatusAlert" class="hidden mb-4 p-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-xs">
+          <!-- FORM INPUT UPLOAD 3 FILE EXCEL REAL -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <!-- UPLOAD SECTION 1 -->
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2">
+              <span class="text-xs font-bold text-slate-700 block">1. Excel Section 1 (Listening)</span>
+              <label class="block bg-white hover:bg-emerald-50 border border-polnes-main text-polnes-dark text-xs font-bold py-2 px-3 rounded-lg cursor-pointer transition-all">
+                <span id="labelS1">Pilih File S1 (.xlsx)</span>
+                <input type="file" id="fileSection1" accept=".xlsx, .xls" onchange="handleExcelSectionUpload(event, 1)" class="hidden">
+              </label>
+              <span id="statusS1" class="text-[11px] text-slate-400 block">Belum Diunggah</span>
+            </div>
+
+            <!-- UPLOAD SECTION 2 -->
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2">
+              <span class="text-xs font-bold text-slate-700 block">2. Excel Section 2 (Structure)</span>
+              <label class="block bg-white hover:bg-emerald-50 border border-polnes-main text-polnes-dark text-xs font-bold py-2 px-3 rounded-lg cursor-pointer transition-all">
+                <span id="labelS2">Pilih File S2 (.xlsx)</span>
+                <input type="file" id="fileSection2" accept=".xlsx, .xls" onchange="handleExcelSectionUpload(event, 2)" class="hidden">
+              </label>
+              <span id="statusS2" class="text-[11px] text-slate-400 block">Belum Diunggah</span>
+            </div>
+
+            <!-- UPLOAD SECTION 3 -->
+            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2">
+              <span class="text-xs font-bold text-slate-700 block">3. Excel Section 3 (Reading)</span>
+              <label class="block bg-white hover:bg-emerald-50 border border-polnes-main text-polnes-dark text-xs font-bold py-2 px-3 rounded-lg cursor-pointer transition-all">
+                <span id="labelS3">Pilih File S3 (.xlsx)</span>
+                <input type="file" id="fileSection3" accept=".xlsx, .xls" onchange="handleExcelSectionUpload(event, 3)" class="hidden">
+              </label>
+              <span id="statusS3" class="text-[11px] text-slate-400 block">Belum Diunggah</span>
+            </div>
+
+          </div>
+
+          <div id="mappingStatusAlert" class="hidden p-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-xs">
             <strong>Peringatan Auto-Mapping:</strong> Ditemukan data komputer cadangan / mahasiswa susulan yang belum terikat di jadwal. Gunakan fitur <i>Fast-Add</i> di bawah ini!
           </div>
 
+          <!-- TABEL HASIL AUTOMAPPING 3 SECTION REAL -->
           <div class="overflow-x-auto rounded-xl border border-slate-200">
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
                 <tr>
-                  <th class="p-3">ID Meja</th>
-                  <th class="p-3">Hasil Parsing Excel (Benar)</th>
-                  <th class="p-3">Status Mapping</th>
-                  <th class="p-3">NIM Terhubung</th>
-                  <th class="p-3 text-center">Aksi Exception Handling</th>
+                  <th class="p-3">ID Meja Komputer</th>
+                  <th class="p-3">Jawaban Benar Asli (S1 | S2 | S3)</th>
+                  <th class="p-3">Status Auto-Mapping</th>
+                  <th class="p-3">NIM & Nama Mahasiswa Terikat</th>
+                  <th class="p-3 text-center">Exception Handling</th>
                 </tr>
               </thead>
               <tbody id="tableMapping" class="divide-y divide-slate-100"></tbody>
             </table>
           </div>
+
         </div>
       </section>
 
-      <!-- MODUL 3: CALCULATOR ENGINE -->
+      <!-- MODUL 3: CALCULATOR ENGINE (TABEL C KONVERSI) -->
       <section id="modul3" class="tab-content hidden">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
           <div class="flex justify-between items-center mb-6">
             <div>
-              <h2 class="text-base font-bold text-slate-800">Modul 3: Conversion Lookup Table Engine (Tabel C)</h2>
-              <p class="text-xs text-slate-500">Mengonversi skor mentah 3 Section menjadi nilai baku TOEFL secara real-time.</p>
+              <h2 class="text-base font-bold text-slate-800">Modul 3: Conversion Lookup Table Engine (Tabel C Baku)</h2>
+              <p class="text-xs text-slate-500">Mengonversi skor jawaban benar mentah (S1, S2, S3) menjadi Nilai Baku TOEFL secara otomatis.</p>
             </div>
             <button onclick="prosesKalkulasiSemua()" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm">
               Jalankan Perhitungan Otomatis
@@ -212,12 +299,12 @@
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
                 <tr>
-                  <th class="p-3">NIM & Nama</th>
+                  <th class="p-3">NIM & Nama Mahasiswa</th>
                   <th class="p-3 text-center">Listening (Benar &rarr; Konversi)</th>
                   <th class="p-3 text-center">Structure (Benar &rarr; Konversi)</th>
                   <th class="p-3 text-center">Reading (Benar &rarr; Konversi)</th>
                   <th class="p-3 text-center">Rumus Kalkulasi</th>
-                  <th class="p-3 text-center">Skor TOEFL Akhir</th>
+                  <th class="p-3 text-center">Skor Akhir TOEFL</th>
                 </tr>
               </thead>
               <tbody id="tableKalkulasi" class="divide-y divide-slate-100"></tbody>
@@ -226,13 +313,13 @@
         </div>
       </section>
 
-      <!-- MODUL 4: APPROVAL KEPALA UPA -->
+      <!-- MODUL 4: APPROVAL KEPALA UPA & SHA-256 -->
       <section id="modul4" class="tab-content hidden">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
           <div class="flex justify-between items-center mb-6">
             <div>
-              <h2 class="text-base font-bold text-slate-800">Modul 4: Panel Verifikasi & Approval Kepala UPA</h2>
-              <p class="text-xs text-slate-500">Otorisasi publikasi nilai dan generasi kunci keaslian E-Sertifikat berbasis Hash SHA-256.</p>
+              <h2 class="text-base font-bold text-slate-800">Modul 4: Panel Verifikasi & Approval Kepala UPA Bahasa</h2>
+              <p class="text-xs text-slate-500">Otorisasi publikasi nilai resmi dan pemicu enkripsi QR Sertifikat SHA-256.</p>
             </div>
             <button onclick="approveSemua()" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm">
               🚀 Publish Semua Skor ke Web Utama & Supabase
@@ -279,13 +366,13 @@
       </div>
 
       <div id="hasilCekSkor" class="hidden max-w-2xl mx-auto bg-white border-2 border-polnes-dark rounded-2xl p-6 shadow-md">
-        <!-- Result Publik via JS -->
+        <!-- Result Publik -->
       </div>
     </div>
 
   </main>
 
-  <!-- JAVASCRIPT ENGINE -->
+  <!-- JAVASCRIPT LOGIKA ENGINE LENGKAP -->
   <script>
     const SUPABASE_URL = 'https://ztgjmyjrtrlyrgntvtny.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_GGh8txjx_3OFYwmTGdccjQ_zkxRYqep';
@@ -296,6 +383,10 @@
     let filteredMaster = [];
     let currentPage = 1;
     const pageSize = 20;
+    let modeFokusPlotting = false;
+
+    // DATA HASIL PARSING REAL EXCEL SECTION 1, 2, 3
+    let realExcelScores = {}; // Key: "STUDENT01" -> { s1: 35, s2: null, s3: null }
 
     const tableC = {
       50: { l: 68, s: 68, r: 67 }, 49: { l: 67, s: 68, r: 66 }, 48: { l: 66, s: 68, r: 65 },
@@ -316,6 +407,7 @@
     let selectedPlotting = [];
     let parsedHasilUjian = [];
 
+    // ROUTING SWITCH VIEW
     function switchView(target) {
       if(target === 'staf') {
         document.getElementById('viewPublik').classList.add('hidden');
@@ -342,7 +434,7 @@
       document.getElementById('tab-' + tabId).classList.add('bg-polnes-main', 'text-white');
     }
 
-    // MODUL 1: PARSER EXCEL MASTER MAHASISWA
+    // MODUL 1: MASTER DATA & PENJADWALAN
     async function uploadMasterMahasiswa(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -395,11 +487,7 @@
                 prodiVal = 'D3 / D4 POLNES';
               }
 
-              return {
-                nim: nimVal,
-                nama: namaVal,
-                prodi: prodiVal
-              };
+              return { nim: nimVal, nama: namaVal, prodi: prodiVal };
             }).filter(m => m.nim !== '' && m.nama !== '');
 
             progressBar.style.width = '40%';
@@ -451,7 +539,6 @@
             <td colspan="5" class="p-8 text-center text-slate-400">
               <div class="text-2xl mb-1">📂</div>
               <p class="font-bold text-slate-600">Belum ada data mahasiswa yang cocok.</p>
-              <p class="text-xs text-slate-400 mt-1">Gunakan tombol <b>Upload Master Mahasiswa (Excel)</b> di pojok kanan atas untuk memuat data.</p>
             </td>
           </tr>
         `;
@@ -478,7 +565,7 @@
 
         tbody.innerHTML += `
           <tr class="${isPlot ? 'bg-polnes-light' : 'hover:bg-slate-50'} transition-all">
-            <td class="p-3 text-center">
+            <td class="p-3 text-center no-print">
               <input type="checkbox" ${isPlot ? 'checked' : ''} onchange="togglePlotting('${m.nim}')" class="w-4 h-4 accent-emerald-600 rounded cursor-pointer">
             </td>
             <td class="p-3 font-mono font-semibold text-slate-700">${m.nim}</td>
@@ -513,12 +600,19 @@
         }
         selectedPlotting.push(nim);
       }
-      renderModul1();
+      if (modeFokusPlotting) filterMahasiswa();
+      else renderModul1();
     }
 
     function filterMahasiswa() {
       const q = document.getElementById('searchInput').value.toLowerCase().trim();
-      filteredMaster = masterMahasiswa.filter(m => 
+      
+      let baseData = masterMahasiswa;
+      if (modeFokusPlotting) {
+        baseData = masterMahasiswa.filter(m => selectedPlotting.includes(m.nim));
+      }
+
+      filteredMaster = baseData.filter(m => 
         m.nama.toLowerCase().includes(q) || 
         m.nim.toLowerCase().includes(q) || 
         m.prodi.toLowerCase().includes(q)
@@ -527,32 +621,120 @@
       renderModul1();
     }
 
-    function simpanPlottingJadwal() {
+    // KUNCI JADWAL & FOKUS TAMPILKAN YANG TERPLOT SAJA
+    function kunciDanFokusJadwal() {
       if(selectedPlotting.length === 0) return alert('Pilih minimal 1 mahasiswa dari tabel!');
-      alert(`Jadwal Sesi Berhasil Disimpan!\nTotal Plotting: ${selectedPlotting.length} Mahasiswa Utama.`);
+
+      const tgl = document.getElementById('inputTanggalUjian').value;
+      const jam = document.getElementById('selectJamSesi').value;
+      const lab = document.getElementById('labSelect').value;
+
+      if (!tgl) return alert('Harap isi Tanggal Pelaksanaan Ujian!');
+
+      // Set Header Cetak Template
+      document.getElementById('printTanggal').innerText = tgl;
+      document.getElementById('printJamSesi').innerText = jam;
+      document.getElementById('printLab').innerText = lab;
+
+      modeFokusPlotting = true;
+      document.getElementById('btnResetFilter').classList.remove('hidden');
+      document.getElementById('printHeaderTemplate').classList.remove('hidden');
+      document.getElementById('actionPrintContainer').classList.remove('hidden');
+
+      filterMahasiswa();
       initParsedData();
-      switchTab('modul2');
+
+      alert(`Sesi Ujian Berhasil Dikunci!\n- Tanggal: ${tgl}\n- Sesi: ${jam}\n- Lokasi: ${lab}\n- Total Plotting: ${selectedPlotting.length} Mahasiswa Utama.\n\nTampilan tabel sekarang difokuskan pada mahasiswa terpilih saja & Siap Dicetak!`);
     }
 
-    // MODUL 2
+    function resetFokusTabel() {
+      modeFokusPlotting = false;
+      document.getElementById('btnResetFilter').classList.add('hidden');
+      document.getElementById('printHeaderTemplate').classList.add('hidden');
+      document.getElementById('actionPrintContainer').classList.add('hidden');
+      filterMahasiswa();
+    }
+
+    // MODUL 2: PARSER 3 FILE EXCEL REAL (SECTION 1, 2, 3)
+    function handleExcelSectionUpload(event, secNum) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const sheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[sheetName];
+          const json = XLSX.utils.sheet_to_json(worksheet);
+
+          let countParsed = 0;
+
+          json.forEach(row => {
+            const keys = Object.keys(row);
+            // Cari kolom ID Meja / USER ID (STUDENT01, STUDENT02, dst)
+            const idKey = keys.find(k => /student|user_id|id_meja|username|peserta/i.test(k.trim().toLowerCase())) || keys[0];
+            
+            // Cari kolom Jawaban Benar / Correct / Score
+            const scoreKey = keys.find(k => /benar|correct|score|nilai|total/i.test(k.trim().toLowerCase())) || keys[1];
+
+            const rawId = String(row[idKey] || '').trim().toUpperCase();
+            const rawScore = parseInt(row[scoreKey] || 0);
+
+            if (rawId.includes('STUDENT') || rawId.length >= 7) {
+              if (!realExcelScores[rawId]) {
+                realExcelScores[rawId] = { s1: 0, s2: 0, s3: 0 };
+              }
+              realExcelScores[rawId][`s${secNum}`] = rawScore;
+              countParsed++;
+            }
+          });
+
+          document.getElementById(`statusS1`).classList.toggle('text-green-600', secNum === 1);
+          document.getElementById(`statusS2`).classList.toggle('text-green-600', secNum === 2);
+          document.getElementById(`statusS3`).classList.toggle('text-green-600', secNum === 3);
+
+          document.getElementById(`statusS${secNum}`).innerText = `✓ Sukses (${countParsed} Meja)`;
+          document.getElementById(`labelS${secNum}`).innerText = file.name.substring(0, 15) + '...';
+
+          initParsedData();
+
+        } catch (err) {
+          alert(`Gagal membaca Excel Section ${secNum}! Pastikan file valid.`);
+          console.error(err);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
     function initParsedData() {
       parsedHasilUjian = [];
+
       selectedPlotting.forEach((nim, index) => {
         const meja = `STUDENT${(index + 1) < 10 ? '0' + (index + 1) : (index + 1)}`;
+        
+        // Ambil data asli dari Excel yang di-upload, jika belum diupload set 0
+        const realData = realExcelScores[meja] || { s1: 0, s2: 0, s3: 0 };
+
         parsedHasilUjian.push({
           meja: meja,
           nim: nim,
-          s1: Math.floor(Math.random() * 15) + 30,
-          s2: Math.floor(Math.random() * 15) + 25,
-          s3: Math.floor(Math.random() * 15) + 30,
+          s1: realData.s1,
+          s2: realData.s2,
+          s3: realData.s3,
           statusMapping: 'MATCHED'
         });
       });
 
+      // KASUS EXCEPTION: Meja Cadangan STUDENT26
+      const cadanganData = realExcelScores['STUDENT26'] || { s1: 0, s2: 0, s3: 0 };
       parsedHasilUjian.push({
         meja: 'STUDENT26',
         nim: null,
-        s1: 36, s2: 33, s3: 42,
+        s1: cadanganData.s1,
+        s2: cadanganData.s2,
+        s3: cadanganData.s3,
         statusMapping: 'UNMAPPED'
       });
 
@@ -571,7 +753,7 @@
         tbody.innerHTML += `
           <tr class="${item.statusMapping === 'UNMAPPED' ? 'bg-amber-50/70' : ''}">
             <td class="p-3 font-bold text-slate-700">${item.meja}</td>
-            <td class="p-3">S1: <b>${item.s1}</b> | S2: <b>${item.s2}</b> | S3: <b>${item.s3}</b></td>
+            <td class="p-3">S1: <b class="text-polnes-dark">${item.s1}</b> | S2: <b class="text-polnes-dark">${item.s2}</b> | S3: <b class="text-polnes-dark">${item.s3}</b></td>
             <td class="p-3">
               ${item.statusMapping === 'MATCHED' 
                 ? '<span class="bg-emerald-100 text-emerald-800 text-[11px] px-2 py-0.5 rounded font-bold">Terikat Otomatis</span>' 
@@ -606,7 +788,7 @@
       renderModul2();
     }
 
-    // MODUL 3
+    // MODUL 3: CALCULATOR TABEL C
     function prosesKalkulasiSemua() {
       const tbody = document.getElementById('tableKalkulasi');
       tbody.innerHTML = '';
@@ -637,7 +819,7 @@
       });
     }
 
-    // MODUL 4
+    // MODUL 4: APPROVAL
     function renderModul4() {
       const tbody = document.getElementById('tableApproval');
       tbody.innerHTML = '';
@@ -778,6 +960,10 @@
 
     // INITIAL LOAD
     document.addEventListener('DOMContentLoaded', () => {
+      // Set default tanggal hari ini
+      const today = new Date().toISOString().split('T')[0];
+      document.getElementById('inputTanggalUjian').value = today;
+
       filterMahasiswa();
       document.getElementById('tab-modul3').addEventListener('click', prosesKalkulasiSemua);
       document.getElementById('tab-modul4').addEventListener('click', renderModul4);
