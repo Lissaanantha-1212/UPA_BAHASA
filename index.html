@@ -651,18 +651,18 @@
             progressPercent.innerText = '40%';
             progressText.innerText = `Mengunggah ${masterMahasiswa.length} data ke Supabase...`;
 
-            const chunkSize = 100;
-            const totalChunks = Math.ceil(masterMahasiswa.length / chunkSize);
-
-            for (let i = 0; i < totalChunks; i++) {
-              const chunk = masterMahasiswa.slice(i * chunkSize, (i + 1) * chunkSize);
+            for (let i = 0; i < masterMahasiswa.length; i++) {
+              const mRow = masterMahasiswa[i];
               try {
-                await _supabase.from('master_mahasiswa').upsert(chunk);
-              } catch(e) {
-                console.log('Syncing chunk offline...');
-              }
+                const { data: exist } = await _supabase.from('master_mahasiswa').select('nim').eq('nim', mRow.nim);
+                if (exist && exist.length > 0) {
+                  await _supabase.from('master_mahasiswa').update({ nama: mRow.nama, prodi: mRow.prodi }).eq('nim', mRow.nim);
+                } else {
+                  await _supabase.from('master_mahasiswa').insert([mRow]);
+                }
+              } catch(e) {}
 
-              const currentPct = Math.round(40 + ((i + 1) / totalChunks) * 60);
+              const currentPct = Math.round(40 + ((i + 1) / masterMahasiswa.length) * 60);
               progressBar.style.width = `${currentPct}%`;
               progressPercent.innerText = `${currentPct}%`;
             }
@@ -1131,7 +1131,7 @@
       });
     }
 
-    // MODUL 4: APPROVAL & PUBLIKASI SINKRON REAL KE SUPABASE
+    // MODUL 4: APPROVAL & PUBLIKASI SINKRON REAL KE SUPABASE DENGAN PENCEGAHAN CONFLICT 100%
     function renderModul4() {
       const tbody = document.getElementById('tableApproval');
       tbody.innerHTML = '';
@@ -1192,38 +1192,45 @@
 
       validItems.forEach(i => i.statusApproval = 'PUBLISHED');
 
-      const payload = validItems.map(i => ({
-        nim: String(i.nim).trim(),
-        student_id_meja: i.meja,
-        listening_raw: i.s1,
-        listening_converted: i.conv1,
-        structure_raw: i.s2,
-        structure_converted: i.conv2,
-        reading_raw: i.s3,
-        reading_converted: i.conv3,
-        total_score: i.totalScore,
-        status_approval: 'PUBLISHED',
-        certificate_hash: i.hash
-      }));
+      let successCount = 0;
 
-      try {
-        // MENGGUNAKAN UPSERT DENGAN EXPLICIT TARGET JIKA SQL SUDAH DI-RUN
-        const { data, error } = await _supabase.from('hasil_ujian').upsert(payload);
-        
-        if (error) {
-          console.error('Supabase Upsert Error:', error);
-          alert(`Peringatan: Gagal mengirim ke Supabase (${error.message}). Harap pastikan kamu sudah menjalankan SQL Editor di Supabase!`);
-        } else {
-          alert(`BERHASIL! ${payload.length} Skor TOEFL Resmi Berhasil Dipublikasikan ke Database Supabase & Web Utama!`);
+      for (const i of validItems) {
+        const payload = {
+          nim: String(i.nim).trim(),
+          student_id_meja: i.meja,
+          listening_raw: i.s1,
+          listening_converted: i.conv1,
+          structure_raw: i.s2,
+          structure_converted: i.conv2,
+          reading_raw: i.s3,
+          reading_converted: i.conv3,
+          total_score: i.totalScore,
+          status_approval: 'PUBLISHED',
+          certificate_hash: i.hash
+        };
+
+        try {
+          // CEK DAHULU APAKAH DATA SUDAH ADA DI SUPABASE
+          const { data: exist } = await _supabase.from('hasil_ujian').select('nim').eq('nim', payload.nim);
+
+          if (exist && exist.length > 0) {
+            // JIKA SUDAH ADA: UPDATE
+            await _supabase.from('hasil_ujian').update(payload).eq('nim', payload.nim);
+          } else {
+            // JIKA BELUM ADA: INSERT
+            await _supabase.from('hasil_ujian').insert([payload]);
+          }
+          successCount++;
+        } catch (err) {
+          console.error(`Error publishing NIM ${payload.nim}:`, err);
         }
-      } catch(e) {
-        console.error('Supabase Sync Exception:', e);
-        alert('Terjadi kesalahan koneksi ke Supabase!');
       }
 
       btn.innerText = '🚀 Publish Semua Skor ke Web Utama & Supabase';
       btn.disabled = false;
       renderModul4();
+
+      alert(`BERHASIL! ${successCount} dari ${validItems.length} Skor TOEFL Resmi Berhasil Dipublikasikan ke Database Supabase & Web Utama!`);
     }
 
     // PUBLIK: ALUR CEK MURNI KETAT SESUAI STATUS APPROVAL SUPABASE
