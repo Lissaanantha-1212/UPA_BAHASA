@@ -394,95 +394,92 @@
 
       <!-- TEMPLATE SERTIFIKAT FISIK PRESISI SAMAKAN 100% SESUAI FOTO ASLI -->
       <div id="hasilCekSkor" class="hidden max-w-4xl mx-auto">
-        <div id="certificatePrintArea" class="bg-white border-8 border-double border-slate-300 p-8 shadow-2xl rounded-sm relative text-slate-900 font-serif my-4">
+        <div id="certificatePrintArea" class="bg-white border-8 border-double border-slate-300 p-8 shadow-2xl rounded-sm relative text-slate-900 font-serif my-4 overflow-hidden">
           
-          <!-- KOP SURAT ATAS SERTIFIKAT FORMAL -->
-          <div class="flex justify-between items-start border-b-2 border-emerald-800 pb-4 mb-6">
-            <div class="flex items-center gap-4">
-              <!-- TEMPAT UPLOAD / TAMPILAN LOGO POLNES ASLI -->
-              <div class="w-16 h-16 flex items-center justify-center bg-slate-100 border border-slate-300 rounded overflow-hidden">
-                <img id="certLogoImg" src="" class="hidden w-full h-full object-contain">
-                <span id="certLogoPlaceholder" class="text-[10px] text-center text-slate-400 font-sans p-1">Logo POLNES</span>
+          <!-- ELEMEN GAMBAR LATAR BELAKANG (WATERMARK SERTIFIKAT) -->
+          <!-- Ganti 'watermark-polnes.png' di bawah ini dengan nama file gambar latar belakang yang kamu upload ke GitHub -->
+          <div id="certBgWatermark" class="absolute inset-0 bg-center bg-no-repeat bg-contain opacity-15 pointer-events-none z-0" style="background-image: url('polnes2.jpg');"></div>
+
+          <div class="relative z-10">
+            <!-- KOP SURAT ATAS SERTIFIKAT FORMAL -->
+            <div class="flex justify-between items-start border-b-2 border-emerald-800 pb-4 mb-6">
+              <div class="flex items-center gap-4">
+                <!-- TAMPILAN LOGO POLNES ASLI -->
+                <div class="w-16 h-16 flex items-center justify-center overflow-hidden">
+                  <img id="certLogoImg" src="logo-removebg-preview.png" class="w-full h-full object-contain">
+                </div>
+                <div>
+                  <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 font-sans">KEMENTERIAN PENDIDIKAN, TINGGI, SAINS, DAN TEKNOLOGI</h3>
+                  <h1 class="text-lg font-extrabold uppercase tracking-wide text-emerald-900 font-sans">POLITEKNIK NEGERI SAMARINDA</h1>
+                  <h2 class="text-sm font-bold uppercase tracking-wider text-emerald-700 font-sans">UPA. BAHASA</h2>
+                </div>
               </div>
-              <div>
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 font-sans">KEMENTERIAN PENDIDIKAN, TINGGI, SAINS, DAN TEKNOLOGI</h3>
-                <h1 class="text-lg font-extrabold uppercase tracking-wide text-emerald-900 font-sans">POLITEKNIK NEGERI SAMARINDA</h1>
-                <h2 class="text-sm font-bold uppercase tracking-wider text-emerald-700 font-sans">UPA. BAHASA</h2>
-              </div>
             </div>
 
-            <!-- TOMBOL UPLOAD EMBEDDED LOGO (NO PRINT) -->
-            <div class="no-print text-right">
-              <label class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 text-[10px] font-sans font-bold px-2.5 py-1.5 rounded cursor-pointer">
-                📷 Upload Logo POLNES
-                <input type="file" accept="image/*" onchange="loadCertLogo(event)" class="hidden">
-              </label>
-            </div>
-          </div>
-
-          <!-- JUDUL SERTIFIKAT & NOMOR -->
-          <div class="text-center my-6">
-            <h2 class="text-xl font-bold tracking-widest text-slate-900 uppercase underline decoration-1 underline-offset-4 cert-font-title">CERTIFICATE OF ACHIEVEMENT</h2>
-            <p class="text-xs font-sans text-slate-600 mt-1" id="certNoRef">No : 0885/ PL19 / UPA.BAHASA / TOEFL-P / 2026</p>
-            <p class="text-xs italic mt-4 text-slate-700">This is presented to</p>
-            <h3 class="text-xl font-bold uppercase tracking-wide text-slate-900 mt-1 my-2 border-b border-dashed border-slate-300 inline-block px-8 py-1" id="certStudentName">-</h3>
-          </div>
-
-          <!-- DETAIL MAHASISWA & TANGGAL TES -->
-          <div class="max-w-md mx-auto text-xs font-sans space-y-1.5 my-6 text-slate-800">
-            <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">NIM</span><span class="col-span-8">: <span id="certNim" class="font-mono font-bold">-</span></span></div>
-            <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Place, date of birth</span><span class="col-span-8">: <span id="certPobDob">Samarinda, 01 Januari 2004</span></span></div>
-            <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Program Study</span><span class="col-span-8">: <span id="certProdi">-</span></span></div>
-            <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Date of test taken</span><span class="col-span-8">: <span id="certTestDate">-</span></span></div>
-          </div>
-
-          <p class="text-center text-xs italic font-serif my-4 text-slate-700">Achieved the following score on TOEFL Prediction Test</p>
-
-          <!-- TABEL RINCIAN SKOR LENGKAP -->
-          <div class="max-w-xl mx-auto my-6 font-sans">
-            <table class="w-full border-collapse border border-slate-800 text-center text-xs">
-              <thead>
-                <tr class="bg-slate-100 border-b border-slate-800 text-slate-900 font-bold">
-                  <th class="border border-slate-800 p-2 w-1/3">Listening Comprehension</th>
-                  <th class="border border-slate-800 p-2 w-1/3">Structure and Written Expression</th>
-                  <th class="border border-slate-800 p-2 w-1/3">Reading Comprehension</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="border border-slate-800 p-2.5 font-bold text-sm" id="certScoreL">-</td>
-                  <td class="border border-slate-800 p-2.5 font-bold text-sm" id="certScoreS">-</td>
-                  <td class="border border-slate-800 p-2.5 font-bold text-sm" id="certScoreR">-</td>
-                </tr>
-                <tr class="bg-slate-50 font-bold border-t-2 border-slate-800">
-                  <td colspan="2" class="border border-slate-800 p-2 text-right uppercase">Total Score</td>
-                  <td class="border border-slate-800 p-2 text-base text-emerald-900 font-extrabold" id="certScoreTotal">-</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <!-- FOOTER TANDA TANGAN & BARCODE SHA-256 -->
-          <div class="mt-12 pt-4 grid grid-cols-2 items-end font-sans text-xs">
-            
-            <!-- QR CODE VERIFIKASI DIGITAL SHA-256 -->
-            <div class="flex flex-col items-start gap-1">
-              <div id="certQrContainer" class="p-1.5 border border-slate-300 rounded bg-white"></div>
-              <span class="text-[9px] font-mono text-slate-400" id="certHashDisplay">SHA-256: -</span>
+            <!-- JUDUL SERTIFIKAT & NOMOR -->
+            <div class="text-center my-6">
+              <h2 class="text-xl font-bold tracking-widest text-slate-900 uppercase underline decoration-1 underline-offset-4 cert-font-title">CERTIFICATE OF ACHIEVEMENT</h2>
+              <p class="text-xs font-sans text-slate-600 mt-1" id="certNoRef">No : 0885/ PL19 / UPA.BAHASA / TOEFL-P / 2026</p>
+              <p class="text-xs italic mt-4 text-slate-700">This is presented to</p>
+              <h3 class="text-xl font-bold uppercase tracking-wide text-slate-900 mt-1 my-2 border-b border-dashed border-slate-300 inline-block px-8 py-1" id="certStudentName">-</h3>
             </div>
 
-            <!-- TANDA TANGAN KOSONG MANUAL MISS (NAMA & NIP TETAP ADA) -->
-            <div class="text-center">
-              <p class="text-slate-700">Samarinda, <span id="certIssueDate">05 Agustus 2026</span></p>
-              <p class="font-bold text-slate-800">Head of UPA. Bahasa</p>
+            <!-- DETAIL MAHASISWA & TANGGAL TES -->
+            <div class="max-w-md mx-auto text-xs font-sans space-y-1.5 my-6 text-slate-800">
+              <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">NIM</span><span class="col-span-8">: <span id="certNim" class="font-mono font-bold">-</span></span></div>
+              <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Place, date of birth</span><span class="col-span-8">: <span id="certPobDob">Samarinda, 01 Januari 2004</span></span></div>
+              <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Program Study</span><span class="col-span-8">: <span id="certProdi">-</span></span></div>
+              <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Date of test taken</span><span class="col-span-8">: <span id="certTestDate">-</span></span></div>
+            </div>
+
+            <p class="text-center text-xs italic font-serif my-4 text-slate-700">Achieved the following score on TOEFL Prediction Test</p>
+
+            <!-- TABEL RINCIAN SKOR LENGKAP -->
+            <div class="max-w-xl mx-auto my-6 font-sans">
+              <table class="w-full border-collapse border border-slate-800 text-center text-xs">
+                <thead>
+                  <tr class="bg-slate-100 border-b border-slate-800 text-slate-900 font-bold">
+                    <th class="border border-slate-800 p-2 w-1/3">Listening Comprehension</th>
+                    <th class="border border-slate-800 p-2 w-1/3">Structure and Written Expression</th>
+                    <th class="border border-slate-800 p-2 w-1/3">Reading Comprehension</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td class="border border-slate-800 p-2.5 font-bold text-sm" id="certScoreL">-</td>
+                    <td class="border border-slate-800 p-2.5 font-bold text-sm" id="certScoreS">-</td>
+                    <td class="border border-slate-800 p-2.5 font-bold text-sm" id="certScoreR">-</td>
+                  </tr>
+                  <tr class="bg-slate-50 font-bold border-t-2 border-slate-800">
+                    <td colspan="2" class="border border-slate-800 p-2 text-right uppercase">Total Score</td>
+                    <td class="border border-slate-800 p-2 text-base text-emerald-900 font-extrabold" id="certScoreTotal">-</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- FOOTER TANDA TANGAN & BARCODE SHA-256 -->
+            <div class="mt-12 pt-4 grid grid-cols-2 items-end font-sans text-xs">
               
-              <!-- RUANG KOSONG KHUSUS TANDA TANGAN MANUAL DENGAN PULPEN -->
-              <div class="h-20 my-1"></div>
+              <!-- QR CODE VERIFIKASI DIGITAL SHA-256 -->
+              <div class="flex flex-col items-start gap-1">
+                <div id="certQrContainer" class="p-1.5 border border-slate-300 rounded bg-white"></div>
+                <span class="text-[9px] font-mono text-slate-400" id="certHashDisplay">SHA-256: -</span>
+              </div>
 
-              <p class="font-bold text-slate-900 underline decoration-1">Dwi Tri Maesaroh, S.Pd., M.Pd.</p>
-              <p class="text-[11px] text-slate-600 font-mono">NIP. 198901172024062002</p>
+              <!-- TANDA TANGAN KOSONG MANUAL MISS (NAMA & NIP TETAP ADA) -->
+              <div class="text-center">
+                <p class="text-slate-700">Samarinda, <span id="certIssueDate">05 Agustus 2026</span></p>
+                <p class="font-bold text-slate-800">Head of UPA. Bahasa</p>
+                
+                <!-- RUANG KOSONG KHUSUS TANDA TANGAN MANUAL DENGAN PULPEN -->
+                <div class="h-20 my-1"></div>
+
+                <p class="font-bold text-slate-900 underline decoration-1">Dwi Tri Maesaroh, S.Pd., M.Pd.</p>
+                <p class="text-[11px] text-slate-600 font-mono">NIP. 198901172024062002</p>
+              </div>
+
             </div>
-
           </div>
 
           <!-- FOOTER ACTION BUTTONS (NO PRINT) -->
@@ -1284,19 +1281,6 @@
       });
 
       container.classList.remove('hidden');
-    }
-
-    function loadCertLogo(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        const img = document.getElementById('certLogoImg');
-        img.src = e.target.result;
-        img.classList.remove('hidden');
-        document.getElementById('certLogoPlaceholder').classList.add('hidden');
-      };
-      reader.readAsDataURL(file);
     }
 
     // INITIAL LOAD
