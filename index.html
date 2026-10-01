@@ -1207,17 +1207,18 @@
       }));
 
       try {
-        const { data, error } = await _supabase.from('hasil_ujian').upsert(payload, { onConflict: 'nim' });
+        // MENGGUNAKAN UPSERT DENGAN EXPLICIT TARGET JIKA SQL SUDAH DI-RUN
+        const { data, error } = await _supabase.from('hasil_ujian').upsert(payload);
         
         if (error) {
           console.error('Supabase Upsert Error:', error);
-          alert(`Peringatan: Gagal mengirim ke Supabase (${error.message}). Data disimpan di sesi lokal.`);
+          alert(`Peringatan: Gagal mengirim ke Supabase (${error.message}). Harap pastikan kamu sudah menjalankan SQL Editor di Supabase!`);
         } else {
           alert(`BERHASIL! ${payload.length} Skor TOEFL Resmi Berhasil Dipublikasikan ke Database Supabase & Web Utama!`);
         }
       } catch(e) {
         console.error('Supabase Sync Exception:', e);
-        alert('Data berhasil di-ACC secara lokal!');
+        alert('Terjadi kesalahan koneksi ke Supabase!');
       }
 
       btn.innerText = '🚀 Publish Semua Skor ke Web Utama & Supabase';
@@ -1255,7 +1256,7 @@
             s3: row.reading_raw || 0,
             conv1: row.listening_converted || getConvertedScore(row.listening_raw || 0, 'l'),
             conv2: row.structure_converted || getConvertedScore(row.structure_raw || 0, 's'),
-            conv3: row.reading_converted || getConvertedScore(row.structure_raw || 0, 's'),
+            conv3: row.reading_converted || getConvertedScore(row.reading_raw || 0, 'r'),
             totalScore: row.total_score || 0,
             hash: row.certificate_hash || ''
           };
