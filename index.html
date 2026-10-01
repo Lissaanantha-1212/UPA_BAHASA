@@ -1131,7 +1131,7 @@
       });
     }
 
-    // MODUL 4: APPROVAL & PUBLIKASI SINKRON REAL KE SUPABASE DENGAN PENCEGAHAN CONFLICT 100%
+    // MODUL 4: APPROVAL & PUBLIKASI SINKRON REAL KE SUPABASE
     function renderModul4() {
       const tbody = document.getElementById('tableApproval');
       tbody.innerHTML = '';
@@ -1233,7 +1233,7 @@
       alert(`BERHASIL! ${successCount} dari ${validItems.length} Skor TOEFL Resmi Berhasil Dipublikasikan ke Database Supabase & Web Utama!`);
     }
 
-    // PUBLIK: ALUR CEK MURNI KETAT SESUAI STATUS APPROVAL SUPABASE
+    // PUBLIK: ALUR CEK MURNI DENGAN PENCAARIAN FLEKSIBEL & ROBUST
     async function cariSkorPublik() {
       const input = document.getElementById('cekNimInput').value.trim();
       const container = document.getElementById('hasilCekSkor');
@@ -1246,18 +1246,20 @@
       let match = null;
       let mInfo = null;
 
-      // 1. QUERY KETAT KE SUPABASE (HARUS STATUS PUBLISHED)
+      // 1. QUERY SUPABASE HASIL UJIAN (SEARCH ILIKE / FLEXIBLE)
       try {
         const { data, error } = await _supabase
           .from('hasil_ujian')
           .select('*')
-          .eq('nim', input)
+          .ilike('nim', input)
           .eq('status_approval', 'PUBLISHED');
+
+        if (error) console.error("Supabase Error:", error);
 
         if (data && data.length > 0) {
           const row = data[0];
           match = {
-            nim: String(row.nim),
+            nim: String(row.nim).trim(),
             s1: row.listening_raw || 0,
             s2: row.structure_raw || 0,
             s3: row.reading_raw || 0,
@@ -1277,16 +1279,16 @@
         const { data: mData } = await _supabase
           .from('master_mahasiswa')
           .select('*')
-          .eq('nim', input);
+          .ilike('nim', input);
 
         if (mData && mData.length > 0) {
-          mInfo = { nama: mData[0].nama, prodi: mData[0].prodi, nim: String(mData[0].nim) };
+          mInfo = { nama: mData[0].nama, prodi: mData[0].prodi, nim: String(mData[0].nim).trim() };
         }
       } catch(e) {}
 
-      // FALLBACK CEK LOKAL JIKA BARU DI-APPROVE OLEH STAFF DI SESI SAMA
+      // FALLBACK 1: CEK LOKAL JIKA BARU DI-APPROVE OLEH STAFF DI SESI SAMA
       if (!match) {
-        const localMatch = parsedHasilUjian.find(i => String(i.nim).trim() === input && i.statusApproval === 'PUBLISHED');
+        const localMatch = parsedHasilUjian.find(i => String(i.nim).trim().toLowerCase() === input.toLowerCase() && i.statusApproval === 'PUBLISHED');
         if (localMatch) {
           match = {
             nim: input,
@@ -1300,25 +1302,25 @@
       }
 
       if (!mInfo) {
-        const localMInfo = masterMahasiswa.find(m => String(m.nim).trim() === input);
+        const localMInfo = masterMahasiswa.find(m => String(m.nim).trim().toLowerCase() === input.toLowerCase());
         if (localMInfo) {
           mInfo = { nama: localMInfo.nama, prodi: localMInfo.prodi, nim: input };
         }
       }
 
-      // PENOLAKAN KETAT JIKA NILAI BELUM DIPUBLIKASIKAN OLEH KEPALA UPA
+      // PENOLAKAN JIKA NILAI BELUM TERSEDIA
       if (!match) {
-        alert(`AKSES DITOLAK: Nilai TOEFL untuk NIM '${input}' belum dipublikasikan atau masih dalam proses ACC verifikasi Kepala UPA Bahasa. Silakan hubungi Petugas Staff UPA.`);
+        alert(`AKSES DITOLAK: Nilai TOEFL untuk NIM '${input}' tidak ditemukan atau belum dipublikasikan oleh Kepala UPA Bahasa.`);
         container.classList.add('hidden');
         return;
       }
 
       // POPULATE DETAIL DATA KE SERTIFIKAT ASLI
       document.getElementById('certStudentName').innerText = mInfo ? mInfo.nama : "MAHASISWA UPA BAHASA";
-      document.getElementById('certNim').innerText = input;
-      document.getElementById('certProdi').innerText = mInfo ? mInfo.prodi : "D3-Teknik Listrik";
+      document.getElementById('certNim').innerText = match.nim || input;
+      document.getElementById('certProdi').innerText = (mInfo && mInfo.prodi) ? mInfo.prodi : "D3 - Teknik Informatika";
       
-      const todayFormatted = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'Long', year: 'numeric' });
+      const todayFormatted = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
       document.getElementById('certTestDate').innerText = todayFormatted;
 
       document.getElementById('certScoreL').innerText = match.conv1 || "20";
@@ -1326,7 +1328,7 @@
       document.getElementById('certScoreR').innerText = match.conv3 || "20";
       document.getElementById('certScoreTotal').innerText = match.totalScore || "200";
 
-      document.getElementById('certHashDisplay').innerText = `SHA-256: ${match.hash}`;
+      document.getElementById('certHashDisplay').innerText = `SHA-256: ${match.hash || 'N/A'}`;
 
       // GENERATE QR CODE WITH SAFE ERROR HANDLING
       try {
