@@ -51,6 +51,8 @@
         padding: 0 !important;
         overflow: hidden;
         background: #fff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
 
       body * { 
@@ -404,7 +406,7 @@
         </div>
       </div>
 
-      <!-- KARTU INFORMASI RINCIAN SKOR LULUS / TIDAK LULUS (MUNCUL SEBELUM SERTIFIKAT) -->
+      <!-- KARTU INFORMASI RINCIAN SKOR LULUS / TIDAK LULUS -->
       <div id="infoSkorCard" class="hidden max-w-xl mx-auto bg-white p-6 rounded-2xl border border-slate-200 shadow-md space-y-5">
         <div class="flex justify-between items-center border-b pb-3">
           <div>
@@ -441,17 +443,23 @@
           <span class="text-2xl font-black text-emerald-900 block mt-0.5" id="infoTotalScore">0</span>
         </div>
 
-        <button onclick="tampilkanSertifikatLengkap()" class="w-full bg-polnes-dark hover:bg-emerald-950 text-white font-bold py-3 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-2">
+        <!-- TOMBOL UNDUH JIKA LULUS -->
+        <button id="btnDownloadCert" onclick="tampilkanSertifikatLengkap()" class="w-full bg-polnes-dark hover:bg-emerald-950 text-white font-bold py-3 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-2">
           <span>📜 Unduh / Preview E-Sertifikat Resmi</span>
         </button>
+
+        <!-- PESAN REMINDER JIKA TIDAK LULUS -->
+        <div id="remedialNotice" class="hidden bg-rose-50 border border-rose-200 p-4 rounded-xl text-center text-xs text-rose-800 leading-relaxed font-semibold">
+          ⚠️ Mohon maaf, Anda belum mencapai batas nilai minimum kelulusan TOEFL (400). Silahkan lakukan pendaftaran <b>remedial test TOEFL</b> di halaman pendaftaran UPA Bahasa.
+        </div>
       </div>
 
-      <!-- TEMPLATE SERTIFIKAT FISIK PRESISI SAMAKAN 100% SESUAI FOTO ASLI (A4 LANDSCAPE EXACT FIT) -->
+      <!-- TEMPLATE SERTIFIKAT FISIK (A4 LANDSCAPE) -->
       <div id="hasilCekSkor" class="hidden max-w-5xl mx-auto">
         <div id="certificatePrintArea" class="bg-white border-8 border-double border-slate-300 p-8 shadow-2xl rounded-sm relative text-slate-900 font-serif my-4 overflow-hidden box-sizing-border">
           
-          <!-- ELEMEN GAMBAR LATAR BELAKANG WATERMARK PAS 1 HALAMAN polnes2.jpg -->
-          <div id="certBgWatermark" class="absolute inset-0 bg-center bg-no-repeat bg-cover opacity-15 pointer-events-none z-0" style="background-image: url('polnes2.jpg'); min-height: 100%;"></div>
+          <!-- GAMBAR LATAR FISIK polnes2.jpg SUPAYA DIBACA SAAT PRINT PDF -->
+          <img src="polnes2.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none z-0">
 
           <div class="relative z-10 flex flex-col justify-between h-full">
             <!-- KOP SURAT ATAS SERTIFIKAT FORMAL -->
@@ -1387,14 +1395,25 @@
 
       document.getElementById('infoTotalScore').innerText = match.totalScore;
 
-      // SET BADGE KELULUSAN (LULUS JIQA >= 400 - HIJAU SOFT / MERAH SOFT)
+      // KONTROL LOGIKA KELULUSAN (BATAS KELULUSAN SCORE 400)
       const badgeEl = document.getElementById('infoBadgeKelulusan');
+      const btnCert = document.getElementById('btnDownloadCert');
+      const remedialNotice = document.getElementById('remedialNotice');
+
       if (match.totalScore >= 400) {
+        // LULUS -> HIJAU SOFT & TOMBOL SERTIFIKAT AKTIF
         badgeEl.className = "px-3.5 py-1.5 rounded-xl text-xs font-extrabold shadow-sm border bg-emerald-100 text-emerald-800 border-emerald-200";
         badgeEl.innerText = "LULUS (PASSED)";
+        
+        btnCert.classList.remove('hidden');
+        remedialNotice.classList.add('hidden');
       } else {
+        // TIDAK LULUS -> MERAH SOFT & KUNCI SERTIFIKAT, TAMPILKAN NOTICE REMEDIAL
         badgeEl.className = "px-3.5 py-1.5 rounded-xl text-xs font-extrabold shadow-sm border bg-rose-100 text-rose-800 border-rose-200";
         badgeEl.innerText = "TIDAK LULUS (FAILED)";
+
+        btnCert.classList.add('hidden');
+        remedialNotice.classList.remove('hidden');
       }
 
       // TAMPILKAN KARTU INFORMASI
@@ -1402,9 +1421,9 @@
       infoCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    // FUNGSI UNTUK MEMUNCULKAN SERTIFIKAT LENGKAP SAAT TOMBOL UNDUH DIKLIK
+    // FUNGSI UNTUK MEMUNCULKAN SERTIFIKAT LENGKAP SAAT TOMBOL UNDUH DIKLIK (HANYA UNTUK YANG LULUS)
     function tampilkanSertifikatLengkap() {
-      if (!currentPublicMatch) return;
+      if (!currentPublicMatch || currentPublicMatch.totalScore < 400) return;
 
       const certContainer = document.getElementById('hasilCekSkor');
       const match = currentPublicMatch;
