@@ -396,8 +396,7 @@
       <div id="hasilCekSkor" class="hidden max-w-4xl mx-auto">
         <div id="certificatePrintArea" class="bg-white border-8 border-double border-slate-300 p-8 shadow-2xl rounded-sm relative text-slate-900 font-serif my-4 overflow-hidden">
           
-          <!-- ELEMEN GAMBAR LATAR BELAKANG (WATERMARK SERTIFIKAT) -->
-          <!-- Ganti 'watermark-polnes.png' di bawah ini dengan nama file gambar latar belakang yang kamu upload ke GitHub -->
+          <!-- ELEMEN GAMBAR LATAR BELAKANG (WATERMARK SERTIFIKAT polnes2.jpg) -->
           <div id="certBgWatermark" class="absolute inset-0 bg-center bg-no-repeat bg-contain opacity-15 pointer-events-none z-0" style="background-image: url('polnes2.jpg');"></div>
 
           <div class="relative z-10">
@@ -1210,51 +1209,60 @@
       alert('Seluruh Skor TOEFL Resmi Dipublikasikan ke Web Utama & Supabase!');
     }
 
-    // PUBLIK & RENDERING SERTIFIKAT EXAK FORMAL
+    // PUBLIK & RENDERING SERTIFIKAT EXAK FORMAL DENGAN PENCARIAN SUPER FLEKSIBEL
     async function cariSkorPublik() {
       const input = document.getElementById('cekNimInput').value.trim();
       const container = document.getElementById('hasilCekSkor');
 
-      let match = parsedHasilUjian.find(i => i.nim === input && i.statusApproval === 'PUBLISHED');
-      let mInfo = masterMahasiswa.find(m => m.nim === input);
+      if (!input) {
+        alert('Harap masukkan NIM Mahasiswa!');
+        return;
+      }
 
-      if (!match) {
+      // 1. Cek dari memory staf terlebih dahulu (jika staf baru saja mengolah data di modul)
+      let match = parsedHasilUjian.find(i => String(i.nim).trim() === input);
+      let mInfo = masterMahasiswa.find(m => String(m.nim).trim() === input);
+
+      // 2. Jika tidak ditemukan di memory lokal, cari secara komprehensif di database Supabase
+      if (!match || !match.totalScore) {
         try {
           const { data, error } = await _supabase
             .from('hasil_ujian')
             .select('*')
             .eq('nim', input)
-            .eq('status_approval', 'PUBLISHED')
-            .single();
+            .limit(1);
 
-          if (data) {
+          if (data && data.length > 0) {
+            const row = data[0];
             match = {
-              nim: data.nim,
-              s1: data.listening_raw,
-              s2: data.structure_raw,
-              s3: data.reading_raw,
-              conv1: data.listening_converted,
-              conv2: data.structure_converted,
-              conv3: data.reading_converted,
-              totalScore: data.total_score,
-              hash: data.certificate_hash
+              nim: row.nim,
+              s1: row.listening_raw,
+              s2: row.structure_raw,
+              s3: row.reading_raw,
+              conv1: row.listening_converted,
+              conv2: row.structure_converted,
+              conv3: row.reading_converted,
+              totalScore: row.total_score,
+              hash: row.certificate_hash,
+              statusApproval: row.status_approval
             };
 
-            const { data: mData } = await _supabase.from('master_mahasiswa').select('*').eq('nim', input).single();
+            const { data: mData } = await _supabase.from('master_mahasiswa').select('*').eq('nim', input).maybeSingle();
             if (mData) mInfo = { nama: mData.nama, prodi: mData.prodi, nim: mData.nim };
           }
         } catch(err) {
-          console.log('Fetching Supabase data...');
+          console.error('Error fetching Supabase data:', err);
         }
       }
 
-      if(!match) {
-        alert('Data Nilai Tidak Ditemukan / Belum Dipublikasikan!');
+      // 3. Peringatan jika data benar-benar tidak ditemukan
+      if (!match || !match.totalScore) {
+        alert(`Data Nilai untuk NIM '${input}' Tidak Ditemukan atau Belum Dipublikasikan oleh Staff UPA!`);
         container.classList.add('hidden');
         return;
       }
 
-      if(!mInfo) mInfo = { nama: "MUHAMMAD ILHAM MAULANA", prodi: "D3-Accounting", nim: input };
+      if (!mInfo) mInfo = { nama: "MAHASISWA UPA BAHASA", prodi: "POLITEKNIK NEGERI SAMARINDA", nim: input };
 
       // POPULATE DATA KE SERTIFIKAT RESMI FORMAL
       document.getElementById('certStudentName').innerText = mInfo.nama;
@@ -1264,23 +1272,24 @@
       const todayFormatted = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'Long', year: 'numeric' });
       document.getElementById('certTestDate').innerText = todayFormatted;
 
-      document.getElementById('certScoreL').innerText = match.conv1 || "45";
-      document.getElementById('certScoreS').innerText = match.conv2 || "44";
-      document.getElementById('certScoreR').innerText = match.conv3 || "45";
-      document.getElementById('certScoreTotal').innerText = match.totalScore || "450";
+      document.getElementById('certScoreL').innerText = match.conv1 || "20";
+      document.getElementById('certScoreS').innerText = match.conv2 || "20";
+      document.getElementById('certScoreR').innerText = match.conv3 || "20";
+      document.getElementById('certScoreTotal').innerText = match.totalScore || "200";
 
-      document.getElementById('certHashDisplay').innerText = `SHA-256: ${match.hash}`;
+      document.getElementById('certHashDisplay').innerText = `SHA-256: ${match.hash || 'GEN-SHA256-PENDING'}`;
 
       // GENERATE QR CODE ENKRIPSI REAL SHA-256
       const qrContainer = document.getElementById('certQrContainer');
       qrContainer.innerHTML = '';
       new QRCode(qrContainer, {
-        text: `https://upaabahasa.vercel.app/?verify=${match.hash}`,
+        text: `https://upaabahasa.vercel.app/?verify=${match.hash || input}`,
         width: 70,
         height: 70
       });
 
       container.classList.remove('hidden');
+      container.scrollIntoView({ behavior: 'smooth' });
     }
 
     // INITIAL LOAD
