@@ -60,7 +60,6 @@
         border: 1px solid #334155 !important;
         font-weight: 800 !important;
       }
-      /* Menampilkan seluruh data tercentang tanpa pagination saat di-print */
       .print-all-rows {
         display: table-row !important;
       }
@@ -114,7 +113,7 @@
           <span>📜</span> Kalkulasi Skor (Tabel C)
         </button>
         <button onclick="switchTab('modul4')" id="tab-modul4" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-lg bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
-          <span>🛠️️</span> ACC & Approval Kepala UPA
+          <span>🛠</span> ACC & Approval Kepala UPA
         </button>
       </div>
 
@@ -408,6 +407,7 @@
 
     let realExcelScores = {};
     let hasExcelUploaded = false;
+    let uploadedFileMetadata = {}; // Menyimpan tanggal & kode section tiap file yang diunggah
 
     // TABEL KONVERSI BAKU LENGKAP 100% PERSIS SESUAI GAMBAR RESMI (0 - 50)
     const tableC = {
@@ -606,7 +606,6 @@
         return;
       }
 
-      // JIKA SEDANG CETAK / PRINT DOKUMEN -> RENDER SELURUH MAHASISWA YANG DITERCENTANG TANPA PAGINATION
       if (modeFokusPlotting) {
         const selectedData = masterMahasiswa.filter(m => selectedPlotting.includes(m.nim));
         selectedData.forEach((m, idx) => {
@@ -630,7 +629,6 @@
         return;
       }
 
-      // MODE NORMAL DENGAN PAGINATION
       const totalPages = Math.ceil(filteredMaster.length / pageSize) || 1;
       if (currentPage > totalPages) currentPage = totalPages;
       if (currentPage < 1) currentPage = 1;
@@ -739,7 +737,7 @@
       alert('Sesi sebelumnya telah selesai. Centang dikosongkan secara otomatis untuk penataan jadwal sesi selanjutnya!');
     }
 
-    // MODUL 2: PARSER SPESIFIK FORMAT ASLI LAB
+    // MODUL 2: PARSER CANGGIH DENGAN VALiDASI KESELARASAN TANGGAL & KODE SECTION
     function handleExcelSectionUpload(event, secNum) {
       const file = event.target.files[0];
       if (!file) return;
@@ -754,6 +752,61 @@
           
           const rawRows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
 
+          // 1. EXTRACTION & COCOKLOGI METADATA (SECTION & TANGGAL)
+          let detectedSectionStr = "";
+          let detectedDateStr = "";
+
+          // Baca dari Baris Top Header Excel (Row 1-3)
+          if (rawRows.length > 1) {
+            const row2 = rawRows[1] || [];
+            if (row2[0]) detectedSectionStr = String(row2[0]).trim().toUpperCase(); // e.g. "SECTION 1 A01" / "SECTION 3 A01"
+            if (row2[3]) detectedDateStr = String(row2[3]).trim();                  // e.g. "2026/28/09"
+          }
+
+          // Fallback: Jika tidak terbaca dari sel, baca dari Nama File
+          const fileNameUpper = file.name.toUpperCase();
+          if (!detectedSectionStr) detectedSectionStr = fileNameUpper;
+
+          // Extraksi Tanggal dari Nama File jika sel Date kosong (misal: "28-09-2026")
+          if (!detectedDateStr) {
+            const dateMatch = fileNameUpper.match(/\d{2}[-\/]\d{2}[-\/]\d{4}/) || fileNameUpper.match(/\d{4}[-\/]\d{2}[-\/]\d{2}/);
+            if (dateMatch) detectedDateStr = dateMatch[0];
+          }
+
+          // Normalisasi Tanggal (e.g. "2026/28/09" / "28-09-2026" -> "28-09-2026")
+          let normalizedDate = detectedDateStr;
+          if (detectedDateStr.includes("/")) {
+            const dateParts = detectedDateStr.split("/");
+            if (dateParts[0].length === 4) {
+              normalizedDate = `${dateParts[1]}-${dateParts[2]}-${dateParts[0]}`;
+            }
+          }
+
+          // VALIDASI 1: CEK TIPE SECTION SESUAI SLOT UPLOAD
+          let isSectionValid = false;
+          if (secNum === 1 && (detectedSectionStr.includes("SECTION 1") || detectedSectionStr.includes("A01"))) isSectionValid = true;
+          if (secNum === 2 && (detectedSectionStr.includes("SECTION 2") || detectedSectionStr.includes("A02"))) isSectionValid = true;
+          if (secNum === 3 && (detectedSectionStr.includes("SECTION 3") || detectedSectionStr.includes("A03"))) isSectionValid = true;
+
+          if (!isSectionValid) {
+            alert(`⚠️ SISTER ERROR - TIPE SECTION TIDAK SINKRON!\n\nAnda mengunggah file untuk Slot Section ${secNum}, namun sistem mendeteksi isi/nama file ini adalah '${detectedSectionStr}'.\n\nHarap unggah file Section ${secNum} yang benar!`);
+            event.target.value = ""; 
+            return;
+          }
+
+          // VALIDASI 2: CEK KESELARASAN TANGGAL DENGAN FILE LAIN YANG SUDAH DIUNGGAH
+          if (uploadedFileMetadata.date && normalizedDate && uploadedFileMetadata.date !== normalizedDate) {
+            alert(`⚠️ SISTEM ERROR - TANGGAL UJIAN TIDAK SINKRON!\n\nFile sebelumnya memiliki Tanggal Ujian: ${uploadedFileMetadata.date}\nTetapi file yang baru diunggah ini memiliki Tanggal Ujian: ${normalizedDate}\n\nFile ditolak karena berasal dari sesi/tanggal ujian yang berbeda!`);
+            event.target.value = "";
+            return;
+          }
+
+          // Simpan metadata tanggal jika valid
+          if (normalizedDate) {
+            uploadedFileMetadata.date = normalizedDate;
+          }
+
+          // 2. PARSING JUMLAH JAWABAN BENAR PER MEJA
           let countParsed = 0;
 
           rawRows.forEach(row => {
@@ -798,7 +851,7 @@
           initParsedData();
 
         } catch (err) {
-          alert(`Gagal membaca Excel Section ${secNum}! Pastikan file valid.`);
+          alert(`Gagal membaca Excel Section ${secNum}! Pastikan format file .xlsx/.xls valid.`);
           console.error(err);
         }
       };
@@ -842,9 +895,8 @@
       renderModul2();
     }
 
-    // LOGIKA PINTAR: MEMBERSIHKAN DATA GANDA (TETAPKAN NAMA DENGAN SKOR AKTIF, HAPUS NILAI 0 BEKAS KOMPUTER RUSAK)
+    // LOGIKA PINTAR: MEMBERSIHKAN DATA GANDA
     function cleanDuplicateAndZeroEntries() {
-      // 1. Cari NIM yang terikat pada meja yang memproduksi nilai > 0
       const validNimsWithScore = new Set();
       parsedHasilUjian.forEach(item => {
         if (item.nim && (item.s1 > 0 || item.s2 > 0 || item.s3 > 0)) {
@@ -852,10 +904,8 @@
         }
       });
 
-      // 2. Jika mahasiswa tersebut punya record baru dengan nilai di meja lain, copot NIM-nya dari meja lama yang nilainya 0 0 0
       parsedHasilUjian.forEach(item => {
         if (item.nim && (item.s1 === 0 && item.s2 === 0 && item.s3 === 0)) {
-          // Jika NIM ini sudah ada di meja baru dengan nilai valid, lepaskan ikatan dari meja lama
           if (validNimsWithScore.has(item.nim)) {
             item.nim = null;
             item.statusMapping = 'UNMAPPED';
@@ -932,7 +982,6 @@
       parsedHasilUjian[index].nim = inputNim;
       parsedHasilUjian[index].statusMapping = 'MATCHED';
 
-      // Jalankan otomatis pembersihan nama ganda & nilai 0
       cleanDuplicateAndZeroEntries();
       renderModul2();
     }
@@ -954,7 +1003,6 @@
         return;
       }
 
-      // OLAHI HANYA MAHASISWA YANG PUNYA NIM DAN MEMILIKI SKOR VALID (>0)
       const validEntries = parsedHasilUjian.filter(item => item.nim && (item.s1 > 0 || item.s2 > 0 || item.s3 > 0));
 
       if (validEntries.length === 0) {
