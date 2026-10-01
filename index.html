@@ -37,35 +37,47 @@
   </script>
 
   <style>
-    /* CSS TAMPILAN CETAK FORMAL & E-SERTIFIKAT */
+    /* CSS TAMPILAN CETAK FORMAL & E-SERTIFIKAT PRESISI 1 HALAMAN A4 LANDSCAPE */
+    @page {
+      size: A4 landscape;
+      margin: 0;
+    }
+
     @media print {
+      html, body {
+        width: 297mm;
+        height: 210mm;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden;
+        background: #fff !important;
+      }
+
       body * { 
         visibility: hidden; 
       }
-      #printableJadwalArea, #printableJadwalArea *, #certificatePrintArea, #certificatePrintArea * { 
+
+      #certificatePrintArea, #certificatePrintArea * { 
         visibility: visible; 
       }
-      #printableJadwalArea, #certificatePrintArea { 
-        position: absolute; 
-        left: 0; 
-        top: 0; 
-        width: 100%; 
-        padding: 0px;
-        margin: 0px;
+
+      #certificatePrintArea { 
+        position: fixed !important; 
+        left: 0 !important; 
+        top: 0 !important; 
+        width: 297mm !important; 
+        height: 210mm !important; 
+        padding: 10mm 15mm !important;
+        margin: 0 !important;
         border: none !important;
         box-shadow: none !important;
+        box-sizing: border-box !important;
+        display: block !important;
+        background: #fff !important;
       }
+
       .no-print { 
         display: none !important; 
-      }
-      .badge-meja-print {
-        background-color: #f1f5f9 !important;
-        color: #0f172a !important;
-        border: 1px solid #334155 !important;
-        font-weight: 800 !important;
-      }
-      .print-all-rows {
-        display: table-row !important;
       }
     }
 
@@ -387,23 +399,64 @@
         <div class="flex gap-2">
           <input type="text" id="cekNimInput" placeholder="Ketik NIM Mahasiswa..." class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-xs outline-none focus:ring-1 focus:ring-polnes-main font-mono">
           <button onclick="cariSkorPublik()" class="bg-polnes-dark hover:bg-emerald-950 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm">
-            Cari Nilai & Tampilkan Sertifikat
+            Cari Nilai Ujian
           </button>
         </div>
       </div>
 
-      <!-- TEMPLATE SERTIFIKAT FISIK PRESISI SAMAKAN 100% SESUAI FOTO ASLI -->
-      <div id="hasilCekSkor" class="hidden max-w-4xl mx-auto">
-        <div id="certificatePrintArea" class="bg-white border-8 border-double border-slate-300 p-8 shadow-2xl rounded-sm relative text-slate-900 font-serif my-4 overflow-hidden">
-          
-          <!-- ELEMEN GAMBAR LATAR BELAKANG (WATERMARK SERTIFIKAT polnes2.jpg) -->
-          <div id="certBgWatermark" class="absolute inset-0 bg-center bg-no-repeat bg-contain opacity-15 pointer-events-none z-0" style="background-image: url('polnes2.jpg');"></div>
+      <!-- KARTU INFORMASI RINCIAN SKOR LULUS / TIDAK LULUS (MUNCUL SEBELUM SERTIFIKAT) -->
+      <div id="infoSkorCard" class="hidden max-w-xl mx-auto bg-white p-6 rounded-2xl border border-slate-200 shadow-md space-y-5">
+        <div class="flex justify-between items-center border-b pb-3">
+          <div>
+            <h3 class="text-base font-bold text-slate-800" id="infoStudentName">-</h3>
+            <p class="text-xs text-slate-500 font-mono" id="infoStudentNimProdi">-</p>
+          </div>
+          <div id="infoBadgeKelulusan" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold shadow-sm border">
+            -
+          </div>
+        </div>
 
-          <div class="relative z-10">
+        <div class="grid grid-cols-3 gap-3 text-center">
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+            <span class="text-[10px] text-slate-400 font-bold block uppercase">Listening</span>
+            <span class="text-xs text-slate-600 block mt-0.5">Benar: <b id="infoRawL">0</b></span>
+            <span class="text-sm font-extrabold text-emerald-700 block mt-1">Konversi: <span id="infoConvL">0</span></span>
+          </div>
+
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+            <span class="text-[10px] text-slate-400 font-bold block uppercase">Structure</span>
+            <span class="text-xs text-slate-600 block mt-0.5">Benar: <b id="infoRawS">0</b></span>
+            <span class="text-sm font-extrabold text-emerald-700 block mt-1">Konversi: <span id="infoConvS">0</span></span>
+          </div>
+
+          <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+            <span class="text-[10px] text-slate-400 font-bold block uppercase">Reading</span>
+            <span class="text-xs text-slate-600 block mt-0.5">Benar: <b id="infoRawR">0</b></span>
+            <span class="text-sm font-extrabold text-emerald-700 block mt-1">Konversi: <span id="infoConvR">0</span></span>
+          </div>
+        </div>
+
+        <div class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-xl text-center">
+          <span class="text-xs text-emerald-800 font-bold uppercase block">Total Skor TOEFL Prediction</span>
+          <span class="text-2xl font-black text-emerald-900 block mt-0.5" id="infoTotalScore">0</span>
+        </div>
+
+        <button onclick="tampilkanSertifikatLengkap()" class="w-full bg-polnes-dark hover:bg-emerald-950 text-white font-bold py-3 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-2">
+          <span>📜 Unduh / Preview E-Sertifikat Resmi</span>
+        </button>
+      </div>
+
+      <!-- TEMPLATE SERTIFIKAT FISIK PRESISI SAMAKAN 100% SESUAI FOTO ASLI (A4 LANDSCAPE EXACT FIT) -->
+      <div id="hasilCekSkor" class="hidden max-w-5xl mx-auto">
+        <div id="certificatePrintArea" class="bg-white border-8 border-double border-slate-300 p-8 shadow-2xl rounded-sm relative text-slate-900 font-serif my-4 overflow-hidden box-sizing-border">
+          
+          <!-- ELEMEN GAMBAR LATAR BELAKANG WATERMARK PAS 1 HALAMAN polnes2.jpg -->
+          <div id="certBgWatermark" class="absolute inset-0 bg-center bg-no-repeat bg-cover opacity-15 pointer-events-none z-0" style="background-image: url('polnes2.jpg'); min-height: 100%;"></div>
+
+          <div class="relative z-10 flex flex-col justify-between h-full">
             <!-- KOP SURAT ATAS SERTIFIKAT FORMAL -->
-            <div class="flex justify-between items-start border-b-2 border-emerald-800 pb-4 mb-6">
+            <div class="flex justify-between items-center border-b-2 border-emerald-800 pb-3 mb-4">
               <div class="flex items-center gap-4">
-                <!-- TAMPILAN LOGO POLNES ASLI -->
                 <div class="w-16 h-16 flex items-center justify-center overflow-hidden">
                   <img id="certLogoImg" src="logo-removebg-preview.png" class="w-full h-full object-contain">
                 </div>
@@ -416,25 +469,25 @@
             </div>
 
             <!-- JUDUL SERTIFIKAT & NOMOR -->
-            <div class="text-center my-6">
+            <div class="text-center my-2">
               <h2 class="text-xl font-bold tracking-widest text-slate-900 uppercase underline decoration-1 underline-offset-4 cert-font-title">CERTIFICATE OF ACHIEVEMENT</h2>
               <p class="text-xs font-sans text-slate-600 mt-1" id="certNoRef">No : 0885/ PL19 / UPA.BAHASA / TOEFL-P / 2026</p>
-              <p class="text-xs italic mt-4 text-slate-700">This is presented to</p>
-              <h3 class="text-xl font-bold uppercase tracking-wide text-slate-900 mt-1 my-2 border-b border-dashed border-slate-300 inline-block px-8 py-1" id="certStudentName">-</h3>
+              <p class="text-xs italic mt-2 text-slate-700">This is presented to</p>
+              <h3 class="text-xl font-bold uppercase tracking-wide text-slate-900 mt-1 my-1 border-b border-dashed border-slate-300 inline-block px-8 py-0.5" id="certStudentName">-</h3>
             </div>
 
             <!-- DETAIL MAHASISWA & TANGGAL TES -->
-            <div class="max-w-md mx-auto text-xs font-sans space-y-1.5 my-6 text-slate-800">
+            <div class="max-w-md mx-auto text-xs font-sans space-y-1 my-3 text-slate-800">
               <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">NIM</span><span class="col-span-8">: <span id="certNim" class="font-mono font-bold">-</span></span></div>
               <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Place, date of birth</span><span class="col-span-8">: <span id="certPobDob">Samarinda, 01 Januari 2004</span></span></div>
               <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Program Study</span><span class="col-span-8">: <span id="certProdi">-</span></span></div>
               <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Date of test taken</span><span class="col-span-8">: <span id="certTestDate">-</span></span></div>
             </div>
 
-            <p class="text-center text-xs italic font-serif my-4 text-slate-700">Achieved the following score on TOEFL Prediction Test</p>
+            <p class="text-center text-xs italic font-serif my-2 text-slate-700">Achieved the following score on TOEFL Prediction Test</p>
 
             <!-- TABEL RINCIAN SKOR LENGKAP -->
-            <div class="max-w-xl mx-auto my-6 font-sans">
+            <div class="max-w-xl mx-auto my-3 font-sans">
               <table class="w-full border-collapse border border-slate-800 text-center text-xs">
                 <thead>
                   <tr class="bg-slate-100 border-b border-slate-800 text-slate-900 font-bold">
@@ -445,34 +498,33 @@
                 </thead>
                 <tbody>
                   <tr>
-                    <td class="border border-slate-800 p-2.5 font-bold text-sm" id="certScoreL">-</td>
-                    <td class="border border-slate-800 p-2.5 font-bold text-sm" id="certScoreS">-</td>
-                    <td class="border border-slate-800 p-2.5 font-bold text-sm" id="certScoreR">-</td>
+                    <td class="border border-slate-800 p-2 font-bold text-sm" id="certScoreL">-</td>
+                    <td class="border border-slate-800 p-2 font-bold text-sm" id="certScoreS">-</td>
+                    <td class="border border-slate-800 p-2 font-bold text-sm" id="certScoreR">-</td>
                   </tr>
                   <tr class="bg-slate-50 font-bold border-t-2 border-slate-800">
-                    <td colspan="2" class="border border-slate-800 p-2 text-right uppercase">Total Score</td>
-                    <td class="border border-slate-800 p-2 text-base text-emerald-900 font-extrabold" id="certScoreTotal">-</td>
+                    <td colspan="2" class="border border-slate-800 p-1.5 text-right uppercase">Total Score</td>
+                    <td class="border border-slate-800 p-1.5 text-base text-emerald-900 font-extrabold" id="certScoreTotal">-</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
             <!-- FOOTER TANDA TANGAN & BARCODE SHA-256 -->
-            <div class="mt-12 pt-4 grid grid-cols-2 items-end font-sans text-xs">
+            <div class="mt-6 pt-2 grid grid-cols-2 items-end font-sans text-xs">
               
               <!-- QR CODE VERIFIKASI DIGITAL SHA-256 -->
               <div class="flex flex-col items-start gap-1">
-                <div id="certQrContainer" class="p-1.5 border border-slate-300 rounded bg-white"></div>
+                <div id="certQrContainer" class="p-1 border border-slate-300 rounded bg-white"></div>
                 <span class="text-[9px] font-mono text-slate-400" id="certHashDisplay">SHA-256: -</span>
               </div>
 
-              <!-- TANDA TANGAN KOSONG MANUAL MISS (NAMA & NIP TETAP ADA) -->
+              <!-- TANDA TANGAN KOSONG MANUAL (NAMA & NIP TETAP ADA) -->
               <div class="text-center">
                 <p class="text-slate-700">Samarinda, <span id="certIssueDate">05 Agustus 2026</span></p>
                 <p class="font-bold text-slate-800">Head of UPA. Bahasa</p>
                 
-                <!-- RUANG KOSONG KHUSUS TANDA TANGAN MANUAL DENGAN PULPEN -->
-                <div class="h-20 my-1"></div>
+                <div class="h-16 my-1"></div>
 
                 <p class="font-bold text-slate-900 underline decoration-1">Dwi Tri Maesaroh, S.Pd., M.Pd.</p>
                 <p class="text-[11px] text-slate-600 font-mono">NIP. 198901172024062002</p>
@@ -482,9 +534,9 @@
           </div>
 
           <!-- FOOTER ACTION BUTTONS (NO PRINT) -->
-          <div class="no-print mt-8 pt-4 border-t flex justify-end gap-3">
+          <div class="no-print mt-6 pt-3 border-t flex justify-end gap-3">
             <button onclick="window.print()" class="bg-polnes-dark hover:bg-emerald-950 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md flex items-center gap-2">
-              <span>🖨️ Cetak E-Sertifikat Resmi (PDF)</span>
+              <span>🖨️ Cetak / Simpan E-Sertifikat (PDF A4 Landscape)</span>
             </button>
           </div>
 
@@ -510,6 +562,9 @@
     let realExcelScores = {};
     let hasExcelUploaded = false;
     let uploadedFileMetadata = {};
+
+    let currentPublicMatch = null;
+    let currentPublicMInfo = null;
 
     const tableC = {
       50: { l: 68, s: 68, r: 67 }, 49: { l: 67, s: 68, r: 66 }, 48: { l: 66, s: 68, r: 65 },
@@ -1210,14 +1265,11 @@
         };
 
         try {
-          // CEK DAHULU APAKAH DATA SUDAH ADA DI SUPABASE
           const { data: exist } = await _supabase.from('hasil_ujian').select('nim').eq('nim', payload.nim);
 
           if (exist && exist.length > 0) {
-            // JIKA SUDAH ADA: UPDATE
             await _supabase.from('hasil_ujian').update(payload).eq('nim', payload.nim);
           } else {
-            // JIKA BELUM ADA: INSERT
             await _supabase.from('hasil_ujian').insert([payload]);
           }
           successCount++;
@@ -1233,28 +1285,30 @@
       alert(`BERHASIL! ${successCount} dari ${validItems.length} Skor TOEFL Resmi Berhasil Dipublikasikan ke Database Supabase & Web Utama!`);
     }
 
-    // PUBLIK: ALUR CEK MURNI DENGAN PENCAARIAN FLEKSIBEL & ROBUST
+    // PUBLIK: ALUR CEK DENGAN KARTU INFORMASI DAHULU SEBELUM SERTIFIKAT
     async function cariSkorPublik() {
       const input = document.getElementById('cekNimInput').value.trim();
-      const container = document.getElementById('hasilCekSkor');
+      const certContainer = document.getElementById('hasilCekSkor');
+      const infoCard = document.getElementById('infoSkorCard');
 
       if (!input) {
         alert('Harap masukkan NIM Mahasiswa!');
         return;
       }
 
+      certContainer.classList.add('hidden');
+      infoCard.classList.add('hidden');
+
       let match = null;
       let mInfo = null;
 
-      // 1. QUERY SUPABASE HASIL UJIAN (SEARCH ILIKE / FLEXIBLE)
+      // 1. QUERY SUPABASE HASIL UJIAN
       try {
         const { data, error } = await _supabase
           .from('hasil_ujian')
           .select('*')
           .ilike('nim', input)
           .eq('status_approval', 'PUBLISHED');
-
-        if (error) console.error("Supabase Error:", error);
 
         if (data && data.length > 0) {
           const row = data[0];
@@ -1270,11 +1324,9 @@
             hash: row.certificate_hash || ''
           };
         }
-      } catch(e) {
-        console.error('Supabase query error:', e);
-      }
+      } catch(e) {}
 
-      // 2. QUERY MASTER MAHASISWA UNTUK NAMA & PRODI
+      // 2. QUERY MASTER MAHASISWA
       try {
         const { data: mData } = await _supabase
           .from('master_mahasiswa')
@@ -1286,12 +1338,15 @@
         }
       } catch(e) {}
 
-      // FALLBACK 1: CEK LOKAL JIKA BARU DI-APPROVE OLEH STAFF DI SESI SAMA
+      // FALLBACK LOKAL JIKA TERSEDIA DI MEMORI STAFF
       if (!match) {
         const localMatch = parsedHasilUjian.find(i => String(i.nim).trim().toLowerCase() === input.toLowerCase() && i.statusApproval === 'PUBLISHED');
         if (localMatch) {
           match = {
             nim: input,
+            s1: localMatch.s1 || 0,
+            s2: localMatch.s2 || 0,
+            s3: localMatch.s3 || 0,
             conv1: localMatch.conv1,
             conv2: localMatch.conv2,
             conv3: localMatch.conv3,
@@ -1308,16 +1363,55 @@
         }
       }
 
-      // PENOLAKAN JIKA NILAI BELUM TERSEDIA
       if (!match) {
         alert(`AKSES DITOLAK: Nilai TOEFL untuk NIM '${input}' tidak ditemukan atau belum dipublikasikan oleh Kepala UPA Bahasa.`);
-        container.classList.add('hidden');
         return;
       }
 
-      // POPULATE DETAIL DATA KE SERTIFIKAT ASLI
+      // SIMPAN DATA SEMENTARA DI VARIABEL GLOBAL
+      currentPublicMatch = match;
+      currentPublicMInfo = mInfo;
+
+      // ISI DATA RINGKASAN KE KARTU INFO
+      document.getElementById('infoStudentName').innerText = mInfo ? mInfo.nama : "MAHASISWA UPA BAHASA";
+      document.getElementById('infoStudentNimProdi').innerText = `NIM: ${match.nim} | ${mInfo ? mInfo.prodi : 'D3 - Teknik Informatika'}`;
+      
+      document.getElementById('infoRawL').innerText = match.s1;
+      document.getElementById('infoConvL').innerText = match.conv1;
+
+      document.getElementById('infoRawS').innerText = match.s2;
+      document.getElementById('infoConvS').innerText = match.conv2;
+
+      document.getElementById('infoRawR').innerText = match.s3;
+      document.getElementById('infoConvR').innerText = match.conv3;
+
+      document.getElementById('infoTotalScore').innerText = match.totalScore;
+
+      // SET BADGE KELULUSAN (LULUS JIQA >= 400 - HIJAU SOFT / MERAH SOFT)
+      const badgeEl = document.getElementById('infoBadgeKelulusan');
+      if (match.totalScore >= 400) {
+        badgeEl.className = "px-3.5 py-1.5 rounded-xl text-xs font-extrabold shadow-sm border bg-emerald-100 text-emerald-800 border-emerald-200";
+        badgeEl.innerText = "LULUS (PASSED)";
+      } else {
+        badgeEl.className = "px-3.5 py-1.5 rounded-xl text-xs font-extrabold shadow-sm border bg-rose-100 text-rose-800 border-rose-200";
+        badgeEl.innerText = "TIDAK LULUS (FAILED)";
+      }
+
+      // TAMPILKAN KARTU INFORMASI
+      infoCard.classList.remove('hidden');
+      infoCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // FUNGSI UNTUK MEMUNCULKAN SERTIFIKAT LENGKAP SAAT TOMBOL UNDUH DIKLIK
+    function tampilkanSertifikatLengkap() {
+      if (!currentPublicMatch) return;
+
+      const certContainer = document.getElementById('hasilCekSkor');
+      const match = currentPublicMatch;
+      const mInfo = currentPublicMInfo;
+
       document.getElementById('certStudentName').innerText = mInfo ? mInfo.nama : "MAHASISWA UPA BAHASA";
-      document.getElementById('certNim').innerText = match.nim || input;
+      document.getElementById('certNim').innerText = match.nim;
       document.getElementById('certProdi').innerText = (mInfo && mInfo.prodi) ? mInfo.prodi : "D3 - Teknik Informatika";
       
       const todayFormatted = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
@@ -1345,10 +1439,9 @@
         console.error("QR Code Error:", err);
       }
 
-      // MUNCULKAN KOTAK SERTIFIKAT DENGAN ANIMASI SMOOTH
-      container.classList.remove('hidden');
+      certContainer.classList.remove('hidden');
       setTimeout(() => {
-        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        certContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }, 100);
     }
 
