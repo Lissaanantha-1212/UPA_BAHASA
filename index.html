@@ -349,8 +349,8 @@
               <h2 class="text-base font-bold text-slate-800">Modul 4: Panel Verifikasi & Approval Kepala UPA Bahasa</h2>
               <p class="text-xs text-slate-500">Otorisasi publikasi nilai resmi dan pemicu enkripsi QR Sertifikat SHA-256.</p>
             </div>
-            <button onclick="approveSemua()" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm">
-              🚀 Publish Semua Skor ke Web Utama & Supabase
+            <button id="btnPublishAll" onclick="approveSemua()" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm flex items-center gap-2">
+              <span>🚀 Publish Semua Skor ke Web Utama & Supabase</span>
             </button>
           </div>
 
@@ -522,7 +522,7 @@
       29: { l: 50, s: 53, r: 47 }, 28: { l: 49, s: 52, r: 46 }, 27: { l: 49, s: 51, r: 46 },
       26: { l: 48, s: 50, r: 45 }, 25: { l: 48, s: 49, r: 44 }, 24: { l: 47, s: 48, r: 43 },
       23: { l: 47, s: 47, r: 43 }, 22: { l: 46, s: 46, r: 42 }, 21: { l: 45, s: 45, r: 41 },
-      20: { l: 45, s: 44, r: 40 }, 19: { l: 44, s: 43, r: 39 }, 18: { l: 43, s: 42, r: 38 },
+      20: { l: 45, s: 44, r: 40 }, 19: { l: 44, s: 43, r: 38 }, 18: { l: 43, s: 42, r: 38 },
       17: { l: 42, s: 41, r: 37 }, 16: { l: 41, s: 40, r: 36 }, 15: { l: 41, s: 40, r: 35 },
       14: { l: 39, s: 38, r: 34 }, 13: { l: 38, s: 37, r: 32 }, 12: { l: 37, s: 36, r: 31 },
       11: { l: 35, s: 35, r: 30 }, 10: { l: 33, s: 33, r: 29 }, 9:  { l: 32, s: 31, r: 28 },
@@ -1026,7 +1026,7 @@
 
       parsedHasilUjian.forEach((item, idx) => {
         if(item.statusMapping === 'UNMAPPED') hasUnmapped = true;
-        const mInfo = masterMahasiswa.find(m => m.nim === item.nim);
+        const mInfo = masterMahasiswa.find(m => String(m.nim) === String(item.nim));
 
         const isZeroScore = (item.s1 === 0 && item.s2 === 0 && item.s3 === 0);
 
@@ -1066,7 +1066,7 @@
     function execFastAdd(index) {
       const inputNim = document.getElementById(`fastAddNim-${index}`).value.trim();
       if(!inputNim) return alert('Masukkan NIM!');
-      const exist = masterMahasiswa.find(m => m.nim === inputNim);
+      const exist = masterMahasiswa.find(m => String(m.nim) === inputNim);
       if(!exist) return alert('NIM Tidak Ditemukan di Data Master!');
 
       parsedHasilUjian[index].nim = inputNim;
@@ -1107,7 +1107,7 @@
       }
 
       validEntries.forEach(item => {
-        const mInfo = masterMahasiswa.find(m => m.nim === item.nim);
+        const mInfo = masterMahasiswa.find(m => String(m.nim) === String(item.nim));
 
         const conv1 = getConvertedScore(item.s1, 'l');
         const conv2 = getConvertedScore(item.s2, 's');
@@ -1120,7 +1120,7 @@
 
         tbody.innerHTML += `
           <tr>
-            <td class="p-3"><b>${mInfo.nama}</b><br><span class="text-slate-400 font-mono">${mInfo.nim}</span></td>
+            <td class="p-3"><b>${mInfo ? mInfo.nama : 'Mahasiswa'}</b><br><span class="text-slate-400 font-mono">${item.nim}</span></td>
             <td class="p-3 text-center">${item.s1} &rarr; <b class="text-emerald-700 font-extrabold text-sm">${conv1}</b></td>
             <td class="p-3 text-center">${item.s2} &rarr; <b class="text-emerald-700 font-extrabold text-sm">${conv2}</b></td>
             <td class="p-3 text-center">${item.s3} &rarr; <b class="text-emerald-700 font-extrabold text-sm">${conv3}</b></td>
@@ -1131,7 +1131,7 @@
       });
     }
 
-    // MODUL 4: APPROVAL
+    // MODUL 4: APPROVAL & PUBLIKASI SINKRON REAL KE SUPABASE
     function renderModul4() {
       const tbody = document.getElementById('tableApproval');
       tbody.innerHTML = '';
@@ -1151,16 +1151,16 @@
 
       validEntries.forEach((item, idx) => {
         if(!item.totalScore) return;
-        const mInfo = masterMahasiswa.find(m => m.nim === item.nim);
+        const mInfo = masterMahasiswa.find(m => String(m.nim) === String(item.nim));
 
         if(!item.hash) {
-          item.hash = CryptoJS.SHA256(`${mInfo.nim}-${item.totalScore}-POLNES-SECRET`).toString().substring(0, 24);
+          item.hash = CryptoJS.SHA256(`${item.nim}-${item.totalScore}-POLNES-SECRET`).toString().substring(0, 24);
         }
 
         tbody.innerHTML += `
           <tr>
-            <td class="p-3"><b>${mInfo.nama}</b><br><span class="text-slate-400 font-mono">${mInfo.nim}</span></td>
-            <td class="p-3 text-slate-500">${mInfo.prodi}</td>
+            <td class="p-3"><b>${mInfo ? mInfo.nama : 'Mahasiswa'}</b><br><span class="text-slate-400 font-mono">${item.nim}</span></td>
+            <td class="p-3 text-slate-500">${mInfo ? mInfo.prodi : '-'}</td>
             <td class="p-3 text-center font-bold text-emerald-800">${item.totalScore}</td>
             <td class="p-3 text-center">
               ${item.statusApproval === 'PUBLISHED' 
@@ -1169,8 +1169,8 @@
             </td>
             <td class="p-3 text-center">
               ${item.statusApproval === 'PUBLISHED' 
-                ? '<span class="text-slate-400">Disetujui</span>' 
-                : `<button onclick="approveSingle(${idx})" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-2.5 py-1 rounded font-bold">ACC</button>`}
+                ? '<span class="text-slate-400 font-semibold">Disetujui</span>' 
+                : `<button onclick="approveSingle(${idx})" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-3 py-1 rounded-lg font-bold shadow-sm transition-all">ACC</button>`}
             </td>
           </tr>
         `;
@@ -1183,33 +1183,49 @@
     }
 
     async function approveSemua() {
-      parsedHasilUjian.forEach(i => i.statusApproval = 'PUBLISHED');
-      
-      try {
-        const payload = parsedHasilUjian.filter(i => i.nim && (i.s1 > 0 || i.s2 > 0 || i.s3 > 0)).map(i => ({
-          nim: i.nim,
-          student_id_meja: i.meja,
-          listening_raw: i.s1,
-          listening_converted: i.conv1,
-          structure_raw: i.s2,
-          structure_converted: i.conv2,
-          reading_raw: i.s3,
-          reading_converted: i.conv3,
-          total_score: i.totalScore,
-          status_approval: 'PUBLISHED',
-          certificate_hash: i.hash
-        }));
+      const validItems = parsedHasilUjian.filter(i => i.nim && (i.s1 > 0 || i.s2 > 0 || i.s3 > 0));
+      if (validItems.length === 0) return alert('Tidak ada data nilai yang siap untuk dipublikasikan!');
 
-        await _supabase.from('hasil_ujian').upsert(payload, { onConflict: 'certificate_hash' });
+      const btn = document.getElementById('btnPublishAll');
+      btn.innerText = '⌛ Mengirim & Mempublikasi ke Supabase...';
+      btn.disabled = true;
+
+      validItems.forEach(i => i.statusApproval = 'PUBLISHED');
+
+      const payload = validItems.map(i => ({
+        nim: String(i.nim).trim(),
+        student_id_meja: i.meja,
+        listening_raw: i.s1,
+        listening_converted: i.conv1,
+        structure_raw: i.s2,
+        structure_converted: i.conv2,
+        reading_raw: i.s3,
+        reading_converted: i.conv3,
+        total_score: i.totalScore,
+        status_approval: 'PUBLISHED',
+        certificate_hash: i.hash
+      }));
+
+      try {
+        const { data, error } = await _supabase.from('hasil_ujian').upsert(payload, { onConflict: 'nim' });
+        
+        if (error) {
+          console.error('Supabase Upsert Error:', error);
+          alert(`Peringatan: Gagal mengirim ke Supabase (${error.message}). Data disimpan di sesi lokal.`);
+        } else {
+          alert(`BERHASIL! ${payload.length} Skor TOEFL Resmi Berhasil Dipublikasikan ke Database Supabase & Web Utama!`);
+        }
       } catch(e) {
-        console.log('Approve & Sync ke Supabase...');
+        console.error('Supabase Sync Exception:', e);
+        alert('Data berhasil di-ACC secara lokal!');
       }
 
+      btn.innerText = '🚀 Publish Semua Skor ke Web Utama & Supabase';
+      btn.disabled = false;
       renderModul4();
-      alert('Seluruh Skor TOEFL Resmi Dipublikasikan ke Web Utama & Supabase!');
     }
 
-    // PUBLIK & RENDERING SERTIFIKAT EXAK FORMAL DENGAN PENCARIAN SUPER FLEKSIBEL
+    // PUBLIK: ALUR CEK MURNI KETAT SESUAI STATUS APPROVAL SUPABASE
     async function cariSkorPublik() {
       const input = document.getElementById('cekNimInput').value.trim();
       const container = document.getElementById('hasilCekSkor');
@@ -1219,55 +1235,80 @@
         return;
       }
 
-      // 1. Cek dari memory staf terlebih dahulu (jika staf baru saja mengolah data di modul)
-      let match = parsedHasilUjian.find(i => String(i.nim).trim() === input);
-      let mInfo = masterMahasiswa.find(m => String(m.nim).trim() === input);
+      let match = null;
+      let mInfo = null;
 
-      // 2. Jika tidak ditemukan di memory lokal, cari secara komprehensif di database Supabase
-      if (!match || !match.totalScore) {
-        try {
-          const { data, error } = await _supabase
-            .from('hasil_ujian')
-            .select('*')
-            .eq('nim', input)
-            .limit(1);
+      // 1. QUERY KETAT KE SUPABASE (HARUS STATUS PUBLISHED)
+      try {
+        const { data, error } = await _supabase
+          .from('hasil_ujian')
+          .select('*')
+          .eq('nim', input)
+          .eq('status_approval', 'PUBLISHED');
 
-          if (data && data.length > 0) {
-            const row = data[0];
-            match = {
-              nim: row.nim,
-              s1: row.listening_raw,
-              s2: row.structure_raw,
-              s3: row.reading_raw,
-              conv1: row.listening_converted,
-              conv2: row.structure_converted,
-              conv3: row.reading_converted,
-              totalScore: row.total_score,
-              hash: row.certificate_hash,
-              statusApproval: row.status_approval
-            };
+        if (data && data.length > 0) {
+          const row = data[0];
+          match = {
+            nim: String(row.nim),
+            s1: row.listening_raw || 0,
+            s2: row.structure_raw || 0,
+            s3: row.reading_raw || 0,
+            conv1: row.listening_converted || getConvertedScore(row.listening_raw || 0, 'l'),
+            conv2: row.structure_converted || getConvertedScore(row.structure_raw || 0, 's'),
+            conv3: row.reading_converted || getConvertedScore(row.structure_raw || 0, 's'),
+            totalScore: row.total_score || 0,
+            hash: row.certificate_hash || ''
+          };
+        }
+      } catch(e) {
+        console.error('Supabase query error:', e);
+      }
 
-            const { data: mData } = await _supabase.from('master_mahasiswa').select('*').eq('nim', input).maybeSingle();
-            if (mData) mInfo = { nama: mData.nama, prodi: mData.prodi, nim: mData.nim };
-          }
-        } catch(err) {
-          console.error('Error fetching Supabase data:', err);
+      // 2. QUERY MASTER MAHASISWA UNTUK NAMA & PRODI
+      try {
+        const { data: mData } = await _supabase
+          .from('master_mahasiswa')
+          .select('*')
+          .eq('nim', input);
+
+        if (mData && mData.length > 0) {
+          mInfo = { nama: mData[0].nama, prodi: mData[0].prodi, nim: String(mData[0].nim) };
+        }
+      } catch(e) {}
+
+      // FALLBACK CEK LOKAL JIKA BARU DI-APPROVE OLEH STAFF DI SESI SAMA
+      if (!match) {
+        const localMatch = parsedHasilUjian.find(i => String(i.nim).trim() === input && i.statusApproval === 'PUBLISHED');
+        if (localMatch) {
+          match = {
+            nim: input,
+            conv1: localMatch.conv1,
+            conv2: localMatch.conv2,
+            conv3: localMatch.conv3,
+            totalScore: localMatch.totalScore,
+            hash: localMatch.hash
+          };
         }
       }
 
-      // 3. Peringatan jika data benar-benar tidak ditemukan
-      if (!match || !match.totalScore) {
-        alert(`Data Nilai untuk NIM '${input}' Tidak Ditemukan atau Belum Dipublikasikan oleh Staff UPA!`);
+      if (!mInfo) {
+        const localMInfo = masterMahasiswa.find(m => String(m.nim).trim() === input);
+        if (localMInfo) {
+          mInfo = { nama: localMInfo.nama, prodi: localMInfo.prodi, nim: input };
+        }
+      }
+
+      // PENOLAKAN KETAT JIKA NILAI BELUM DIPUBLIKASIKAN OLEH KEPALA UPA
+      if (!match) {
+        alert(`AKSES DITOLAK: Nilai TOEFL untuk NIM '${input}' belum dipublikasikan atau masih dalam proses ACC verifikasi Kepala UPA Bahasa. Silakan hubungi Petugas Staff UPA.`);
         container.classList.add('hidden');
         return;
       }
 
-      if (!mInfo) mInfo = { nama: "MAHASISWA UPA BAHASA", prodi: "POLITEKNIK NEGERI SAMARINDA", nim: input };
-
-      // POPULATE DATA KE SERTIFIKAT RESMI FORMAL
-      document.getElementById('certStudentName').innerText = mInfo.nama;
-      document.getElementById('certNim').innerText = mInfo.nim;
-      document.getElementById('certProdi').innerText = mInfo.prodi;
+      // POPULATE DETAIL DATA KE SERTIFIKAT ASLI
+      document.getElementById('certStudentName').innerText = mInfo ? mInfo.nama : "MAHASISWA UPA BAHASA";
+      document.getElementById('certNim').innerText = input;
+      document.getElementById('certProdi').innerText = mInfo ? mInfo.prodi : "D3-Teknik Listrik";
       
       const todayFormatted = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'Long', year: 'numeric' });
       document.getElementById('certTestDate').innerText = todayFormatted;
@@ -1277,19 +1318,28 @@
       document.getElementById('certScoreR').innerText = match.conv3 || "20";
       document.getElementById('certScoreTotal').innerText = match.totalScore || "200";
 
-      document.getElementById('certHashDisplay').innerText = `SHA-256: ${match.hash || 'GEN-SHA256-PENDING'}`;
+      document.getElementById('certHashDisplay').innerText = `SHA-256: ${match.hash}`;
 
-      // GENERATE QR CODE ENKRIPSI REAL SHA-256
-      const qrContainer = document.getElementById('certQrContainer');
-      qrContainer.innerHTML = '';
-      new QRCode(qrContainer, {
-        text: `https://upaabahasa.vercel.app/?verify=${match.hash || input}`,
-        width: 70,
-        height: 70
-      });
+      // GENERATE QR CODE WITH SAFE ERROR HANDLING
+      try {
+        const qrContainer = document.getElementById('certQrContainer');
+        qrContainer.innerHTML = '';
+        if (typeof QRCode !== 'undefined') {
+          new QRCode(qrContainer, {
+            text: `https://upaabahasa.vercel.app/?verify=${match.hash}`,
+            width: 70,
+            height: 70
+          });
+        }
+      } catch (err) {
+        console.error("QR Code Error:", err);
+      }
 
+      // MUNCULKAN KOTAK SERTIFIKAT DENGAN ANIMASI SMOOTH
       container.classList.remove('hidden');
-      container.scrollIntoView({ behavior: 'smooth' });
+      setTimeout(() => {
+        container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     }
 
     // INITIAL LOAD
