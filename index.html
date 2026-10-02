@@ -163,7 +163,11 @@
               <p class="text-xs text-slate-500 mt-0.5">Pengaturan jadwal, waktu sesi, serta plotting 25 Meja Utama + 5 Meja Cadangan.</p>
             </div>
 
-            <div class="flex items-center gap-3">
+            <div class="flex items-center gap-2">
+              <button onclick="hapusSemuaDataMaster()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-3 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-1">
+                <span>🗑️ Kosongkan Data Master</span>
+              </button>
+
               <label class="bg-polnes-main hover:bg-polnes-dark text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer shadow-sm transition-all flex items-center gap-2">
                 <span>📂 Upload Master Mahasiswa</span>
                 <input type="file" id="excelMasterInput" accept=".xlsx, .xls, .csv" onchange="uploadMasterMahasiswa(event)" class="hidden">
@@ -623,6 +627,32 @@
         renderModul2();
       } catch (err) {
         console.error('Error Syncing Persistent Data:', err);
+      }
+    }
+
+    async function hapusSemuaDataMaster() {
+      if (!confirm("Apakah Anda yakin ingin MENGHAPUS SEMUA DATA MAHASISWA dari database? Tindakan ini akan mengosongkan tabel secara permanen!")) {
+        return;
+      }
+
+      try {
+        localStorage.removeItem('masterMahasiswaCache');
+        masterMahasiswa = [];
+        filteredMaster = [];
+        selectedPlotting = [];
+        parsedHasilUjian = [];
+
+        // HAPUS DI SUPABASE
+        await _supabase.from('master_mahasiswa').delete().neq('nim', 'DUMMY_NEQ');
+        await _supabase.from('hasil_ujian').delete().neq('nim', 'DUMMY_NEQ');
+
+        renderModul1();
+        renderModul2();
+
+        alert("Berhasil! Semua data master mahasiswa dan hasil ujian telah dibersihkan.");
+      } catch (err) {
+        console.error("Gagal menghapus data:", err);
+        alert("Terjadi kesalahan saat menghapus data!");
       }
     }
 
