@@ -37,33 +37,51 @@
   </script>
 
   <style>
-    /* CSS TAMPILAN CETAK FORMAL & E-SERTIFIKAT PRESISI 1 HALAMAN A4 LANDSCAPE */
+    /* CSS CETAK BERITA ACARA JADWAL & SERTIFIKAT */
     @page {
+      size: A4 portrait;
+      margin: 10mm;
+    }
+
+    body.print-cert-mode @page {
       size: A4 landscape;
       margin: 0;
     }
 
     @media print {
-      html, body {
-        width: 297mm;
-        height: 210mm;
+      body * { 
+        visibility: hidden !important; 
+      }
+
+      /* KONDISI 1: CETAK BERITA ACARA JADWAL */
+      body.print-jadwal-mode #printableJadwalArea, 
+      body.print-jadwal-mode #printableJadwalArea * { 
+        visibility: visible !important; 
+      }
+
+      body.print-jadwal-mode #printableJadwalArea { 
+        position: absolute !important; 
+        left: 0 !important; 
+        top: 0 !important; 
+        width: 100% !important; 
         margin: 0 !important;
         padding: 0 !important;
-        overflow: hidden;
+        box-shadow: none !important;
+        border: none !important;
         background: #fff !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
       }
 
-      body * { 
-        visibility: hidden; 
+      body.print-jadwal-mode .no-print { 
+        display: none !important; 
       }
 
-      #certificatePrintArea, #certificatePrintArea * { 
-        visibility: visible; 
+      /* KONDISI 2: CETAK E-SERTIFIKAT DIGITAL */
+      body.print-cert-mode #certificatePrintArea, 
+      body.print-cert-mode #certificatePrintArea * { 
+        visibility: visible !important; 
       }
 
-      #certificatePrintArea { 
+      body.print-cert-mode #certificatePrintArea { 
         position: fixed !important; 
         left: 0 !important; 
         top: 0 !important; 
@@ -76,9 +94,11 @@
         box-sizing: border-box !important;
         display: block !important;
         background: #fff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
 
-      .no-print { 
+      body.print-cert-mode .no-print { 
         display: none !important; 
       }
     }
@@ -143,7 +163,7 @@
       <section id="modul1" class="tab-content">
         <div id="printableJadwalArea" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
           
-          <!-- KOP SURAT RESMI AKADEMIK -->
+          <!-- KOP SURAT RESMI AKADEMIK UNTUK CETAK BERITA ACARA -->
           <div id="printHeaderTemplate" class="hidden mb-6 border-b-2 border-slate-900 pb-4 text-center">
             <h1 class="text-lg font-extrabold tracking-wider uppercase text-slate-900">UPA BAHASA POLITEKNIK NEGERI SAMARINDA</h1>
             <h2 class="text-sm font-bold uppercase text-slate-800 tracking-wide mt-0.5">DAFTAR HADIR & JADWAL RESMI TES TOEFL PREDICTION</h2>
@@ -251,7 +271,7 @@
             <div id="paginationInfo" class="no-print">Menampilkan 0 data</div>
             
             <div id="actionPrintContainer" class="hidden">
-              <button onclick="window.print()" class="bg-polnes-main hover:bg-polnes-dark text-white font-bold px-5 py-2 rounded-xl text-xs shadow-sm flex items-center gap-1.5 no-print">
+              <button onclick="cetakBeritaAcaraJadwal()" class="bg-polnes-main hover:bg-polnes-dark text-white font-bold px-5 py-2 rounded-xl text-xs shadow-sm flex items-center gap-1.5 no-print">
                 <span>🖨️ Cetak Berita Acara Jadwal (PDF/Word)</span>
               </button>
             </div>
@@ -547,7 +567,7 @@
 
           <!-- FOOTER ACTION BUTTONS (NO PRINT) -->
           <div class="no-print mt-6 pt-3 border-t flex justify-end gap-3">
-            <button onclick="window.print()" class="bg-polnes-dark hover:bg-emerald-950 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md flex items-center gap-2">
+            <button onclick="cetakSertifikatDigital()" class="bg-polnes-dark hover:bg-emerald-950 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md flex items-center gap-2">
               <span>🖨️ Cetak / Simpan E-Sertifikat (PDF A4 Landscape)</span>
             </button>
           </div>
@@ -642,7 +662,6 @@
         selectedPlotting = [];
         parsedHasilUjian = [];
 
-        // HAPUS DI SUPABASE
         await _supabase.from('master_mahasiswa').delete().neq('nim', 'DUMMY_NEQ');
         await _supabase.from('hasil_ujian').delete().neq('nim', 'DUMMY_NEQ');
 
@@ -680,6 +699,20 @@
       document.getElementById(tabId).classList.remove('hidden');
       document.getElementById('tab-' + tabId).classList.remove('bg-white', 'text-slate-600');
       document.getElementById('tab-' + tabId).classList.add('bg-polnes-main', 'text-white');
+    }
+
+    // FUNGSI CETAK KHUSUS BERITA ACARA JADWAL
+    function cetakBeritaAcaraJadwal() {
+      document.body.classList.remove('print-cert-mode');
+      document.body.classList.add('print-jadwal-mode');
+      window.print();
+    }
+
+    // FUNGSI CETAK KHUSUS E-SERTIFIKAT DIGITAL
+    function cetakSertifikatDigital() {
+      document.body.classList.remove('print-jadwal-mode');
+      document.body.classList.add('print-cert-mode');
+      window.print();
     }
 
     // MODUL 1
