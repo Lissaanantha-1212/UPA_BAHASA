@@ -37,18 +37,24 @@
   </script>
 
   <style>
-    /* CSS CETAK BERITA ACARA JADWAL & SERTIFIKAT */
+    /* ATURAN DOKUMEN CETAK KETAT PRESISI A4 LANDSCAPE */
     @page {
-      size: A4 portrait;
-      margin: 10mm;
-    }
-
-    body.print-cert-mode @page {
-      size: A4 landscape;
-      margin: 0;
+      size: 297mm 210mm; /* A4 Landscape */
+      margin: 0 !important;
     }
 
     @media print {
+      html, body {
+        width: 297mm !important;
+        height: 210mm !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+        background: #fff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+
       body * { 
         visibility: hidden !important; 
       }
@@ -65,17 +71,13 @@
         top: 0 !important; 
         width: 100% !important; 
         margin: 0 !important;
-        padding: 0 !important;
+        padding: 10mm !important;
         box-shadow: none !important;
         border: none !important;
         background: #fff !important;
       }
 
-      body.print-jadwal-mode .no-print { 
-        display: none !important; 
-      }
-
-      /* KONDISI 2: CETAK E-SERTIFIKAT DIGITAL */
+      /* KONDISI 2: CETAK E-SERTIFIKAT DIGITAL A4 LANDSCAPE */
       body.print-cert-mode #certificatePrintArea, 
       body.print-cert-mode #certificatePrintArea * { 
         visibility: visible !important; 
@@ -87,18 +89,16 @@
         top: 0 !important; 
         width: 297mm !important; 
         height: 210mm !important; 
-        padding: 10mm 15mm !important;
+        padding: 12mm 18mm !important;
         margin: 0 !important;
-        border: none !important;
+        border: 8px double #cbd5e1 !important;
         box-shadow: none !important;
         box-sizing: border-box !important;
         display: block !important;
         background: #fff !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
       }
 
-      body.print-cert-mode .no-print { 
+      .no-print { 
         display: none !important; 
       }
     }
@@ -478,72 +478,72 @@
         </div>
       </div>
 
-      <!-- TEMPLATE SERTIFIKAT FISIK (A4 LANDSCAPE) -->
+      <!-- TEMPLATE SERTIFIKAT FISIK (A4 LANDSCAPE PRESISI 1 HALAMAN FULL) -->
       <div id="hasilCekSkor" class="hidden max-w-5xl mx-auto">
-        <div id="certificatePrintArea" class="bg-white border-8 border-double border-slate-300 p-8 shadow-2xl rounded-sm relative text-slate-900 font-serif my-4 overflow-hidden box-sizing-border">
+        <div id="certificatePrintArea" class="bg-white border-8 border-double border-slate-300 p-6 md:p-8 shadow-2xl rounded-sm relative text-slate-900 font-serif my-4 overflow-hidden box-sizing-border">
           
-          <!-- GAMBAR LATAR FISIK polnes2.jpg SUPAYA DIBACA SAAT PRINT PDF -->
+          <!-- GAMBAR LATAR FISIK polnes2.jpg PRESISI MENUTUPI SATU LEMBAR -->
           <img src="polnes2.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none z-0">
 
-          <div class="relative z-10 flex flex-col justify-between h-full">
+          <div class="relative z-10 flex flex-col justify-between h-full min-h-[500px]">
             <!-- KOP SURAT ATAS SERTIFIKAT FORMAL -->
-            <div class="flex justify-between items-center border-b-2 border-emerald-800 pb-3 mb-4">
-              <div class="flex items-center gap-4">
-                <div class="w-16 h-16 flex items-center justify-center overflow-hidden">
+            <div class="flex justify-between items-center border-b-2 border-emerald-800 pb-2 mb-2">
+              <div class="flex items-center gap-3">
+                <div class="w-14 h-14 flex items-center justify-center overflow-hidden">
                   <img id="certLogoImg" src="logo-removebg-preview.png" class="w-full h-full object-contain">
                 </div>
                 <div>
-                  <h3 class="text-xs font-bold uppercase tracking-wider text-slate-700 font-sans">KEMENTERIAN PENDIDIKAN, TINGGI, SAINS, DAN TEKNOLOGI</h3>
-                  <h1 class="text-lg font-extrabold uppercase tracking-wide text-emerald-900 font-sans">POLITEKNIK NEGERI SAMARINDA</h1>
-                  <h2 class="text-sm font-bold uppercase tracking-wider text-emerald-700 font-sans">UPA. BAHASA</h2>
+                  <h3 class="text-[10px] font-bold uppercase tracking-wider text-slate-700 font-sans">KEMENTERIAN PENDIDIKAN, TINGGI, SAINS, DAN TEKNOLOGI</h3>
+                  <h1 class="text-base font-extrabold uppercase tracking-wide text-emerald-900 font-sans">POLITEKNIK NEGERI SAMARINDA</h1>
+                  <h2 class="text-xs font-bold uppercase tracking-wider text-emerald-700 font-sans">UPA. BAHASA</h2>
                 </div>
               </div>
             </div>
 
             <!-- JUDUL SERTIFIKAT & NOMOR -->
-            <div class="text-center my-2">
-              <h2 class="text-xl font-bold tracking-widest text-slate-900 uppercase underline decoration-1 underline-offset-4 cert-font-title">CERTIFICATE OF ACHIEVEMENT</h2>
-              <p class="text-xs font-sans text-slate-600 mt-1" id="certNoRef">No : 0885/ PL19 / UPA.BAHASA / TOEFL-P / 2026</p>
-              <p class="text-xs italic mt-2 text-slate-700">This is presented to</p>
-              <h3 class="text-xl font-bold uppercase tracking-wide text-slate-900 mt-1 my-1 border-b border-dashed border-slate-300 inline-block px-8 py-0.5" id="certStudentName">-</h3>
+            <div class="text-center my-1">
+              <h2 class="text-lg font-bold tracking-widest text-slate-900 uppercase underline decoration-1 underline-offset-4 cert-font-title">CERTIFICATE OF ACHIEVEMENT</h2>
+              <p class="text-[11px] font-sans text-slate-600 mt-0.5" id="certNoRef">No : 0885/ PL19 / UPA.BAHASA / TOEFL-P / 2026</p>
+              <p class="text-[11px] italic mt-1 text-slate-700">This is presented to</p>
+              <h3 class="text-lg font-bold uppercase tracking-wide text-slate-900 my-0.5 border-b border-dashed border-slate-300 inline-block px-6 py-0.5" id="certStudentName">-</h3>
             </div>
 
             <!-- DETAIL MAHASISWA & TANGGAL TES -->
-            <div class="max-w-md mx-auto text-xs font-sans space-y-1 my-3 text-slate-800">
+            <div class="max-w-md mx-auto text-xs font-sans space-y-0.5 my-2 text-slate-800">
               <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">NIM</span><span class="col-span-8">: <span id="certNim" class="font-mono font-bold">-</span></span></div>
               <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Place, date of birth</span><span class="col-span-8">: <span id="certPobDob">Samarinda, 01 Januari 2004</span></span></div>
               <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Program Study</span><span class="col-span-8">: <span id="certProdi">-</span></span></div>
               <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Date of test taken</span><span class="col-span-8">: <span id="certTestDate">-</span></span></div>
             </div>
 
-            <p class="text-center text-xs italic font-serif my-2 text-slate-700">Achieved the following score on TOEFL Prediction Test</p>
+            <p class="text-center text-xs italic font-serif my-1 text-slate-700">Achieved the following score on TOEFL Prediction Test</p>
 
             <!-- TABEL RINCIAN SKOR LENGKAP -->
-            <div class="max-w-xl mx-auto my-3 font-sans">
+            <div class="max-w-xl mx-auto my-2 font-sans">
               <table class="w-full border-collapse border border-slate-800 text-center text-xs">
                 <thead>
                   <tr class="bg-slate-100 border-b border-slate-800 text-slate-900 font-bold">
-                    <th class="border border-slate-800 p-2 w-1/3">Listening Comprehension</th>
-                    <th class="border border-slate-800 p-2 w-1/3">Structure and Written Expression</th>
-                    <th class="border border-slate-800 p-2 w-1/3">Reading Comprehension</th>
+                    <th class="border border-slate-800 p-1.5 w-1/3">Listening Comprehension</th>
+                    <th class="border border-slate-800 p-1.5 w-1/3">Structure and Written Expression</th>
+                    <th class="border border-slate-800 p-1.5 w-1/3">Reading Comprehension</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr>
-                    <td class="border border-slate-800 p-2 font-bold text-sm" id="certScoreL">-</td>
-                    <td class="border border-slate-800 p-2 font-bold text-sm" id="certScoreS">-</td>
-                    <td class="border border-slate-800 p-2 font-bold text-sm" id="certScoreR">-</td>
+                    <td class="border border-slate-800 p-1.5 font-bold text-sm" id="certScoreL">-</td>
+                    <td class="border border-slate-800 p-1.5 font-bold text-sm" id="certScoreS">-</td>
+                    <td class="border border-slate-800 p-1.5 font-bold text-sm" id="certScoreR">-</td>
                   </tr>
                   <tr class="bg-slate-50 font-bold border-t-2 border-slate-800">
-                    <td colspan="2" class="border border-slate-800 p-1.5 text-right uppercase">Total Score</td>
-                    <td class="border border-slate-800 p-1.5 text-base text-emerald-900 font-extrabold" id="certScoreTotal">-</td>
+                    <td colspan="2" class="border border-slate-800 p-1 text-right uppercase">Total Score</td>
+                    <td class="border border-slate-800 p-1 text-sm text-emerald-900 font-extrabold" id="certScoreTotal">-</td>
                   </tr>
                 </tbody>
               </table>
             </div>
 
             <!-- FOOTER TANDA TANGAN & BARCODE SHA-256 -->
-            <div class="mt-6 pt-2 grid grid-cols-2 items-end font-sans text-xs">
+            <div class="mt-4 pt-1 grid grid-cols-2 items-end font-sans text-xs">
               
               <!-- QR CODE VERIFIKASI DIGITAL SHA-256 -->
               <div class="flex flex-col items-start gap-1">
@@ -556,17 +556,17 @@
                 <p class="text-slate-700">Samarinda, <span id="certIssueDate">05 Agustus 2026</span></p>
                 <p class="font-bold text-slate-800">Head of UPA. Bahasa</p>
                 
-                <div class="h-16 my-1"></div>
+                <div class="h-12 my-1"></div>
 
                 <p class="font-bold text-slate-900 underline decoration-1">Dwi Tri Maesaroh, S.Pd., M.Pd.</p>
-                <p class="text-[11px] text-slate-600 font-mono">NIP. 198901172024062002</p>
+                <p class="text-[10px] text-slate-600 font-mono">NIP. 198901172024062002</p>
               </div>
 
             </div>
           </div>
 
           <!-- FOOTER ACTION BUTTONS (NO PRINT) -->
-          <div class="no-print mt-6 pt-3 border-t flex justify-end gap-3">
+          <div class="no-print mt-4 pt-2 border-t flex justify-end gap-3">
             <button onclick="cetakSertifikatDigital()" class="bg-polnes-dark hover:bg-emerald-950 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md flex items-center gap-2">
               <span>🖨️ Cetak / Simpan E-Sertifikat (PDF A4 Landscape)</span>
             </button>
@@ -1513,8 +1513,8 @@
         if (typeof QRCode !== 'undefined') {
           new QRCode(qrContainer, {
             text: `https://upaabahasa.vercel.app/?verify=${match.hash}`,
-            width: 70,
-            height: 70
+            width: 65,
+            height: 65
           });
         }
       } catch (err) {
