@@ -180,16 +180,16 @@
               <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
                 <span>Modul 1: Penjadwalan & Penguncian Sesi Ujian</span>
               </h2>
-              <p class="text-xs text-slate-500 mt-0.5">Pengaturan jadwal, waktu sesi, serta plotting 25 Meja Utama + 5 Meja Cadangan.</p>
+              <p class="text-xs text-slate-500 mt-0.5">Pengaturan jadwal per kelas/file, serta plotting 25 Meja Utama + 5 Meja Cadangan.</p>
             </div>
 
             <div class="flex items-center gap-2">
               <button onclick="hapusSemuaDataMaster()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-3 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-1">
-                <span>🗑️ Kosongkan Data Master</span>
+                <span>🗑️ Kosongkan Database</span>
               </button>
 
               <label class="bg-polnes-main hover:bg-polnes-dark text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer shadow-sm transition-all flex items-center gap-2">
-                <span>📂 Upload Master Mahasiswa</span>
+                <span>📂 Upload File Mahasiswa (Per Kelas)</span>
                 <input type="file" id="excelMasterInput" accept=".xlsx, .xls, .csv" onchange="uploadMasterMahasiswa(event)" class="hidden">
               </label>
 
@@ -245,9 +245,21 @@
             </div>
           </div>
 
-          <!-- FILTER SEARCH BAR -->
-          <div id="searchBarContainer" class="mb-4 no-print">
-            <input type="text" id="searchInput" onkeyup="filterMahasiswa()" placeholder="Cari berdasarkan NIM, Nama, atau Prodi..." class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-polnes-main">
+          <!-- KONTROL FILTER TAMPILAN DATA (DROPDOWN JENIS DATA) -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 no-print">
+            <div class="md:col-span-1">
+              <label class="text-[10px] font-bold text-slate-500 uppercase mb-1 block">Tampilkan Kategori Data:</label>
+              <select id="filterKategoriSelect" onchange="gantiKategoriTampilan()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none bg-white font-bold text-slate-700">
+                <option value="LATEST">📄 File Terakhir Diunggah Saja</option>
+                <option value="ALL">🌐 Tampilkan Seluruh Data Mahasiswa</option>
+                <option value="D3">🎓 Khusus Mahasiswa Program D3</option>
+                <option value="D4">🎓 Khusus Mahasiswa Program D4</option>
+              </select>
+            </div>
+
+            <div class="md:col-span-2 flex items-end">
+              <input type="text" id="searchInput" onkeyup="filterMahasiswa()" placeholder="Cari berdasarkan NIM, Nama, atau Prodi..." class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-polnes-main">
+            </div>
           </div>
 
           <!-- TABEL DATA MAHASISWA MASTER / TERPLOT -->
@@ -255,8 +267,13 @@
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
                 <tr>
-                  <th class="p-3 text-center no-print">Plot</th>
-                  <th class="p-3">NIM</th>
+                  <th class="p-3 text-center no-print w-20">
+                    <div class="flex flex-col items-center gap-0.5">
+                      <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAllInView(this)" class="w-4 h-4 accent-emerald-600 rounded cursor-pointer">
+                      <span class="text-[9px] font-bold text-emerald-800 uppercase">Pilih All</span>
+                    </div>
+                  </th>
+                  <th class="p-3">NIM & Angkatan</th>
                   <th class="p-3">Nama Mahasiswa</th>
                   <th class="p-3">Program Studi</th>
                   <th class="p-3 text-center">ID Meja Komputer</th>
@@ -423,7 +440,7 @@
       <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
         <label class="text-xs font-bold text-slate-700 mb-2 block uppercase">Pencarian NIM Mahasiswa:</label>
         <div class="flex gap-2">
-          <input type="text" id="cekNimInput" placeholder="Ketik NIM Mahasiswa..." class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-xs outline-none focus:ring-1 focus:ring-polnes-main font-mono">
+          <input type="text" id="cekNimInput" placeholder="Ketik NIM Mahasiswa (contoh: 246151048)..." class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-xs outline-none focus:ring-1 focus:ring-polnes-main font-mono">
           <button onclick="cariSkorPublik()" class="bg-polnes-dark hover:bg-emerald-950 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm">
             Cari Nilai Ujian
           </button>
@@ -436,6 +453,9 @@
           <div>
             <h3 class="text-base font-bold text-slate-800" id="infoStudentName">-</h3>
             <p class="text-xs text-slate-500 font-mono" id="infoStudentNimProdi">-</p>
+            <div id="infoKategoriAngkatan" class="mt-1 inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+              -
+            </div>
           </div>
           <div id="infoBadgeKelulusan" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold shadow-sm border">
             -
@@ -467,10 +487,15 @@
           <span class="text-2xl font-black text-emerald-900 block mt-0.5" id="infoTotalScore">0</span>
         </div>
 
-        <!-- TOMBOL UNDUH JIKA LULUS -->
+        <!-- TOMBOL UNDUH JIKA LULUS & MAHASISWA SEMESTER AKHIR -->
         <button id="btnDownloadCert" onclick="tampilkanSertifikatLengkap()" class="w-full bg-polnes-dark hover:bg-emerald-950 text-white font-bold py-3 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-2">
           <span>📜 Unduh / Preview E-Sertifikat Resmi</span>
         </button>
+
+        <!-- PESAN UNTUK MAHASISWA SEMESTER BAWAH (FLOWCHART LOGIC) -->
+        <div id="semesterBawahNotice" class="hidden bg-sky-50 border border-sky-200 p-4 rounded-xl text-center text-xs text-sky-800 leading-relaxed font-semibold">
+          ℹ️ Anda terdeteksi sebagai <b>Mahasiswa Semester Bawah</b>. Sesuai ketentuan UPA Bahasa POLNES, nilai Anda telah tercatat, namun E-Sertifikat Digital hanya dapat diunduh saat Anda berada di <b>Semester Akhir</b>.
+        </div>
 
         <!-- PESAN REMINDER JIKA TIDAK LULUS -->
         <div id="remedialNotice" class="hidden bg-rose-50 border border-rose-200 p-4 rounded-xl text-center text-xs text-rose-800 leading-relaxed font-semibold">
@@ -586,6 +611,7 @@
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let masterMahasiswa = [];
+    let latestUploadBatch = []; // Menyimpan NIM dari batch upload file terakhir
     let filteredMaster = [];
     let currentPage = 1;
     const pageSize = 20;
@@ -627,6 +653,23 @@
       return 20;
     }
 
+    // HELPER LOGIKA ANGKATAN & SEMESTER (DARI 2 DIGIT PERTAMA NIM)
+    function getAngkatanFromNim(nim) {
+      if (!nim) return { angkatan: 2024, isSemesterAkhir: false };
+      const nimStr = String(nim).trim();
+      const prefixTwo = nimStr.substring(0, 2);
+      const year = parseInt("20" + prefixTwo) || 2024;
+      
+      // Sesuai Flowchart: Angkatan 24, 25, dst -> Semester Bawah.
+      // Angkatan <= 23 (D3) atau <= 22 (D4) -> Semester Akhir.
+      const isSemesterAkhir = (year <= 2023);
+
+      return {
+        angkatan: year,
+        isSemesterAkhir: isSemesterAkhir
+      };
+    }
+
     let selectedPlotting = [];
     let parsedHasilUjian = [];
 
@@ -658,6 +701,7 @@
       try {
         localStorage.removeItem('masterMahasiswaCache');
         masterMahasiswa = [];
+        latestUploadBatch = [];
         filteredMaster = [];
         selectedPlotting = [];
         parsedHasilUjian = [];
@@ -715,7 +759,7 @@
       window.print();
     }
 
-    // MODUL 1
+    // MODUL 1: UPLOAD PER FILE (PER KELAS/JURUSAN)
     async function uploadMasterMahasiswa(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -759,7 +803,7 @@
             const prodiKey = firstRowKeys.find(k => /^(prodi|program_studi|program studi|jurusan|kelas|proglat)$/i.test(k.trim().toLowerCase())) 
                            || firstRowKeys.find(k => /prodi|studi|jurusan|program/i.test(k.trim().toLowerCase()));
 
-            masterMahasiswa = json.map(row => {
+            const newUploadedList = json.map(row => {
               const nimVal = String(row[nimKey] || '').trim();
               const namaVal = String(row[namaKey] || '').trim();
               
@@ -771,14 +815,26 @@
               return { nim: nimVal, nama: namaVal, prodi: prodiVal };
             }).filter(m => m.nim !== '' && m.nama !== '');
 
+            latestUploadBatch = newUploadedList.map(m => m.nim);
+
+            // GABUNGKAN DENGAN MASTER MAHASISWA TANPA DUPLIKAT NIM
+            newUploadedList.forEach(newM => {
+              const idx = masterMahasiswa.findIndex(m => String(m.nim) === String(newM.nim));
+              if (idx >= 0) {
+                masterMahasiswa[idx] = newM;
+              } else {
+                masterMahasiswa.push(newM);
+              }
+            });
+
             localStorage.setItem('masterMahasiswaCache', JSON.stringify(masterMahasiswa));
 
             progressBar.style.width = '40%';
             progressPercent.innerText = '40%';
-            progressText.innerText = `Mengunggah ${masterMahasiswa.length} data ke Supabase...`;
+            progressText.innerText = `Mengunggah ${newUploadedList.length} data file baru ke Supabase...`;
 
-            for (let i = 0; i < masterMahasiswa.length; i++) {
-              const mRow = masterMahasiswa[i];
+            for (let i = 0; i < newUploadedList.length; i++) {
+              const mRow = newUploadedList[i];
               try {
                 const { data: exist } = await _supabase.from('master_mahasiswa').select('nim').eq('nim', mRow.nim);
                 if (exist && exist.length > 0) {
@@ -788,7 +844,7 @@
                 }
               } catch(e) {}
 
-              const currentPct = Math.round(40 + ((i + 1) / masterMahasiswa.length) * 60);
+              const currentPct = Math.round(40 + ((i + 1) / newUploadedList.length) * 60);
               progressBar.style.width = `${currentPct}%`;
               progressPercent.innerText = `${currentPct}%`;
             }
@@ -796,8 +852,9 @@
             progressText.innerText = 'Selesai!';
             setTimeout(() => {
               progressContainer.classList.add('hidden');
-              alert(`Sukses! ${masterMahasiswa.length} Data Master Mahasiswa Berhasil Diunggah & Tersimpan Permanen!`);
-              selectedPlotting = [];
+              alert(`Sukses! ${newUploadedList.length} Data Mahasiswa Berhasil Diunggah!\nTampilan sekarang difokuskan pada file baru saja.`);
+              
+              document.getElementById('filterKategoriSelect').value = 'LATEST';
               currentPage = 1;
               filterMahasiswa();
             }, 300);
@@ -812,6 +869,64 @@
       }, 50);
     }
 
+    function gantiKategoriTampilan() {
+      currentPage = 1;
+      filterMahasiswa();
+    }
+
+    function filterMahasiswa() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      const kat = document.getElementById('filterKategoriSelect').value;
+      
+      let baseData = masterMahasiswa;
+
+      if (modeFokusPlotting) {
+        baseData = masterMahasiswa.filter(m => selectedPlotting.includes(m.nim));
+      } else {
+        if (kat === 'LATEST' && latestUploadBatch.length > 0) {
+          baseData = masterMahasiswa.filter(m => latestUploadBatch.includes(m.nim));
+        } else if (kat === 'D3') {
+          baseData = masterMahasiswa.filter(m => String(m.prodi).toUpperCase().includes('D3'));
+        } else if (kat === 'D4') {
+          baseData = masterMahasiswa.filter(m => String(m.prodi).toUpperCase().includes('D4'));
+        }
+      }
+
+      filteredMaster = baseData.filter(m => 
+        m.nama.toLowerCase().includes(q) || 
+        m.nim.toLowerCase().includes(q) || 
+        m.prodi.toLowerCase().includes(q)
+      );
+      currentPage = 1;
+      renderModul1();
+    }
+
+    function toggleSelectAllInView(masterCheckbox) {
+      const isChecked = masterCheckbox.checked;
+
+      const currentDisplayedData = modeFokusPlotting 
+        ? masterMahasiswa.filter(m => selectedPlotting.includes(m.nim)) 
+        : filteredMaster;
+
+      currentDisplayedData.forEach(m => {
+        if (isChecked) {
+          if (!selectedPlotting.includes(m.nim)) {
+            if (selectedPlotting.length < 25) {
+              selectedPlotting.push(m.nim);
+            }
+          }
+        } else {
+          selectedPlotting = selectedPlotting.filter(n => n !== m.nim);
+        }
+      });
+
+      if (selectedPlotting.length >= 25 && isChecked) {
+        alert('Catatan: Batas maksimum plot sesi utama adalah 25 mahasiswa.');
+      }
+
+      renderModul1();
+    }
+
     function renderModul1() {
       const tbody = document.getElementById('tableMahasiswa');
       tbody.innerHTML = '';
@@ -821,7 +936,7 @@
           <tr>
             <td colspan="5" class="p-8 text-center text-slate-400">
               <div class="text-2xl mb-1">📂</div>
-              <p class="font-bold text-slate-600">Belum ada data mahasiswa yang cocok.</p>
+              <p class="font-bold text-slate-600">Silakan unggah file data mahasiswa lagi atau ganti filter kategori.</p>
             </td>
           </tr>
         `;
@@ -829,7 +944,8 @@
         document.getElementById('pageIndicator').innerText = 'Hal 1 / 1';
         document.getElementById('btnPrevPage').disabled = true;
         document.getElementById('btnNextPage').disabled = true;
-        document.getElementById('selectedCount').innerText = '0';
+        document.getElementById('selectedCount').innerText = selectedPlotting.length;
+        document.getElementById('selectAllCheckbox').checked = false;
         return;
       }
 
@@ -837,12 +953,17 @@
         const selectedData = masterMahasiswa.filter(m => selectedPlotting.includes(m.nim));
         selectedData.forEach((m, idx) => {
           const meja = `STUDENT${(idx + 1) < 10 ? '0' + (idx + 1) : (idx + 1)}`;
+          const angkInfo = getAngkatanFromNim(m.nim);
+
           tbody.innerHTML += `
             <tr class="bg-polnes-light print-all-rows">
               <td class="p-3 text-center no-print">
                 <input type="checkbox" checked onchange="togglePlotting('${m.nim}')" class="w-4 h-4 accent-emerald-600 rounded cursor-pointer">
               </td>
-              <td class="p-3 font-mono font-semibold text-slate-700">${m.nim}</td>
+              <td class="p-3 font-mono font-semibold text-slate-700">
+                ${m.nim}
+                <span class="block text-[10px] text-slate-400 font-sans">Angkatan: <b>${angkInfo.angkatan}</b></span>
+              </td>
               <td class="p-3 font-medium text-slate-800">${m.nama}</td>
               <td class="p-3 text-slate-500">${m.prodi}</td>
               <td class="p-3 text-center">
@@ -864,17 +985,25 @@
       const endIndex = Math.min(startIndex + pageSize, filteredMaster.length);
       const pageData = filteredMaster.slice(startIndex, endIndex);
 
+      let allInPageSelected = pageData.length > 0;
+
       pageData.forEach(m => {
         const isPlot = selectedPlotting.includes(m.nim);
+        if (!isPlot) allInPageSelected = false;
+
         const idx = selectedPlotting.indexOf(m.nim) + 1;
         const meja = isPlot ? `STUDENT${idx < 10 ? '0' + idx : idx}` : '-';
+        const angkInfo = getAngkatanFromNim(m.nim);
 
         tbody.innerHTML += `
           <tr class="${isPlot ? 'bg-polnes-light' : 'hover:bg-slate-50'} transition-all">
             <td class="p-3 text-center no-print">
               <input type="checkbox" ${isPlot ? 'checked' : ''} onchange="togglePlotting('${m.nim}')" class="w-4 h-4 accent-emerald-600 rounded cursor-pointer">
             </td>
-            <td class="p-3 font-mono font-semibold text-slate-700">${m.nim}</td>
+            <td class="p-3 font-mono font-semibold text-slate-700">
+              ${m.nim}
+              <span class="block text-[10px] text-slate-400 font-sans">Angkatan: <b>${angkInfo.angkatan}</b></span>
+            </td>
             <td class="p-3 font-medium text-slate-800">${m.nama}</td>
             <td class="p-3 text-slate-500">${m.prodi}</td>
             <td class="p-3 text-center">
@@ -884,6 +1013,7 @@
         `;
       });
 
+      document.getElementById('selectAllCheckbox').checked = allInPageSelected;
       document.getElementById('selectedCount').innerText = selectedPlotting.length;
       document.getElementById('paginationInfo').innerText = `Menampilkan ${startIndex + 1} - ${endIndex} dari total ${filteredMaster.length} data`;
       document.getElementById('pageIndicator').innerText = `Hal ${currentPage} / ${totalPages}`;
@@ -908,23 +1038,6 @@
       }
       if (modeFokusPlotting) filterMahasiswa();
       else renderModul1();
-    }
-
-    function filterMahasiswa() {
-      const q = document.getElementById('searchInput').value.toLowerCase().trim();
-      
-      let baseData = masterMahasiswa;
-      if (modeFokusPlotting) {
-        baseData = masterMahasiswa.filter(m => selectedPlotting.includes(m.nim));
-      }
-
-      filteredMaster = baseData.filter(m => 
-        m.nama.toLowerCase().includes(q) || 
-        m.nim.toLowerCase().includes(q) || 
-        m.prodi.toLowerCase().includes(q)
-      );
-      currentPage = 1;
-      renderModul1();
     }
 
     function kunciDanFokusJadwal() {
@@ -960,8 +1073,10 @@
       document.getElementById('printHeaderTemplate').classList.add('hidden');
       document.getElementById('actionPrintContainer').classList.add('hidden');
       
+      document.getElementById('filterKategoriSelect').value = 'ALL';
       filterMahasiswa();
-      alert('Sesi sebelumnya telah selesai. Centang dikosongkan secara otomatis untuk penataan jadwal sesi selanjutnya!');
+
+      alert('Sesi sebelumnya telah dikunci! Silahkan upload file data mahasiswa lagi untuk menjadwalkan sesi berikutnya.');
     }
 
     // MODUL 2: PARSER WITH METADATA CHECK
@@ -1356,7 +1471,7 @@
       alert(`BERHASIL! ${successCount} dari ${validItems.length} Skor TOEFL Resmi Berhasil Dipublikasikan ke Database Supabase & Web Utama!`);
     }
 
-    // PUBLIK: ALUR CEK DENGAN KARTU INFORMASI DAHULU SEBELUM SERTIFIKAT
+    // PUBLIK: ALUR CEK LOGIKA FLOWCHART (SEMESTER BAWAH VS AKHIR)
     async function cariSkorPublik() {
       const input = document.getElementById('cekNimInput').value.trim();
       const certContainer = document.getElementById('hasilCekSkor');
@@ -1439,14 +1554,26 @@
         return;
       }
 
+      // HITUNG DENGAN HELPER ANGKATAN NIM
+      const angkatanInfo = getAngkatanFromNim(match.nim);
+
       // SIMPAN DATA SEMENTARA DI VARIABEL GLOBAL
       currentPublicMatch = match;
       currentPublicMInfo = mInfo;
 
       // ISI DATA RINGKASAN KE KARTU INFO
       document.getElementById('infoStudentName').innerText = mInfo ? mInfo.nama : "MAHASISWA UPA BAHASA";
-      document.getElementById('infoStudentNimProdi').innerText = `NIM: ${match.nim} | ${mInfo ? mInfo.prodi : 'D3 - Teknik Informatika'}`;
+      document.getElementById('infoStudentNimProdi').innerText = `NIM: ${match.nim} | ${mInfo ? mInfo.prodi : 'POLNES'}`;
       
+      const katEl = document.getElementById('infoKategoriAngkatan');
+      if (angkatanInfo.isSemesterAkhir) {
+        katEl.className = "mt-1 inline-block text-[10px] font-extrabold px-2 py-0.5 rounded bg-purple-100 text-purple-800 border border-purple-300";
+        katEl.innerText = `Angkatan ${angkatanInfo.angkatan} - Mahasiswa Semester Akhir`;
+      } else {
+        katEl.className = "mt-1 inline-block text-[10px] font-extrabold px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300";
+        katEl.innerText = `Angkatan ${angkatanInfo.angkatan} - Mahasiswa Semester Bawah`;
+      }
+
       document.getElementById('infoRawL').innerText = match.s1;
       document.getElementById('infoConvL').innerText = match.conv1;
 
@@ -1458,25 +1585,38 @@
 
       document.getElementById('infoTotalScore').innerText = match.totalScore;
 
-      // KONTROL LOGIKA KELULUSAN (BATAS KELULUSAN SCORE 400)
+      // KONTROL LOGIKA FLOWCHART PENELITIAN
       const badgeEl = document.getElementById('infoBadgeKelulusan');
       const btnCert = document.getElementById('btnDownloadCert');
+      const semBawahNotice = document.getElementById('semesterBawahNotice');
       const remedialNotice = document.getElementById('remedialNotice');
 
-      if (match.totalScore >= 400) {
-        // LULUS -> HIJAU SOFT & TOMBOL SERTIFIKAT AKTIF
+      const isPassed = (match.totalScore >= 400);
+
+      if (isPassed) {
         badgeEl.className = "px-3.5 py-1.5 rounded-xl text-xs font-extrabold shadow-sm border bg-emerald-100 text-emerald-800 border-emerald-200";
         badgeEl.innerText = "LULUS (PASSED)";
-        
-        btnCert.classList.remove('hidden');
-        remedialNotice.classList.add('hidden');
       } else {
-        // TIDAK LULUS -> MERAH SOFT & KUNCI SERTIFIKAT, TAMPILKAN NOTICE REMEDIAL
         badgeEl.className = "px-3.5 py-1.5 rounded-xl text-xs font-extrabold shadow-sm border bg-rose-100 text-rose-800 border-rose-200";
         badgeEl.innerText = "TIDAK LULUS (FAILED)";
+      }
 
+      // KONTROL PENAMPILAN E-SERTIFIKAT SESUAI FLOWCHART:
+      if (angkatanInfo.isSemesterAkhir) {
+        // MAHASISWA SEMESTER AKHIR
+        semBawahNotice.classList.add('hidden');
+        if (isPassed) {
+          btnCert.classList.remove('hidden');
+          remedialNotice.classList.add('hidden');
+        } else {
+          btnCert.classList.add('hidden');
+          remedialNotice.classList.remove('hidden');
+        }
+      } else {
+        // MAHASISWA SEMESTER BAWAH -> TIDAK MUNCUL SERTIFIKAT SESUAI FLOWCHART
         btnCert.classList.add('hidden');
-        remedialNotice.classList.remove('hidden');
+        remedialNotice.classList.add('hidden');
+        semBawahNotice.classList.remove('hidden');
       }
 
       // TAMPILKAN KARTU INFORMASI
@@ -1484,7 +1624,7 @@
       infoCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    // FUNGSI UNTUK MEMUNCULKAN SERTIFIKAT LENGKAP SAAT TOMBOL UNDUH DIKLIK (HANYA UNTUK YANG LULUS)
+    // FUNGSI UNTUK MEMUNCULKAN SERTIFIKAT LENGKAP SAAT TOMBOL UNDUH DIKLIK (HANYA UNTUK SEMESTER AKHIR & LULUS)
     function tampilkanSertifikatLengkap() {
       if (!currentPublicMatch || currentPublicMatch.totalScore < 400) return;
 
