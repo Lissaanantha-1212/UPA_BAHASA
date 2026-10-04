@@ -76,6 +76,11 @@
         background: #fff !important;
       }
 
+      /* MUNCULKAN KOP HANYA SAAT CETAK MODE JADWAL */
+      body.print-jadwal-mode #printHeaderTemplate {
+        display: block !important;
+      }
+
       /* KONDISI 2: CETAK E-SERTIFIKAT DIGITAL (LANDSCAPE A4) */
       body.print-cert-mode #certificatePrintArea, 
       body.print-cert-mode #certificatePrintArea * { 
@@ -162,28 +167,33 @@
       <section id="modul1" class="tab-content">
         <div id="printableJadwalArea" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
           
-          <!-- KOP SURAT RESMI AKADEMIK DENGAN LOGO POLNES (SESUAI CONTOH GAMBAR) -->
-          <div id="printHeaderTemplate" class="hidden mb-6 border-b-2 border-slate-900 pb-3 text-center">
-            <div class="flex items-center justify-between px-2 mb-2">
-              <div class="w-20 h-20 flex items-center justify-center overflow-hidden">
+          <!-- KOP SURAT RESMI AKADEMIK (DISEMBUNYIKAN DI WEB, HANYA MUNCUL SAAT CETAK PRINT) -->
+          <div id="printHeaderTemplate" class="hidden mb-6 text-center">
+            <div class="flex items-center justify-between pb-2">
+              <!-- LOGO POLNES SISI KIRI -->
+              <div class="w-24 h-24 flex items-center justify-start overflow-hidden">
                 <img src="logo-removebg-preview.png" class="w-full h-full object-contain">
               </div>
-              <div class="text-center flex-1 px-4">
-                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800">KEMENTERIAN PENDIDIKAN TINGGI, SAINS DAN TEKNOLOGI</h3>
-                <h1 class="text-base font-extrabold uppercase tracking-wide text-slate-900 mt-0.5">POLITEKNIK NEGERI SAMARINDA</h1>
-                <h2 class="text-sm font-extrabold uppercase tracking-wide text-slate-900">UPA. BAHASA</h2>
-                <p class="text-[10px] text-slate-700 mt-1">
+              
+              <!-- TEKS KOP DENGAN LETTER SPACING PROFESIONAL RATA TENGAH MELEBAR -->
+              <div class="text-center flex-1 px-2">
+                <h3 class="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-800 leading-snug">KEMENTERIAN PENDIDIKAN TINGGI, SAINS DAN TEKNOLOGI</h3>
+                <h1 class="text-base font-extrabold uppercase tracking-[0.25em] text-slate-900 mt-1">POLITEKNIK NEGERI SAMARINDA</h1>
+                <h2 class="text-sm font-extrabold uppercase tracking-[0.3em] text-slate-900 mt-0.5">UPA. BAHASA</h2>
+                <p class="text-[9.5px] text-slate-700 mt-1 leading-normal tracking-wide">
                   Jalan Dr. Ciptomangkunkusumo Kampus Gunung Panjang Samarinda<br>
                   Telepon: PABX(0541)260588-260553-262018 FAX (0541) 260355<br>
-                  Website: www.polnes.ac.id &nbsp; Email: polnes@polnes.ac.id
+                  Website: www.polnes.ac.id &nbsp;|&nbsp; Email: polnes@polnes.ac.id
                 </p>
               </div>
-              <div class="w-20 h-20 opacity-0"></div> <!-- Placeholder Penyeimbang -->
+
+              <div class="w-24 h-24 opacity-0"></div> <!-- Penyeimbang Margin Kanan -->
             </div>
 
-            <div class="w-full border-t-2 border-b border-slate-900 my-1 h-1"></div>
+            <!-- GARIS GANDA TEBAL KOP SURAT -->
+            <div class="w-full border-t-[2.5px] border-b border-slate-900 my-1 h-[3px]"></div>
 
-            <h2 class="text-xs font-extrabold uppercase text-slate-900 tracking-wide mt-3 underline decoration-1">DAFTAR HADIR & JADWAL RESMI TES TOEFL PREDICTION</h2>
+            <h2 class="text-xs font-extrabold uppercase text-slate-900 tracking-wider mt-4 underline decoration-1 underline-offset-2">DAFTAR HADIR & JADWAL RESMI TES TOEFL PREDICTION</h2>
             <div class="grid grid-cols-3 text-xs text-left mt-3 border border-slate-300 p-2.5 rounded-lg bg-slate-50 gap-2 font-mono">
               <div><b>Tanggal Ujian:</b> <span id="printTanggal">-</span></div>
               <div><b>Waktu / Sesi:</b> <span id="printJamSesi">-</span></div>
@@ -262,7 +272,7 @@
             </div>
           </div>
 
-          <!-- KONTROL FILTER TAMPILAN DATA (DROPDOWN KATEGORI PROFESSIONAL TANPA EMOJI) -->
+          <!-- KONTROL FILTER TAMPILAN DATA -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 no-print">
             <div class="md:col-span-1">
               <label class="text-[10px] font-bold text-slate-500 uppercase mb-1 block">Tampilkan Kategori Data:</label>
@@ -668,7 +678,6 @@
       return 20;
     }
 
-    // HELPER LOGIKA ANGKATAN & SEMESTER (DARI 2 DIGIT PERTAMA NIM)
     function getAngkatanFromNim(nim) {
       if (!nim) return { angkatan: 2024, isSemesterAkhir: false };
       const nimStr = String(nim).trim();
@@ -1065,7 +1074,6 @@
       modeFokusPlotting = true;
       document.getElementById('btnKunciSesi').classList.add('hidden');
       document.getElementById('btnResetFilter').classList.remove('hidden');
-      document.getElementById('printHeaderTemplate').classList.remove('hidden');
       document.getElementById('actionPrintContainer').classList.remove('hidden');
 
       filterMahasiswa();
@@ -1079,7 +1087,6 @@
 
       document.getElementById('btnKunciSesi').classList.remove('hidden');
       document.getElementById('btnResetFilter').classList.add('hidden');
-      document.getElementById('printHeaderTemplate').classList.add('hidden');
       document.getElementById('actionPrintContainer').classList.add('hidden');
       
       document.getElementById('filterKategoriSelect').value = 'ALL';
