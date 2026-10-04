@@ -37,19 +37,13 @@
   </script>
 
   <style>
-    /* ATURAN DOKUMEN CETAK KETAT PRESISI A4 LANDSCAPE */
-    @page {
-      size: 297mm 210mm; /* A4 Landscape */
-      margin: 0 !important;
-    }
-
+    /* ATURAN DOKUMEN CETAK KETAT PRESISI */
     @media print {
       html, body {
-        width: 297mm !important;
-        height: 210mm !important;
+        width: 100% !important;
+        height: auto !important;
         margin: 0 !important;
         padding: 0 !important;
-        overflow: hidden !important;
         background: #fff !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
@@ -59,7 +53,12 @@
         visibility: hidden !important; 
       }
 
-      /* KONDISI 1: CETAK BERITA ACARA JADWAL */
+      /* KONDISI 1: CETAK BERITA ACARA JADWAL (PORTRAIT A4) */
+      @page {
+        size: A4 portrait !important;
+        margin: 10mm !important;
+      }
+
       body.print-jadwal-mode #printableJadwalArea, 
       body.print-jadwal-mode #printableJadwalArea * { 
         visibility: visible !important; 
@@ -71,13 +70,13 @@
         top: 0 !important; 
         width: 100% !important; 
         margin: 0 !important;
-        padding: 10mm !important;
+        padding: 0 !important;
         box-shadow: none !important;
         border: none !important;
         background: #fff !important;
       }
 
-      /* KONDISI 2: CETAK E-SERTIFIKAT DIGITAL A4 LANDSCAPE */
+      /* KONDISI 2: CETAK E-SERTIFIKAT DIGITAL (LANDSCAPE A4) */
       body.print-cert-mode #certificatePrintArea, 
       body.print-cert-mode #certificatePrintArea * { 
         visibility: visible !important; 
@@ -163,11 +162,29 @@
       <section id="modul1" class="tab-content">
         <div id="printableJadwalArea" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
           
-          <!-- KOP SURAT RESMI AKADEMIK UNTUK CETAK BERITA ACARA -->
-          <div id="printHeaderTemplate" class="hidden mb-6 border-b-2 border-slate-900 pb-4 text-center">
-            <h1 class="text-lg font-extrabold tracking-wider uppercase text-slate-900">UPA BAHASA POLITEKNIK NEGERI SAMARINDA</h1>
-            <h2 class="text-sm font-bold uppercase text-slate-800 tracking-wide mt-0.5">DAFTAR HADIR & JADWAL RESMI TES TOEFL PREDICTION</h2>
-            <div class="grid grid-cols-3 text-xs text-left mt-4 border border-slate-300 p-3 rounded-lg bg-slate-50 gap-2 font-mono">
+          <!-- KOP SURAT RESMI AKADEMIK DENGAN LOGO POLNES (SESUAI CONTOH GAMBAR) -->
+          <div id="printHeaderTemplate" class="hidden mb-6 border-b-2 border-slate-900 pb-3 text-center">
+            <div class="flex items-center justify-between px-2 mb-2">
+              <div class="w-20 h-20 flex items-center justify-center overflow-hidden">
+                <img src="logo-removebg-preview.png" class="w-full h-full object-contain">
+              </div>
+              <div class="text-center flex-1 px-4">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800">KEMENTERIAN PENDIDIKAN TINGGI, SAINS DAN TEKNOLOGI</h3>
+                <h1 class="text-base font-extrabold uppercase tracking-wide text-slate-900 mt-0.5">POLITEKNIK NEGERI SAMARINDA</h1>
+                <h2 class="text-sm font-extrabold uppercase tracking-wide text-slate-900">UPA. BAHASA</h2>
+                <p class="text-[10px] text-slate-700 mt-1">
+                  Jalan Dr. Ciptomangkunkusumo Kampus Gunung Panjang Samarinda<br>
+                  Telepon: PABX(0541)260588-260553-262018 FAX (0541) 260355<br>
+                  Website: www.polnes.ac.id &nbsp; Email: polnes@polnes.ac.id
+                </p>
+              </div>
+              <div class="w-20 h-20 opacity-0"></div> <!-- Placeholder Penyeimbang -->
+            </div>
+
+            <div class="w-full border-t-2 border-b border-slate-900 my-1 h-1"></div>
+
+            <h2 class="text-xs font-extrabold uppercase text-slate-900 tracking-wide mt-3 underline decoration-1">DAFTAR HADIR & JADWAL RESMI TES TOEFL PREDICTION</h2>
+            <div class="grid grid-cols-3 text-xs text-left mt-3 border border-slate-300 p-2.5 rounded-lg bg-slate-50 gap-2 font-mono">
               <div><b>Tanggal Ujian:</b> <span id="printTanggal">-</span></div>
               <div><b>Waktu / Sesi:</b> <span id="printJamSesi">-</span></div>
               <div><b>Lokasi Ruangan:</b> <span id="printLab">-</span></div>
@@ -185,11 +202,11 @@
 
             <div class="flex items-center gap-2">
               <button onclick="hapusSemuaDataMaster()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-3 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-1">
-                <span>🗑️ Kosongkan Database</span>
+                <span>Kosongkan Database</span>
               </button>
 
               <label class="bg-polnes-main hover:bg-polnes-dark text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer shadow-sm transition-all flex items-center gap-2">
-                <span>📂 Upload File Mahasiswa (Per Kelas)</span>
+                <span>Upload File Mahasiswa (Per Kelas)</span>
                 <input type="file" id="excelMasterInput" accept=".xlsx, .xls, .csv" onchange="uploadMasterMahasiswa(event)" class="hidden">
               </label>
 
@@ -240,20 +257,19 @@
                 Kunci Plotting Sesi
               </button>
               <button id="btnResetFilter" onclick="jadwalkanSesiBerikutnya()" class="hidden bg-slate-700 hover:bg-slate-900 text-white font-bold px-3 py-2.5 rounded-xl text-xs transition-all">
-                🔓 Jadwalkan Sesi Berikutnya
+                Jadwalkan Sesi Berikutnya
               </button>
             </div>
           </div>
 
-          <!-- KONTROL FILTER TAMPILAN DATA (DROPDOWN JENIS DATA) -->
+          <!-- KONTROL FILTER TAMPILAN DATA (DROPDOWN KATEGORI PROFESSIONAL TANPA EMOJI) -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 no-print">
             <div class="md:col-span-1">
               <label class="text-[10px] font-bold text-slate-500 uppercase mb-1 block">Tampilkan Kategori Data:</label>
               <select id="filterKategoriSelect" onchange="gantiKategoriTampilan()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none bg-white font-bold text-slate-700">
-                <option value="LATEST">📄 File Terakhir Diunggah Saja</option>
-                <option value="ALL">🌐 Tampilkan Seluruh Data Mahasiswa</option>
-                <option value="D3">🎓 Khusus Mahasiswa Program D3</option>
-                <option value="D4">🎓 Khusus Mahasiswa Program D4</option>
+                <option value="ALL">Tampilkan Semua Data Mahasiswa</option>
+                <option value="D3">Khusus Mahasiswa Program D3</option>
+                <option value="D4">Khusus Mahasiswa Program D4</option>
               </select>
             </div>
 
@@ -289,7 +305,7 @@
             
             <div id="actionPrintContainer" class="hidden">
               <button onclick="cetakBeritaAcaraJadwal()" class="bg-polnes-main hover:bg-polnes-dark text-white font-bold px-5 py-2 rounded-xl text-xs shadow-sm flex items-center gap-1.5 no-print">
-                <span>🖨️ Cetak Berita Acara Jadwal (PDF/Word)</span>
+                <span>Cetak Berita Acara Jadwal (A4 Portrait)</span>
               </button>
             </div>
 
@@ -405,7 +421,7 @@
               <p class="text-xs text-slate-500">Otorisasi publikasi nilai resmi dan pemicu enkripsi QR Sertifikat SHA-256.</p>
             </div>
             <button id="btnPublishAll" onclick="approveSemua()" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm flex items-center gap-2">
-              <span>🚀 Publish Semua Skor ke Web Utama & Supabase</span>
+              <span>Publish Semua Skor ke Web Utama & Supabase</span>
             </button>
           </div>
 
@@ -446,7 +462,6 @@
           </button>
         </div>
       </div>
-
       <!-- KARTU INFORMASI RINCIAN SKOR LULUS / TIDAK LULUS -->
       <div id="infoSkorCard" class="hidden max-w-xl mx-auto bg-white p-6 rounded-2xl border border-slate-200 shadow-md space-y-5">
         <div class="flex justify-between items-center border-b pb-3">
@@ -489,17 +504,17 @@
 
         <!-- TOMBOL UNDUH JIKA LULUS & MAHASISWA SEMESTER AKHIR -->
         <button id="btnDownloadCert" onclick="tampilkanSertifikatLengkap()" class="w-full bg-polnes-dark hover:bg-emerald-950 text-white font-bold py-3 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-2">
-          <span>📜 Unduh / Preview E-Sertifikat Resmi</span>
+          <span>Unduh / Preview E-Sertifikat Resmi</span>
         </button>
 
         <!-- PESAN UNTUK MAHASISWA SEMESTER BAWAH (FLOWCHART LOGIC) -->
         <div id="semesterBawahNotice" class="hidden bg-sky-50 border border-sky-200 p-4 rounded-xl text-center text-xs text-sky-800 leading-relaxed font-semibold">
-          ℹ️ Anda terdeteksi sebagai <b>Mahasiswa Semester Bawah</b>. Sesuai ketentuan UPA Bahasa POLNES, nilai Anda telah tercatat, namun E-Sertifikat Digital hanya dapat diunduh saat Anda berada di <b>Semester Akhir</b>.
+          Anda terdeteksi sebagai <b>Mahasiswa Semester Bawah</b>. Sesuai ketentuan UPA Bahasa POLNES, nilai Anda telah tercatat, namun E-Sertifikat Digital hanya dapat diunduh saat Anda berada di <b>Semester Akhir</b>.
         </div>
 
         <!-- PESAN REMINDER JIKA TIDAK LULUS -->
         <div id="remedialNotice" class="hidden bg-rose-50 border border-rose-200 p-4 rounded-xl text-center text-xs text-rose-800 leading-relaxed font-semibold">
-          ⚠️ Mohon maaf, Anda belum mencapai batas nilai minimum kelulusan TOEFL (400). Silahkan lakukan pendaftaran <b>remedial test TOEFL</b> di halaman pendaftaran UPA Bahasa.
+          Mohon maaf, Anda belum mencapai batas nilai minimum kelulusan TOEFL (400). Silahkan lakukan pendaftaran <b>remedial test TOEFL</b> di halaman pendaftaran UPA Bahasa.
         </div>
       </div>
 
@@ -518,7 +533,7 @@
                   <img id="certLogoImg" src="logo-removebg-preview.png" class="w-full h-full object-contain">
                 </div>
                 <div>
-                  <h3 class="text-[10px] font-bold uppercase tracking-wider text-slate-700 font-sans">KEMENTERIAN PENDIDIKAN, TINGGI, SAINS, DAN TEKNOLOGI</h3>
+                  <h3 class="text-[10px] font-bold uppercase tracking-wider text-slate-700 font-sans">KEMENTERIAN PENDIDIKAN TINGGI, SAINS DAN TEKNOLOGI</h3>
                   <h1 class="text-base font-extrabold uppercase tracking-wide text-emerald-900 font-sans">POLITEKNIK NEGERI SAMARINDA</h1>
                   <h2 class="text-xs font-bold uppercase tracking-wider text-emerald-700 font-sans">UPA. BAHASA</h2>
                 </div>
@@ -578,7 +593,7 @@
 
               <!-- TANDA TANGAN KOSONG MANUAL (NAMA & NIP TETAP ADA) -->
               <div class="text-center">
-                <p class="text-slate-700">Samarinda, <span id="certIssueDate">05 Agustus 2026</span></p>
+                <p class="text-slate-700">Samarinda, <span id="certIssueDate">05 Oktober 2026</span></p>
                 <p class="font-bold text-slate-800">Head of UPA. Bahasa</p>
                 
                 <div class="h-12 my-1"></div>
@@ -593,7 +608,7 @@
           <!-- FOOTER ACTION BUTTONS (NO PRINT) -->
           <div class="no-print mt-4 pt-2 border-t flex justify-end gap-3">
             <button onclick="cetakSertifikatDigital()" class="bg-polnes-dark hover:bg-emerald-950 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md flex items-center gap-2">
-              <span>🖨️ Cetak / Simpan E-Sertifikat (PDF A4 Landscape)</span>
+              <span>Cetak / Simpan E-Sertifikat (PDF A4 Landscape)</span>
             </button>
           </div>
 
@@ -611,7 +626,7 @@
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let masterMahasiswa = [];
-    let latestUploadBatch = []; // Menyimpan NIM dari batch upload file terakhir
+    let latestUploadBatch = []; 
     let filteredMaster = [];
     let currentPage = 1;
     const pageSize = 20;
@@ -660,8 +675,6 @@
       const prefixTwo = nimStr.substring(0, 2);
       const year = parseInt("20" + prefixTwo) || 2024;
       
-      // Sesuai Flowchart: Angkatan 24, 25, dst -> Semester Bawah.
-      // Angkatan <= 23 (D3) atau <= 22 (D4) -> Semester Akhir.
       const isSemesterAkhir = (year <= 2023);
 
       return {
@@ -745,14 +758,14 @@
       document.getElementById('tab-' + tabId).classList.add('bg-polnes-main', 'text-white');
     }
 
-    // FUNGSI CETAK KHUSUS BERITA ACARA JADWAL
+    // FUNGSI CETAK KHUSUS BERITA ACARA JADWAL (A4 PORTRAIT)
     function cetakBeritaAcaraJadwal() {
       document.body.classList.remove('print-cert-mode');
       document.body.classList.add('print-jadwal-mode');
       window.print();
     }
 
-    // FUNGSI CETAK KHUSUS E-SERTIFIKAT DIGITAL
+    // FUNGSI CETAK KHUSUS E-SERTIFIKAT DIGITAL (A4 LANDSCAPE)
     function cetakSertifikatDigital() {
       document.body.classList.remove('print-jadwal-mode');
       document.body.classList.add('print-cert-mode');
@@ -817,7 +830,6 @@
 
             latestUploadBatch = newUploadedList.map(m => m.nim);
 
-            // GABUNGKAN DENGAN MASTER MAHASISWA TANPA DUPLIKAT NIM
             newUploadedList.forEach(newM => {
               const idx = masterMahasiswa.findIndex(m => String(m.nim) === String(newM.nim));
               if (idx >= 0) {
@@ -852,9 +864,9 @@
             progressText.innerText = 'Selesai!';
             setTimeout(() => {
               progressContainer.classList.add('hidden');
-              alert(`Sukses! ${newUploadedList.length} Data Mahasiswa Berhasil Diunggah!\nTampilan sekarang difokuskan pada file baru saja.`);
+              alert(`Sukses! ${newUploadedList.length} Data Mahasiswa Berhasil Diunggah!`);
               
-              document.getElementById('filterKategoriSelect').value = 'LATEST';
+              document.getElementById('filterKategoriSelect').value = 'ALL';
               currentPage = 1;
               filterMahasiswa();
             }, 300);
@@ -883,9 +895,7 @@
       if (modeFokusPlotting) {
         baseData = masterMahasiswa.filter(m => selectedPlotting.includes(m.nim));
       } else {
-        if (kat === 'LATEST' && latestUploadBatch.length > 0) {
-          baseData = masterMahasiswa.filter(m => latestUploadBatch.includes(m.nim));
-        } else if (kat === 'D3') {
+        if (kat === 'D3') {
           baseData = masterMahasiswa.filter(m => String(m.prodi).toUpperCase().includes('D3'));
         } else if (kat === 'D4') {
           baseData = masterMahasiswa.filter(m => String(m.prodi).toUpperCase().includes('D4'));
@@ -935,8 +945,7 @@
         tbody.innerHTML = `
           <tr>
             <td colspan="5" class="p-8 text-center text-slate-400">
-              <div class="text-2xl mb-1">📂</div>
-              <p class="font-bold text-slate-600">Silakan unggah file data mahasiswa lagi atau ganti filter kategori.</p>
+              <p class="font-bold text-slate-600">Silakan unggah file data mahasiswa atau ganti filter kategori.</p>
             </td>
           </tr>
         `;
@@ -1061,7 +1070,7 @@
 
       filterMahasiswa();
 
-      alert(`Sesi Ujian Berhasil Dikunci!\n- Tanggal: ${tgl}\n- Sesi: ${jam}\n- Lokasi: ${lab}\n- Total Plotting: ${selectedPlotting.length} Mahasiswa Utama.\n\nTampilan tabel sekarang difokuskan pada mahasiswa terpilih saja & Siap Dicetak!`);
+      alert(`Sesi Ujian Berhasil Dikunci!\n- Tanggal: ${tgl}\n- Sesi: ${jam}\n- Lokasi: ${lab}\n- Total Plotting: ${selectedPlotting.length} Mahasiswa Utama.\n\nTampilan tabel sekarang difokuskan pada mahasiswa terpilih saja & Siap Dicetak (Portrait A4)!`);
     }
 
     function jadwalkanSesiBerikutnya() {
@@ -1253,7 +1262,6 @@
         tbody.innerHTML = `
           <tr>
             <td colspan="5" class="p-8 text-center text-slate-400">
-              <div class="text-2xl mb-1">📑</div>
               <p class="font-bold text-slate-600">Belum Ada Data Hasil Ujian</p>
               <p class="text-xs text-slate-400 mt-1">Silakan unggah minimal 1 file Excel hasil ujian (A01, A02, atau A03) di atas untuk menampilkan auto-mapping.</p>
             </td>
@@ -1428,7 +1436,7 @@
       if (validItems.length === 0) return alert('Tidak ada data nilai yang siap untuk dipublikasikan!');
 
       const btn = document.getElementById('btnPublishAll');
-      btn.innerText = '⌛ Mengirim & Mempublikasi ke Supabase...';
+      btn.innerText = 'Mengirim & Mempublikasi ke Supabase...';
       btn.disabled = true;
 
       validItems.forEach(i => i.statusApproval = 'PUBLISHED');
@@ -1464,7 +1472,7 @@
         }
       }
 
-      btn.innerText = '🚀 Publish Semua Skor ke Web Utama & Supabase';
+      btn.innerText = 'Publish Semua Skor ke Web Utama & Supabase';
       btn.disabled = false;
       renderModul4();
 
@@ -1488,7 +1496,6 @@
       let match = null;
       let mInfo = null;
 
-      // 1. QUERY SUPABASE HASIL UJIAN
       try {
         const { data, error } = await _supabase
           .from('hasil_ujian')
@@ -1512,7 +1519,6 @@
         }
       } catch(e) {}
 
-      // 2. QUERY MASTER MAHASISWA
       try {
         const { data: mData } = await _supabase
           .from('master_mahasiswa')
@@ -1524,7 +1530,6 @@
         }
       } catch(e) {}
 
-      // FALLBACK LOKAL JIKA TERSEDIA DI MEMORI STAFF
       if (!match) {
         const localMatch = parsedHasilUjian.find(i => String(i.nim).trim().toLowerCase() === input.toLowerCase() && i.statusApproval === 'PUBLISHED');
         if (localMatch) {
@@ -1554,14 +1559,11 @@
         return;
       }
 
-      // HITUNG DENGAN HELPER ANGKATAN NIM
       const angkatanInfo = getAngkatanFromNim(match.nim);
 
-      // SIMPAN DATA SEMENTARA DI VARIABEL GLOBAL
       currentPublicMatch = match;
       currentPublicMInfo = mInfo;
 
-      // ISI DATA RINGKASAN KE KARTU INFO
       document.getElementById('infoStudentName').innerText = mInfo ? mInfo.nama : "MAHASISWA UPA BAHASA";
       document.getElementById('infoStudentNimProdi').innerText = `NIM: ${match.nim} | ${mInfo ? mInfo.prodi : 'POLNES'}`;
       
@@ -1585,7 +1587,6 @@
 
       document.getElementById('infoTotalScore').innerText = match.totalScore;
 
-      // KONTROL LOGIKA FLOWCHART PENELITIAN
       const badgeEl = document.getElementById('infoBadgeKelulusan');
       const btnCert = document.getElementById('btnDownloadCert');
       const semBawahNotice = document.getElementById('semesterBawahNotice');
@@ -1601,9 +1602,7 @@
         badgeEl.innerText = "TIDAK LULUS (FAILED)";
       }
 
-      // KONTROL PENAMPILAN E-SERTIFIKAT SESUAI FLOWCHART:
       if (angkatanInfo.isSemesterAkhir) {
-        // MAHASISWA SEMESTER AKHIR
         semBawahNotice.classList.add('hidden');
         if (isPassed) {
           btnCert.classList.remove('hidden');
@@ -1613,18 +1612,15 @@
           remedialNotice.classList.remove('hidden');
         }
       } else {
-        // MAHASISWA SEMESTER BAWAH -> TIDAK MUNCUL SERTIFIKAT SESUAI FLOWCHART
         btnCert.classList.add('hidden');
         remedialNotice.classList.add('hidden');
         semBawahNotice.classList.remove('hidden');
       }
 
-      // TAMPILKAN KARTU INFORMASI
       infoCard.classList.remove('hidden');
       infoCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
-    // FUNGSI UNTUK MEMUNCULKAN SERTIFIKAT LENGKAP SAAT TOMBOL UNDUH DIKLIK (HANYA UNTUK SEMESTER AKHIR & LULUS)
     function tampilkanSertifikatLengkap() {
       if (!currentPublicMatch || currentPublicMatch.totalScore < 400) return;
 
@@ -1646,7 +1642,6 @@
 
       document.getElementById('certHashDisplay').innerText = `SHA-256: ${match.hash || 'N/A'}`;
 
-      // GENERATE QR CODE WITH SAFE ERROR HANDLING
       try {
         const qrContainer = document.getElementById('certQrContainer');
         qrContainer.innerHTML = '';
