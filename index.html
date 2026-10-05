@@ -335,12 +335,18 @@
         </div>
       </section>
 
-      <!-- MODUL 2: UPLOAD EXCEL AUTO MAPPING & VALIDASI TANGGAL STRICT -->
+      <!-- MODUL 2: UPLOAD EXCEL AUTO MAPPING & EXCEPTION HANDLING TANPA LIMIT -->
       <section id="modul2" class="tab-content hidden">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 space-y-6">
           
-          <div>
-            <h2 class="text-base font-bold text-slate-800">Modul 2: Upload Excel Hasil Ujian Lab & Auto-Mapping Engine</h2>
+          <div class="flex justify-between items-center border-b pb-3">
+            <div>
+              <h2 class="text-base font-bold text-slate-800">Modul 2: Upload Excel Hasil Ujian Lab & Auto-Mapping Engine</h2>
+              <p class="text-xs text-slate-500">Menampilkan seluruh data meja komputer hasil ujian secara real-time (tanpa pemotongan data).</p>
+            </div>
+            <div id="totalMejaCounter" class="bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-xl text-xs font-bold text-emerald-800">
+              Total Meja Dibaca: <span id="countMejaText" class="text-sm font-extrabold text-emerald-900">0</span>
+            </div>
           </div>
 
           <!-- FORM INPUT UPLOAD 3 FILE EXCEL REAL -->
@@ -374,19 +380,19 @@
           </div>
 
           <div id="mappingStatusAlert" class="hidden p-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-xs">
-            <strong>Peringatan Auto-Mapping:</strong> Ditemukan data komputer cadangan / mahasiswa susulan yang belum terikat di jadwal.
+            <strong>Peringatan Exception Handling:</strong> Ditemukan meja komputer cadangan / mahasiswa susulan yang belum terikat NIM. Silahkan masukkan NIM secara manual pada kolom "Exception Handling".
           </div>
 
-          <!-- TABEL HASIL AUTOMAPPING -->
-          <div class="overflow-x-auto rounded-xl border border-slate-200">
-            <table class="w-full text-left text-xs">
-              <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
+          <!-- TABEL HASIL AUTOMAPPING FULL / UNLIMITED SCROLL -->
+          <div class="overflow-x-auto max-h-[600px] overflow-y-auto rounded-xl border border-slate-200 shadow-inner">
+            <table class="w-full text-left text-xs relative">
+              <thead class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200 sticky top-0 z-10 shadow-sm">
                 <tr>
-                  <th class="p-3">ID Meja Komputer</th>
-                  <th class="p-3">Jawaban Benar Asli (S1 | S2 | S3)</th>
-                  <th class="p-3">Status Auto-Mapping</th>
-                  <th class="p-3">NIM & Nama Mahasiswa Terikat</th>
-                  <th class="p-3 text-center">Exception Handling</th>
+                  <th class="p-3 w-28 bg-slate-100">ID Meja Komputer</th>
+                  <th class="p-3 bg-slate-100">Jawaban Benar Asli (S1 | S2 | S3)</th>
+                  <th class="p-3 bg-slate-100">Status Auto-Mapping</th>
+                  <th class="p-3 bg-slate-100">NIM & Nama Mahasiswa Terikat</th>
+                  <th class="p-3 text-center bg-slate-100">Exception Handling</th>
                 </tr>
               </thead>
               <tbody id="tableMapping" class="divide-y divide-slate-100"></tbody>
@@ -1168,15 +1174,6 @@
             return;
           }
 
-          let existingDates = Object.values(sectionDates).filter(d => d !== null);
-          if (existingDates.length > 0 && normalizedFileDate) {
-            if (existingDates[0] !== normalizedFileDate) {
-              alert(`⚠️ TANGGAL BERBEDA ANTA-SECTION!\n\nFile Section ${secNum} (${normalizedFileDate}) tidak sama dengan section sebelumnya (${existingDates[0]}).\n\nUpload dibatalkan!`);
-              event.target.value = "";
-              return;
-            }
-          }
-
           let countParsed = 0;
 
           rawRows.forEach(row => {
@@ -1226,12 +1223,19 @@
       reader.readAsArrayBuffer(file);
     }
 
+    // INIT MAPPING: MAPPING SECARA URUT TANPA PEMBATASAN PAGINASI
     function initParsedData() {
       parsedHasilUjian = [];
 
-      Object.keys(realExcelScores).forEach(mejaKey => {
+      // Urutkan kunci meja secara numerik (STUDENT01, STUDENT02, dst.)
+      const sortedMejaKeys = Object.keys(realExcelScores).sort((a, b) => {
+        const numA = parseInt(a.match(/\d+/)?.[0] || "0");
+        const numB = parseInt(b.match(/\d+/)?.[0] || "0");
+        return numA - numB;
+      });
+
+      sortedMejaKeys.forEach(mejaKey => {
         const uData = realExcelScores[mejaKey];
-        
         const matchNum = mejaKey.match(/\d+/);
         let assignedNim = null;
 
@@ -1266,9 +1270,13 @@
       renderModul2();
     }
 
+    // RENDER MODUL 2: TAMPILKAN SEMUA BARIS DARI EXCEL TANPA DIPOTONG PAGINASI
     function renderModul2() {
       const tbody = document.getElementById('tableMapping');
       tbody.innerHTML = '';
+
+      const countText = document.getElementById('countMejaText');
+      countText.innerText = parsedHasilUjian.length;
 
       if (!hasExcelUploaded || parsedHasilUjian.length === 0) {
         tbody.innerHTML = `
@@ -1284,6 +1292,7 @@
 
       let hasUnmapped = false;
 
+      // RENDERING UTUH SELURUH ARRAY TANPA LIMIT
       parsedHasilUjian.forEach((item, idx) => {
         if(item.statusMapping === 'UNMAPPED') hasUnmapped = true;
         const mInfo = item.nim ? masterMahasiswa.find(m => String(m.nim) === String(item.nim)) : null;
@@ -1291,9 +1300,9 @@
         const isZeroScore = (item.s1 === 0 && item.s2 === 0 && item.s3 === 0);
 
         tbody.innerHTML += `
-          <tr class="${isZeroScore ? 'bg-red-50/80 border-l-4 border-l-red-500' : (item.statusMapping === 'UNMAPPED' ? 'bg-amber-50/70' : '')}">
+          <tr class="${isZeroScore ? 'bg-red-50/80 border-l-4 border-l-red-500' : (item.statusMapping === 'UNMAPPED' ? 'bg-amber-50/70' : 'hover:bg-slate-50')} transition-all">
             <td class="p-3 font-bold text-slate-700">${item.meja}</td>
-            <td class="p-3">
+            <td class="p-3 font-mono">
               S1: <b class="${item.s1 === 0 ? 'text-red-500' : 'text-polnes-dark'} font-extrabold text-sm">${item.s1}</b> | 
               S2: <b class="${item.s2 === 0 ? 'text-red-500' : 'text-polnes-dark'} font-extrabold text-sm">${item.s2}</b> | 
               S3: <b class="${item.s3 === 0 ? 'text-red-500' : 'text-polnes-dark'} font-extrabold text-sm">${item.s3}</b>
@@ -1314,7 +1323,7 @@
               ${item.statusMapping === 'UNMAPPED' || !item.nim
                 ? `<div class="flex gap-1 justify-center">
                     <input type="text" id="fastAddNim-${idx}" placeholder="Ketik NIM..." class="px-2 py-1 border text-xs rounded w-28 font-mono">
-                    <button onclick="execFastAdd(${idx})" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2.5 py-1 rounded font-bold shadow-sm">Bind NIM</button>
+                    <button onclick="execFastAdd(${idx})" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2.5 py-1 rounded font-bold shadow-sm transition-all">Bind NIM</button>
                    </div>`
                 : '<span class="text-emerald-700 font-bold">&check; Valid</span>'}
             </td>
