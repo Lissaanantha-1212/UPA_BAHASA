@@ -277,7 +277,7 @@
             </div>
 
             <div class="md:col-span-2 flex items-end relative">
-              <input type="text" id="searchInput" list="prodiSuggestions" oninput="filterMahasiswa()" onkeyup="filterMahasiswa()" placeholder="Ketik Program Studi (misal: 'Bisnis Digital', 'Informatika') atau Nama/NIM..." class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-polnes-main font-medium">
+              <input type="text" id="searchInput" list="prodiSuggestions" oninput="filterMahasiswa()" onkeyup="filterMahasiswa()" placeholder="Ketik Program Studi (misal: 'D4 - BISNIS DIGITAL') atau Nama/NIM..." class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-polnes-main font-medium">
               <!-- DATALIST KETIKAN REKOMENDASI AUTOCOMPLETE -->
               <datalist id="prodiSuggestions"></datalist>
             </div>
@@ -781,10 +781,13 @@
       window.print();
     }
 
-    // MODUL 1: UPLOAD PER KELAS DENGAN DETEKSI PRODI PRESISI SANGAT AKURAT
+    // MODUL 1: UPLOAD PER KELAS DENGAN NAMA PRODI OTOMATIS AMBIL DARI NAMA FILE EXCEL
     async function uploadMasterMahasiswa(event) {
       const file = event.target.files[0];
       if (!file) return;
+
+      // AMBIL NAMA FILE EXCEL SEBAGAI NAMA PROGRAM STUDI
+      let fileNameProdi = file.name.replace(/\.[^/.]+$/, "").trim(); // Hapus .xlsx / .xls
 
       const progressContainer = document.getElementById('uploadProgressContainer');
       const progressBar = document.getElementById('uploadProgressBar');
@@ -822,7 +825,7 @@
                           || firstRowKeys.find(k => /nama|student/i.test(k.trim().toLowerCase()) && !/prodi|studi|jurusan/i.test(k.trim().toLowerCase())) 
                           || firstRowKeys[1];
 
-            // DETEKSI KOLOM PRODI SECARA DEDIKATED TANPA FALLBACK HARDCODED
+            // JIKA ISI EXCEL PUNYA KOLOM PRODI GUNAKAN ITU, JIKA TIDAK GUNAKAN NAMA FILE EXCEL
             const prodiKey = firstRowKeys.find(k => /^(prodi|program_studi|program studi|jurusan|kelas|proglat)$/i.test(k.trim().toLowerCase())) 
                            || firstRowKeys.find(k => /prodi|studi|jurusan|program|kelas/i.test(k.trim().toLowerCase()));
 
@@ -831,8 +834,8 @@
               const namaVal = String(row[namaKey] || '').trim();
               
               let prodiVal = prodiKey ? String(row[prodiKey] || '').trim() : '';
-              if (!prodiVal || prodiVal.toLowerCase() === namaVal.toLowerCase()) {
-                prodiVal = 'Program Studi Polnes';
+              if (!prodiVal || prodiVal.toLowerCase() === namaVal.toLowerCase() || prodiVal.toLowerCase().includes('polnes')) {
+                prodiVal = fileNameProdi; // Ambil dari nama file Excel
               }
 
               return { nim: nimVal, nama: namaVal, prodi: prodiVal };
@@ -874,7 +877,7 @@
             progressText.innerText = 'Selesai!';
             setTimeout(() => {
               progressContainer.classList.add('hidden');
-              alert(`Sukses! ${newUploadedList.length} Data Mahasiswa Berhasil Diunggah!`);
+              alert(`Sukses! ${newUploadedList.length} Data Mahasiswa Berhasil Diunggah untuk Prodi "${fileNameProdi}"!`);
               
               document.getElementById('filterKategoriSelect').value = 'ALL';
               updateProdiSuggestions();
