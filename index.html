@@ -53,7 +53,7 @@
         visibility: hidden !important; 
       }
 
-      /* KONDISI 1: CETAK BERITA ACARA JADWAL (PORTRAIT A4 DILAKUKAN SINKRON DI BALIK PROGRAM) */
+      /* KONDISI 1: CETAK BERITA ACARA JADWAL (PORTRAIT A4) */
       @page {
         size: A4 portrait !important;
         margin: 10mm !important;
@@ -76,12 +76,11 @@
         background: #fff !important;
       }
 
-      /* MUNCULKAN KOP HANYA SAAT CETAK MODE JADWAL */
       body.print-jadwal-mode #printHeaderTemplate {
         display: block !important;
       }
 
-      /* KONDISI 2: CETAK E-SERTIFIKAT DIGITAL (LANDSCAPE A4 DILAKUKAN SINKRON DI BALIK PROGRAM) */
+      /* KONDISI 2: CETAK E-SERTIFIKAT DIGITAL (LANDSCAPE A4) */
       body.print-cert-mode #certificatePrintArea, 
       body.print-cert-mode #certificatePrintArea * { 
         visibility: visible !important; 
@@ -117,7 +116,6 @@
   <!-- HEADER DASHBOARD STAFF -->
   <header class="bg-polnes-dark text-white py-3.5 px-8 shadow-md flex justify-between items-center sticky top-0 z-50 no-print">
     <div class="flex items-center gap-3">
-      <!-- FOTO LOGO POLNES (MENGGANTIKAN KOTAK S ORANYE) -->
       <div id="logoContainer" class="w-10 h-10 flex items-center justify-center bg-white/10 p-1 rounded-lg border border-white/20 shadow-sm overflow-hidden">
         <img src="logo-removebg-preview.png" alt="POLNES" class="w-full h-full object-contain">
       </div>
@@ -168,15 +166,13 @@
       <section id="modul1" class="tab-content">
         <div id="printableJadwalArea" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
           
-          <!-- KOP SURAT RESMI AKADEMIK (HANYA MUNCUL SAAT PRINT) -->
+          <!-- KOP SURAT RESMI AKADEMIK -->
           <div id="printHeaderTemplate" class="hidden mb-6 text-center pt-2">
             <div class="flex items-center justify-between pb-1">
-              <!-- LOGO POLNES SISI KIRI -->
               <div class="w-24 h-24 flex items-center justify-start overflow-hidden">
                 <img src="logo-removebg-preview.png" class="w-full h-full object-contain">
               </div>
               
-              <!-- TEKS KOP REVISI: TANPA TITIK DI UPA BAHASA & ALAMAT MELEBAR RATA KANAN KIRI -->
               <div class="text-center flex-1 px-2">
                 <h3 class="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-800 leading-snug">KEMENTERIAN PENDIDIKAN TINGGI, SAINS DAN TEKNOLOGI</h3>
                 <h1 class="text-base font-extrabold uppercase tracking-[0.25em] text-slate-900 mt-1">POLITEKNIK NEGERI SAMARINDA</h1>
@@ -188,10 +184,9 @@
                 </div>
               </div>
 
-              <div class="w-24 h-24 opacity-0"></div> <!-- Penyeimbang Margin Kanan -->
+              <div class="w-24 h-24 opacity-0"></div>
             </div>
 
-            <!-- GARIS GANDA TEBAL KOP SURAT -->
             <div class="w-full border-t-[2.5px] border-b border-slate-900 my-1 h-[3px]"></div>
 
             <h2 class="text-xs font-extrabold uppercase text-slate-900 tracking-wider mt-4 underline decoration-1 underline-offset-2">DAFTAR HADIR & JADWAL RESMI TES TOEFL PREDICTION</h2>
@@ -202,7 +197,7 @@
             </div>
           </div>
 
-          <!-- HEADER MODUL 1 (DESKRIPSI TAMBAHAN DIHAPUS) -->
+          <!-- HEADER MODUL 1 -->
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 mb-4 border-b border-slate-100 gap-4 no-print">
             <div>
               <h2 class="text-base font-bold text-slate-800">Modul 1: Penjadwalan & Penguncian Sesi Ujian</h2>
@@ -307,7 +302,7 @@
             </table>
           </div>
 
-          <!-- FOOTER PAGINATION & TOMBOL CETAK JADWAL (NAMA TOMBOL RINGKAS) -->
+          <!-- FOOTER PAGINATION & TOMBOL CETAK -->
           <div id="paginationContainer" class="flex flex-col sm:flex-row justify-between items-center mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500 gap-3">
             <div id="paginationInfo" class="no-print">Menampilkan 0 data</div>
             
@@ -327,7 +322,7 @@
         </div>
       </section>
 
-      <!-- MODUL 2: UPLOAD EXCEL (DESKRIPSI TAMBAHAN DIHAPUS) -->
+      <!-- MODUL 2: UPLOAD EXCEL AUTO MAPPING & VALIDASI TANGGAL STRICT -->
       <section id="modul2" class="tab-content hidden">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 space-y-6">
           
@@ -388,7 +383,7 @@
         </div>
       </section>
 
-      <!-- MODUL 3: CALCULATOR TABEL C (DESKRIPSI TAMBAHAN DIHAPUS) -->
+      <!-- MODUL 3: CALCULATOR TABEL C -->
       <section id="modul3" class="tab-content hidden">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
           <div class="flex justify-between items-center mb-6">
@@ -418,7 +413,7 @@
         </div>
       </section>
 
-      <!-- MODUL 4: APPROVAL KEPALA UPA & SHA-256 (DESKRIPSI TAMBAHAN DIHAPUS) -->
+      <!-- MODUL 4: APPROVAL KEPALA UPA & PUBLIKASI -->
       <section id="modul4" class="tab-content hidden">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
           <div class="flex justify-between items-center mb-6">
@@ -524,15 +519,13 @@
         </div>
       </div>
 
-      <!-- TEMPLATE SERTIFIKAT FISIK (NAMA TOMBOL CETAK RINGKAS) -->
+      <!-- TEMPLATE SERTIFIKAT FISIK -->
       <div id="hasilCekSkor" class="hidden max-w-5xl mx-auto">
         <div id="certificatePrintArea" class="bg-white border-8 border-double border-slate-300 p-6 md:p-8 shadow-2xl rounded-sm relative text-slate-900 font-serif my-4 overflow-hidden box-sizing-border">
           
-          <!-- GAMBAR LATAR FISIK polnes2.jpg -->
           <img src="polnes2.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none z-0">
 
           <div class="relative z-10 flex flex-col justify-between h-full min-h-[500px]">
-            <!-- KOP SURAT ATAS SERTIFIKAT FORMAL (TANPA TITIK UPA BAHASA) -->
             <div class="flex justify-between items-center border-b-2 border-emerald-800 pb-2 mb-2">
               <div class="flex items-center gap-3">
                 <div class="w-14 h-14 flex items-center justify-center overflow-hidden">
@@ -546,7 +539,6 @@
               </div>
             </div>
 
-            <!-- JUDUL SERTIFIKAT & NOMOR -->
             <div class="text-center my-1">
               <h2 class="text-lg font-bold tracking-widest text-slate-900 uppercase underline decoration-1 underline-offset-4 cert-font-title">CERTIFICATE OF ACHIEVEMENT</h2>
               <p class="text-[11px] font-sans text-slate-600 mt-0.5" id="certNoRef">No : 0885/ PL19 / UPA.BAHASA / TOEFL-P / 2026</p>
@@ -554,7 +546,6 @@
               <h3 class="text-lg font-bold uppercase tracking-wide text-slate-900 my-0.5 border-b border-dashed border-slate-300 inline-block px-6 py-0.5" id="certStudentName">-</h3>
             </div>
 
-            <!-- DETAIL MAHASISWA & TANGGAL TES -->
             <div class="max-w-md mx-auto text-xs font-sans space-y-0.5 my-2 text-slate-800">
               <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">NIM</span><span class="col-span-8">: <span id="certNim" class="font-mono font-bold">-</span></span></div>
               <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Place, date of birth</span><span class="col-span-8">: <span id="certPobDob">Samarinda, 01 Januari 2004</span></span></div>
@@ -564,7 +555,6 @@
 
             <p class="text-center text-xs italic font-serif my-1 text-slate-700">Achieved the following score on TOEFL Prediction Test</p>
 
-            <!-- TABEL RINCIAN SKOR LENGKAP -->
             <div class="max-w-xl mx-auto my-2 font-sans">
               <table class="w-full border-collapse border border-slate-800 text-center text-xs">
                 <thead>
@@ -588,30 +578,22 @@
               </table>
             </div>
 
-            <!-- FOOTER TANDA TANGAN & BARCODE SHA-256 -->
             <div class="mt-4 pt-1 grid grid-cols-2 items-end font-sans text-xs">
-              
-              <!-- QR CODE VERIFIKASI DIGITAL SHA-256 -->
               <div class="flex flex-col items-start gap-1">
                 <div id="certQrContainer" class="p-1 border border-slate-300 rounded bg-white"></div>
                 <span class="text-[9px] font-mono text-slate-400" id="certHashDisplay">SHA-256: -</span>
               </div>
 
-              <!-- TANDA TANGAN KOSONG MANUAL -->
               <div class="text-center">
                 <p class="text-slate-700">Samarinda, <span id="certIssueDate">05 Oktober 2026</span></p>
                 <p class="font-bold text-slate-800">Head of UPA Bahasa</p>
-                
                 <div class="h-12 my-1"></div>
-
                 <p class="font-bold text-slate-900 underline decoration-1">Dwi Tri Maesaroh, S.Pd., M.Pd.</p>
                 <p class="text-[10px] text-slate-600 font-mono">NIP. 198901172024062002</p>
               </div>
-
             </div>
           </div>
 
-          <!-- FOOTER ACTION BUTTONS -->
           <div class="no-print mt-4 pt-2 border-t flex justify-end gap-3">
             <button onclick="cetakSertifikatDigital()" class="bg-polnes-dark hover:bg-emerald-950 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md flex items-center gap-2">
               <span>Cetak E-Sertifikat Digital</span>
@@ -640,7 +622,7 @@
 
     let realExcelScores = {};
     let hasExcelUploaded = false;
-    let uploadedFileMetadata = {};
+    let sectionDates = { 1: null, 2: null, 3: null };
 
     let currentPublicMatch = null;
     let currentPublicMInfo = null;
@@ -660,7 +642,7 @@
       17: { l: 42, s: 41, r: 37 }, 16: { l: 41, s: 40, r: 36 }, 15: { l: 41, s: 40, r: 35 },
       14: { l: 39, s: 38, r: 34 }, 13: { l: 38, s: 37, r: 32 }, 12: { l: 37, s: 36, r: 31 },
       11: { l: 35, s: 35, r: 30 }, 10: { l: 33, s: 33, r: 29 }, 9:  { l: 32, s: 31, r: 28 },
-      8:  { l: 32, s: 29, r: 28 }, 7:  { l: 31, s: 27, r: 27 }, 6:  { l: 30, s: 26, r: 26 },
+      8:  { l: 32, s: 29, r: 28 }, 7:  { l: 31, s: 27, r: 27 }, 6:  { l: 29, s: 26, r: 26 },
       5:  { l: 29, s: 25, r: 25 }, 4:  { l: 28, s: 23, r: 24 }, 3:  { l: 27, s: 22, r: 23 },
       2:  { l: 26, s: 21, r: 23 }, 1:  { l: 25, s: 20, r: 22 }, 0:  { l: 24, s: 20, r: 21 }
     };
@@ -763,7 +745,6 @@
       document.getElementById('tab-' + tabId).classList.add('bg-polnes-main', 'text-white');
     }
 
-    /* FUNGSI CETAK SINKRON DIBALIK PROGRAM */
     function cetakBeritaAcaraJadwal() {
       document.body.classList.remove('print-cert-mode');
       document.body.classList.add('print-jadwal-mode');
@@ -776,7 +757,7 @@
       window.print();
     }
 
-    // MODUL 1: UPLOAD PER FILE (PER KELAS/JURUSAN)
+    // MODUL 1: UPLOAD PER KELAS
     async function uploadMasterMahasiswa(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -1044,7 +1025,7 @@
         selectedPlotting = selectedPlotting.filter(n => n !== nim);
       } else {
         if(selectedPlotting.length >= 25) {
-          alert('Kuota Utama (25 Mahasiswa) telah penuh! 5 Meja sisa dikunci sebagai Kuota Cadangan.');
+          alert('Kuota Utama (25 Mahasiswa) telah penuh!');
           return;
         }
         selectedPlotting.push(nim);
@@ -1073,7 +1054,7 @@
 
       filterMahasiswa();
 
-      alert(`Sesi Ujian Berhasil Dikunci!\n- Tanggal: ${tgl}\n- Sesi: ${jam}\n- Lokasi: ${lab}\n- Total Plotting: ${selectedPlotting.length} Mahasiswa Utama.\n\nTampilan tabel sekarang difokuskan pada mahasiswa terpilih saja & Siap Dicetak!`);
+      alert(`Sesi Ujian Berhasil Dikunci!\n- Tanggal: ${tgl}\n- Sesi: ${jam}\n- Lokasi: ${lab}\n- Total Plotting: ${selectedPlotting.length} Mahasiswa Utama.`);
     }
 
     function jadwalkanSesiBerikutnya() {
@@ -1087,10 +1068,10 @@
       document.getElementById('filterKategoriSelect').value = 'ALL';
       filterMahasiswa();
 
-      alert('Sesi sebelumnya telah dikunci! Silahkan upload file data mahasiswa lagi untuk menjadwalkan sesi berikutnya.');
+      alert('Sesi sebelumnya telah dikunci! Silahkan upload file data mahasiswa lagi untuk sesi berikutnya.');
     }
 
-    // MODUL 2: PARSER WITH METADATA CHECK
+    // MODUL 2: PARSER DENGAN VALIDASI TANGGAL STRICT ANTA-SECTION
     function handleExcelSectionUpload(event, secNum) {
       const file = event.target.files[0];
       if (!file) return;
@@ -1122,33 +1103,16 @@
             if (dateMatch) detectedDateStr = dateMatch[0];
           }
 
-          let normalizedDate = detectedDateStr;
-          if (detectedDateStr.includes("/")) {
-            const dateParts = detectedDateStr.split("/");
-            if (dateParts[0].length === 4) {
-              normalizedDate = `${dateParts[1]}-${dateParts[2]}-${dateParts[0]}`;
+          let normalizedDate = detectedDateStr.replace(/\//g, '-');
+
+          // STRICT CHECKING TANGGAL SINKRON
+          let existingDates = Object.values(sectionDates).filter(d => d !== null);
+          if (existingDates.length > 0 && normalizedDate) {
+            if (existingDates[0] !== normalizedDate) {
+              alert(`⚠️ HASH / TANGGAL TIDAK SINKRON!\n\nFile Section ${secNum} memiliki Tanggal Ujian (${normalizedDate}) yang BERBEDA dengan section sebelumnya (${existingDates[0]}).\n\nFile ditolak! Ketiga Section (S1, S2, S3) HARUS berasal dari tanggal ujian yang sama.`);
+              event.target.value = "";
+              return;
             }
-          }
-
-          let isSectionValid = false;
-          if (secNum === 1 && (detectedSectionStr.includes("SECTION 1") || detectedSectionStr.includes("A01"))) isSectionValid = true;
-          if (secNum === 2 && (detectedSectionStr.includes("SECTION 2") || detectedSectionStr.includes("A02"))) isSectionValid = true;
-          if (secNum === 3 && (detectedSectionStr.includes("SECTION 3") || detectedSectionStr.includes("A03"))) isSectionValid = true;
-
-          if (!isSectionValid) {
-            alert(`⚠️ SISTEM ERROR - TIPE SECTION TIDAK SINKRON!\n\nAnda mengunggah file untuk Slot Section ${secNum}, namun sistem mendeteksi isi/nama file ini adalah '${detectedSectionStr}'.\n\nHarap unggah file Section ${secNum} yang benar!`);
-            event.target.value = ""; 
-            return;
-          }
-
-          if (uploadedFileMetadata.date && normalizedDate && uploadedFileMetadata.date !== normalizedDate) {
-            alert(`⚠️ SISTEM ERROR - TANGGAL UJIAN TIDAK SINKRON!\n\nFile sebelumnya memiliki Tanggal Ujian: ${uploadedFileMetadata.date}\nTetapi file yang baru diunggah ini memiliki Tanggal Ujian: ${normalizedDate}\n\nFile ditolak karena berasal dari sesi/tanggal ujian yang berbeda!`);
-            event.target.value = "";
-            return;
-          }
-
-          if (normalizedDate) {
-            uploadedFileMetadata.date = normalizedDate;
           }
 
           let countParsed = 0;
@@ -1184,11 +1148,9 @@
           });
 
           hasExcelUploaded = true;
+          sectionDates[secNum] = normalizedDate;
 
-          document.getElementById(`statusS1`).classList.toggle('text-green-600', secNum === 1);
-          document.getElementById(`statusS2`).classList.toggle('text-green-600', secNum === 2);
-          document.getElementById(`statusS3`).classList.toggle('text-green-600', secNum === 3);
-
+          document.getElementById(`statusS${secNum}`).className = "text-[11px] text-green-600 font-bold block";
           document.getElementById(`statusS${secNum}`).innerText = `✓ Sukses (${countParsed} Meja Dibaca)`;
           document.getElementById(`labelS${secNum}`).innerText = file.name.substring(0, 15) + '...';
 
@@ -1265,7 +1227,6 @@
           <tr>
             <td colspan="5" class="p-8 text-center text-slate-400">
               <p class="font-bold text-slate-600">Belum Ada Data Hasil Ujian</p>
-              <p class="text-xs text-slate-400 mt-1">Silakan unggah minimal 1 file Excel hasil ujian (A01, A02, atau A03) di atas untuk menampilkan auto-mapping.</p>
             </td>
           </tr>
         `;
@@ -1337,7 +1298,6 @@
           <tr>
             <td colspan="6" class="p-8 text-center text-slate-400">
               <p class="font-bold text-slate-600">Belum Ada Data Hasil Ujian untuk Dikalkulasi</p>
-              <p class="text-xs text-slate-400 mt-1">Harap unggah hasil file Excel di Modul 2 terlebih dahulu.</p>
             </td>
           </tr>
         `;
@@ -1345,17 +1305,6 @@
       }
 
       const validEntries = parsedHasilUjian.filter(item => item.nim && (item.s1 > 0 || item.s2 > 0 || item.s3 > 0));
-
-      if (validEntries.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="6" class="p-8 text-center text-slate-400">
-              <p class="font-bold text-slate-600">Tidak ada data peserta aktif dengan skor valid (>0)</p>
-            </td>
-          </tr>
-        `;
-        return;
-      }
 
       validEntries.forEach(item => {
         const mInfo = masterMahasiswa.find(m => String(m.nim) === String(item.nim));
@@ -1382,7 +1331,7 @@
       });
     }
 
-    // MODUL 4: APPROVAL & PUBLIKASI SINKRON REAL KE SUPABASE
+    // MODUL 4: APPROVAL & RIWAYAT TRACKING
     function renderModul4() {
       const tbody = document.getElementById('tableApproval');
       tbody.innerHTML = '';
@@ -1438,7 +1387,7 @@
       if (validItems.length === 0) return alert('Tidak ada data nilai yang siap untuk dipublikasikan!');
 
       const btn = document.getElementById('btnPublishAll');
-      btn.innerText = 'Mengirim & Mempublikasi ke Supabase...';
+      btn.innerText = 'Mempublikasi ke Supabase Database...';
       btn.disabled = true;
 
       validItems.forEach(i => i.statusApproval = 'PUBLISHED');
@@ -1457,17 +1406,13 @@
           reading_converted: i.conv3,
           total_score: i.totalScore,
           status_approval: 'PUBLISHED',
-          certificate_hash: i.hash
+          certificate_hash: i.hash,
+          created_at: new Date().toISOString()
         };
 
         try {
-          const { data: exist } = await _supabase.from('hasil_ujian').select('nim').eq('nim', payload.nim);
-
-          if (exist && exist.length > 0) {
-            await _supabase.from('hasil_ujian').update(payload).eq('nim', payload.nim);
-          } else {
-            await _supabase.from('hasil_ujian').insert([payload]);
-          }
+          // INSERT REKAP RECORD BARU UNTUK MENAMBAH HITUNGAN RIWAYAT TES MAHASISWA
+          await _supabase.from('hasil_ujian').insert([payload]);
           successCount++;
         } catch (err) {
           console.error(`Error publishing NIM ${payload.nim}:`, err);
@@ -1478,10 +1423,10 @@
       btn.disabled = false;
       renderModul4();
 
-      alert(`BERHASIL! ${successCount} dari ${validItems.length} Skor TOEFL Resmi Berhasil Dipublikasikan ke Database Supabase & Web Utama!`);
+      alert(`BERHASIL! ${successCount} Skor TOEFL Resmi Ditambahkan ke Database Supabase!`);
     }
 
-    // PUBLIK: ALUR CEK LOGIKA FLOWCHART
+    // PUBLIK: LOGIKA SILENT RIWAYAT TES & KELULUSAN
     async function cariSkorPublik() {
       const input = document.getElementById('cekNimInput').value.trim();
       const certContainer = document.getElementById('hasilCekSkor');
@@ -1497,16 +1442,19 @@
 
       let match = null;
       let mInfo = null;
+      let totalTesCount = 0;
 
       try {
         const { data, error } = await _supabase
           .from('hasil_ujian')
           .select('*')
           .ilike('nim', input)
-          .eq('status_approval', 'PUBLISHED');
+          .eq('status_approval', 'PUBLISHED')
+          .order('created_at', { ascending: false });
 
         if (data && data.length > 0) {
-          const row = data[0];
+          totalTesCount = data.length; // JUMLAH TOTAL SKOR TES YANG TERCATAT
+          const row = data[0]; // AMBIL SKOR TERBARU
           match = {
             nim: String(row.nim).trim(),
             s1: row.listening_raw || 0,
@@ -1535,6 +1483,7 @@
       if (!match) {
         const localMatch = parsedHasilUjian.find(i => String(i.nim).trim().toLowerCase() === input.toLowerCase() && i.statusApproval === 'PUBLISHED');
         if (localMatch) {
+          totalTesCount = 1;
           match = {
             nim: input,
             s1: localMatch.s1 || 0,
@@ -1557,7 +1506,7 @@
       }
 
       if (!match) {
-        alert(`AKSES DITOLAK: Nilai TOEFL untuk NIM '${input}' tidak ditemukan atau belum dipublikasikan oleh Kepala UPA Bahasa.`);
+        alert(`AKSES DITOLAK: Nilai TOEFL untuk NIM '${input}' tidak ditemukan atau belum dipublikasikan.`);
         return;
       }
 
@@ -1604,6 +1553,7 @@
         badgeEl.innerText = "TIDAK LULUS (FAILED)";
       }
 
+      // SYARAT BACKEND SILENT: HARUS SEMESTER AKHIR DAN (LULUS ATAU MEMILIKI RIWAYAT TES CUKUP)
       if (angkatanInfo.isSemesterAkhir) {
         semBawahNotice.classList.add('hidden');
         if (isPassed) {
@@ -1614,6 +1564,7 @@
           remedialNotice.classList.remove('hidden');
         }
       } else {
+        // MAHASISWA SEMESTER BAWAH HANYA MENAMPILKAN SKOR SAJA
         btnCert.classList.add('hidden');
         remedialNotice.classList.add('hidden');
         semBawahNotice.classList.remove('hidden');
