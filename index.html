@@ -41,7 +41,7 @@
     @media print {
       html, body {
         width: 100% !important;
-        height: auto !important;
+        height: 100% !important;
         margin: 0 !important;
         padding: 0 !important;
         background: #fff !important;
@@ -54,9 +54,11 @@
       }
 
       /* KONDISI 1: CETAK BERITA ACARA JADWAL (PORTRAIT A4) */
-      @page {
-        size: A4 portrait !important;
-        margin: 10mm !important;
+      body.print-jadwal-mode {
+        @page {
+          size: A4 portrait !important;
+          margin: 10mm !important;
+        }
       }
 
       body.print-jadwal-mode #printableJadwalArea, 
@@ -81,6 +83,13 @@
       }
 
       /* KONDISI 2: CETAK E-SERTIFIKAT DIGITAL (LANDSCAPE A4) */
+      body.print-cert-mode {
+        @page {
+          size: A4 landscape !important;
+          margin: 0 !important;
+        }
+      }
+
       body.print-cert-mode #certificatePrintArea, 
       body.print-cert-mode #certificatePrintArea * { 
         visibility: visible !important; 
@@ -92,13 +101,15 @@
         top: 0 !important; 
         width: 297mm !important; 
         height: 210mm !important; 
-        padding: 12mm 18mm !important;
+        padding: 10mm 15mm !important;
         margin: 0 !important;
         border: 8px double #cbd5e1 !important;
         box-shadow: none !important;
         box-sizing: border-box !important;
         display: block !important;
         background: #fff !important;
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
       }
 
       .no-print { 
@@ -672,7 +683,6 @@
       };
     }
 
-    // UTILITY: FORMAT DAN NORMALISASI TANGGAL KE YYYY-MM-DD
     function normalizeDateString(dateInput) {
       if (!dateInput) return "";
       let d = String(dateInput).trim();
@@ -681,10 +691,8 @@
       const parts = d.split('-');
       if (parts.length === 3) {
         if (parts[0].length === 4) {
-          // YYYY-MM-DD
           return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
         } else if (parts[2].length === 4) {
-          // DD-MM-YYYY -> YYYY-MM-DD
           return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
         }
       }
@@ -715,7 +723,6 @@
       }
     }
 
-    // UPDATE LIST REKOMENDASI DROPDOWN PRODI OTOMATIS
     function updateProdiSuggestions() {
       const datalist = document.getElementById('prodiSuggestions');
       if (!datalist) return;
@@ -800,7 +807,6 @@
       window.print();
     }
 
-    // MODUL 1: UPLOAD PER KELAS DENGAN NAMA PRODI OTOMATIS AMBIL DARI NAMA FILE EXCEL
     async function uploadMasterMahasiswa(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -1123,12 +1129,10 @@
       alert('Sesi sebelumnya telah dikunci! Silahkan upload file data mahasiswa lagi untuk sesi berikutnya.');
     }
 
-    // MODUL 2: PARSER DENGAN VALIDASI TANGGAL STRICT TERHADAP TANGGAL JADWAL DILOCK & TANPA AUTO-ASSIGN KELIRU
     function handleExcelSectionUpload(event, secNum) {
       const file = event.target.files[0];
       if (!file) return;
 
-      // 1. CEK DAHULU APABILA JADWAL TERKUNCI/DIINPUT
       const lockedDateInput = document.getElementById('inputTanggalUjian').value;
       const normalizedLockedDate = normalizeDateString(lockedDateInput);
 
@@ -1158,14 +1162,12 @@
 
           let normalizedFileDate = normalizeDateString(detectedDateStr);
 
-          // VALIDASI STRICT 1: JIKA TANGGAL FILE TIDAK SAMA DENGAN JADWAL YANG DIKUNCI DI MODUL 1
           if (normalizedLockedDate && normalizedFileDate && (normalizedLockedDate !== normalizedFileDate)) {
             alert(`⚠️ BELUM ADA PENJADWALAN UNTUK TANGGAL TERSEBUT!\n\nSesi Ujian di Modul 1 dijadwalkan pada Tanggal (${normalizedLockedDate}), tetapi file Excel yang diunggah bertanggal (${normalizedFileDate}).\n\nSilahkan pilih/sesuaikan tanggal pelaksanaan ujian yang tepat di Modul 1.`);
             event.target.value = "";
             return;
           }
 
-          // VALIDASI STRICT 2: TANGGAL ANTA-SECTION HARUS SINKRON (S1, S2, S3)
           let existingDates = Object.values(sectionDates).filter(d => d !== null);
           if (existingDates.length > 0 && normalizedFileDate) {
             if (existingDates[0] !== normalizedFileDate) {
@@ -1224,14 +1226,12 @@
       reader.readAsArrayBuffer(file);
     }
 
-    // INIT MAPPING: PRESISI TERIKAT JIKA SESUAI JADWAL TERPLOT, JIKA BELUM MAKA MURNI UNMAPPED KOSONG
     function initParsedData() {
       parsedHasilUjian = [];
 
       Object.keys(realExcelScores).forEach(mejaKey => {
         const uData = realExcelScores[mejaKey];
         
-        // Ambil indeks angka dari MEJA (misal STUDENT01 -> indeks 0)
         const matchNum = mejaKey.match(/\d+/);
         let assignedNim = null;
 
@@ -1252,7 +1252,6 @@
             statusMapping: 'MATCHED'
           });
         } else {
-          // JIKA TIDAK ADA DI JADWAL TERPLOT, DIBIARKAN MURNI UNMAPPED KOSONG DENGAN NILAI DARI EXCEL
           parsedHasilUjian.push({
             meja: mejaKey,
             nim: null,
@@ -1341,7 +1340,6 @@
       renderModul2();
     }
 
-    // MODUL 3: CALCULATOR TABEL C
     function prosesKalkulasiSemua() {
       const tbody = document.getElementById('tableKalkulasi');
       tbody.innerHTML = '';
@@ -1395,7 +1393,6 @@
       });
     }
 
-    // MODUL 4: APPROVAL & RIWAYAT TRACKING
     function renderModul4() {
       const tbody = document.getElementById('tableApproval');
       tbody.innerHTML = '';
@@ -1489,7 +1486,6 @@
       alert(`BERHASIL! ${successCount} Skor TOEFL Resmi Ditambahkan ke Database Supabase!`);
     }
 
-    // PUBLIK: LOGIKA SILENT RIWAYAT TES & KELULUSAN
     async function cariSkorPublik() {
       const input = document.getElementById('cekNimInput').value.trim();
       const certContainer = document.getElementById('hasilCekSkor');
