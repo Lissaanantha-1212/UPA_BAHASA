@@ -53,7 +53,7 @@
         visibility: hidden !important; 
       }
 
-      /* KONDISI 1: CETAK BERITA ACARA JADWAL (PORTRAIT A4) */
+      /* KONDISI 1: CETAK BERITA ACARA JADWAL (PORTRAIT A4 DILAKUKAN SINKRON DI BALIK PROGRAM) */
       @page {
         size: A4 portrait !important;
         margin: 10mm !important;
@@ -81,7 +81,7 @@
         display: block !important;
       }
 
-      /* KONDISI 2: CETAK E-SERTIFIKAT DIGITAL (LANDSCAPE A4) */
+      /* KONDISI 2: CETAK E-SERTIFIKAT DIGITAL (LANDSCAPE A4 DILAKUKAN SINKRON DI BALIK PROGRAM) */
       body.print-cert-mode #certificatePrintArea, 
       body.print-cert-mode #certificatePrintArea * { 
         visibility: visible !important; 
@@ -117,8 +117,9 @@
   <!-- HEADER DASHBOARD STAFF -->
   <header class="bg-polnes-dark text-white py-3.5 px-8 shadow-md flex justify-between items-center sticky top-0 z-50 no-print">
     <div class="flex items-center gap-3">
-      <div id="logoContainer" class="bg-amber-500 text-slate-900 font-extrabold px-3 py-1.5 rounded-lg text-sm shadow-sm flex items-center justify-center">
-        S
+      <!-- FOTO LOGO POLNES (MENGGANTIKAN KOTAK S ORANYE) -->
+      <div id="logoContainer" class="w-10 h-10 flex items-center justify-center bg-white/10 p-1 rounded-lg border border-white/20 shadow-sm overflow-hidden">
+        <img src="logo-removebg-preview.png" alt="POLNES" class="w-full h-full object-contain">
       </div>
       <div>
         <h1 class="text-base font-bold leading-tight tracking-wide uppercase">PANEL OPERASIONAL STAFF</h1>
@@ -163,28 +164,28 @@
         </button>
       </div>
 
-      <!-- MODUL 1: PENJADWALAN, PLOTTING & PRINT TEMPLATE JADWAL -->
+      <!-- MODUL 1: PENJADWALAN & PLOTTING SESI -->
       <section id="modul1" class="tab-content">
         <div id="printableJadwalArea" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
           
-          <!-- KOP SURAT RESMI AKADEMIK (DISEMBUNYIKAN DI WEB, HANYA MUNCUL SAAT CETAK PRINT) -->
-          <div id="printHeaderTemplate" class="hidden mb-6 text-center">
-            <div class="flex items-center justify-between pb-2">
+          <!-- KOP SURAT RESMI AKADEMIK (HANYA MUNCUL SAAT PRINT) -->
+          <div id="printHeaderTemplate" class="hidden mb-6 text-center pt-2">
+            <div class="flex items-center justify-between pb-1">
               <!-- LOGO POLNES SISI KIRI -->
               <div class="w-24 h-24 flex items-center justify-start overflow-hidden">
                 <img src="logo-removebg-preview.png" class="w-full h-full object-contain">
               </div>
               
-              <!-- TEKS KOP DENGAN LETTER SPACING PROFESIONAL RATA TENGAH MELEBAR -->
+              <!-- TEKS KOP REVISI: TANPA TITIK DI UPA BAHASA & ALAMAT MELEBAR RATA KANAN KIRI -->
               <div class="text-center flex-1 px-2">
                 <h3 class="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-800 leading-snug">KEMENTERIAN PENDIDIKAN TINGGI, SAINS DAN TEKNOLOGI</h3>
                 <h1 class="text-base font-extrabold uppercase tracking-[0.25em] text-slate-900 mt-1">POLITEKNIK NEGERI SAMARINDA</h1>
-                <h2 class="text-sm font-extrabold uppercase tracking-[0.3em] text-slate-900 mt-0.5">UPA. BAHASA</h2>
-                <p class="text-[9.5px] text-slate-700 mt-1 leading-normal tracking-wide">
-                  Jalan Dr. Ciptomangkunkusumo Kampus Gunung Panjang Samarinda<br>
-                  Telepon: PABX(0541)260588-260553-262018 FAX (0541) 260355<br>
-                  Website: www.polnes.ac.id &nbsp;|&nbsp; Email: polnes@polnes.ac.id
-                </p>
+                <h2 class="text-sm font-extrabold uppercase tracking-[0.3em] text-slate-900 mt-0.5">UPA BAHASA</h2>
+                <div class="text-[9.5px] text-slate-700 mt-1.5 leading-tight tracking-wider">
+                  <p class="w-full text-center">Jalan Dr. Ciptomangkunkusumo Kampus Gunung Panjang Samarinda</p>
+                  <p class="w-full text-center">Telepon: PABX(0541)260588-260553-262018 FAX (0541) 260355</p>
+                  <p class="w-full text-center">Website: www.polnes.ac.id &nbsp;|&nbsp; Email: polnes@polnes.ac.id</p>
+                </div>
               </div>
 
               <div class="w-24 h-24 opacity-0"></div> <!-- Penyeimbang Margin Kanan -->
@@ -201,13 +202,10 @@
             </div>
           </div>
 
-          <!-- HEADER MODUL 1 -->
+          <!-- HEADER MODUL 1 (DESKRIPSI TAMBAHAN DIHAPUS) -->
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 mb-4 border-b border-slate-100 gap-4 no-print">
             <div>
-              <h2 class="text-base font-bold text-slate-800 flex items-center gap-2">
-                <span>Modul 1: Penjadwalan & Penguncian Sesi Ujian</span>
-              </h2>
-              <p class="text-xs text-slate-500 mt-0.5">Pengaturan jadwal per kelas/file, serta plotting 25 Meja Utama + 5 Meja Cadangan.</p>
+              <h2 class="text-base font-bold text-slate-800">Modul 1: Penjadwalan & Penguncian Sesi Ujian</h2>
             </div>
 
             <div class="flex items-center gap-2">
@@ -309,13 +307,13 @@
             </table>
           </div>
 
-          <!-- FOOTER PAGINATION & TOMBOL CETAK JADWAL -->
+          <!-- FOOTER PAGINATION & TOMBOL CETAK JADWAL (NAMA TOMBOL RINGKAS) -->
           <div id="paginationContainer" class="flex flex-col sm:flex-row justify-between items-center mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500 gap-3">
             <div id="paginationInfo" class="no-print">Menampilkan 0 data</div>
             
             <div id="actionPrintContainer" class="hidden">
               <button onclick="cetakBeritaAcaraJadwal()" class="bg-polnes-main hover:bg-polnes-dark text-white font-bold px-5 py-2 rounded-xl text-xs shadow-sm flex items-center gap-1.5 no-print">
-                <span>Cetak Berita Acara Jadwal (A4 Portrait)</span>
+                <span>Cetak Berita Acara Jadwal</span>
               </button>
             </div>
 
@@ -329,13 +327,12 @@
         </div>
       </section>
 
-      <!-- MODUL 2: UPLOAD 3 FILE EXCEL REAL -->
+      <!-- MODUL 2: UPLOAD EXCEL (DESKRIPSI TAMBAHAN DIHAPUS) -->
       <section id="modul2" class="tab-content hidden">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 space-y-6">
           
           <div>
-            <h2 class="text-base font-bold text-slate-800 mb-1">Modul 2: Upload Excel Hasil Ujian Lab & Auto-Mapping Engine</h2>
-            <p class="text-xs text-slate-500">Unggah 3 File Excel Asli dari Aplikasi Lab (A01 Listening, A02 Structure, A03 Reading) untuk membaca jumlah jawaban benar secara presisi.</p>
+            <h2 class="text-base font-bold text-slate-800">Modul 2: Upload Excel Hasil Ujian Lab & Auto-Mapping Engine</h2>
           </div>
 
           <!-- FORM INPUT UPLOAD 3 FILE EXCEL REAL -->
@@ -369,7 +366,7 @@
           </div>
 
           <div id="mappingStatusAlert" class="hidden p-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-xs">
-            <strong>Peringatan Auto-Mapping:</strong> Ditemukan data komputer cadangan / mahasiswa susulan yang belum terikat di jadwal. Gunakan fitur <i>Fast-Add</i> di bawah ini!
+            <strong>Peringatan Auto-Mapping:</strong> Ditemukan data komputer cadangan / mahasiswa susulan yang belum terikat di jadwal.
           </div>
 
           <!-- TABEL HASIL AUTOMAPPING -->
@@ -391,13 +388,12 @@
         </div>
       </section>
 
-      <!-- MODUL 3: CALCULATOR ENGINE -->
+      <!-- MODUL 3: CALCULATOR TABEL C (DESKRIPSI TAMBAHAN DIHAPUS) -->
       <section id="modul3" class="tab-content hidden">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
           <div class="flex justify-between items-center mb-6">
             <div>
               <h2 class="text-base font-bold text-slate-800">Modul 3: Conversion Lookup Table Engine (Tabel C Baku Resmi)</h2>
-              <p class="text-xs text-slate-500">Mengonversi skor jawaban benar mentah (S1, S2, S3) menjadi Nilai Baku TOEFL secara otomatis sesuai tabel standar UPA Bahasa.</p>
             </div>
             <button onclick="prosesKalkulasiSemua()" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm">
               Jalankan Perhitungan Otomatis
@@ -422,13 +418,12 @@
         </div>
       </section>
 
-      <!-- MODUL 4: APPROVAL KEPALA UPA & SHA-256 -->
+      <!-- MODUL 4: APPROVAL KEPALA UPA & SHA-256 (DESKRIPSI TAMBAHAN DIHAPUS) -->
       <section id="modul4" class="tab-content hidden">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
           <div class="flex justify-between items-center mb-6">
             <div>
               <h2 class="text-base font-bold text-slate-800">Modul 4: Panel Verifikasi & Approval Kepala UPA Bahasa</h2>
-              <p class="text-xs text-slate-500">Otorisasi publikasi nilai resmi dan pemicu enkripsi QR Sertifikat SHA-256.</p>
             </div>
             <button id="btnPublishAll" onclick="approveSemua()" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm flex items-center gap-2">
               <span>Publish Semua Skor ke Web Utama & Supabase</span>
@@ -472,7 +467,8 @@
           </button>
         </div>
       </div>
-      <!-- KARTU INFORMASI RINCIAN SKOR LULUS / TIDAK LULUS -->
+
+      <!-- KARTU INFORMASI RINCIAN SKOR -->
       <div id="infoSkorCard" class="hidden max-w-xl mx-auto bg-white p-6 rounded-2xl border border-slate-200 shadow-md space-y-5">
         <div class="flex justify-between items-center border-b pb-3">
           <div>
@@ -512,12 +508,12 @@
           <span class="text-2xl font-black text-emerald-900 block mt-0.5" id="infoTotalScore">0</span>
         </div>
 
-        <!-- TOMBOL UNDUH JIKA LULUS & MAHASISWA SEMESTER AKHIR -->
+        <!-- TOMBOL UNDUH E-SERTIFIKAT -->
         <button id="btnDownloadCert" onclick="tampilkanSertifikatLengkap()" class="w-full bg-polnes-dark hover:bg-emerald-950 text-white font-bold py-3 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-2">
           <span>Unduh / Preview E-Sertifikat Resmi</span>
         </button>
 
-        <!-- PESAN UNTUK MAHASISWA SEMESTER BAWAH (FLOWCHART LOGIC) -->
+        <!-- PESAN UNTUK MAHASISWA SEMESTER BAWAH -->
         <div id="semesterBawahNotice" class="hidden bg-sky-50 border border-sky-200 p-4 rounded-xl text-center text-xs text-sky-800 leading-relaxed font-semibold">
           Anda terdeteksi sebagai <b>Mahasiswa Semester Bawah</b>. Sesuai ketentuan UPA Bahasa POLNES, nilai Anda telah tercatat, namun E-Sertifikat Digital hanya dapat diunduh saat Anda berada di <b>Semester Akhir</b>.
         </div>
@@ -528,15 +524,15 @@
         </div>
       </div>
 
-      <!-- TEMPLATE SERTIFIKAT FISIK (A4 LANDSCAPE PRESISI 1 HALAMAN FULL) -->
+      <!-- TEMPLATE SERTIFIKAT FISIK (NAMA TOMBOL CETAK RINGKAS) -->
       <div id="hasilCekSkor" class="hidden max-w-5xl mx-auto">
         <div id="certificatePrintArea" class="bg-white border-8 border-double border-slate-300 p-6 md:p-8 shadow-2xl rounded-sm relative text-slate-900 font-serif my-4 overflow-hidden box-sizing-border">
           
-          <!-- GAMBAR LATAR FISIK polnes2.jpg PRESISI MENUTUPI SATU LEMBAR -->
+          <!-- GAMBAR LATAR FISIK polnes2.jpg -->
           <img src="polnes2.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none z-0">
 
           <div class="relative z-10 flex flex-col justify-between h-full min-h-[500px]">
-            <!-- KOP SURAT ATAS SERTIFIKAT FORMAL -->
+            <!-- KOP SURAT ATAS SERTIFIKAT FORMAL (TANPA TITIK UPA BAHASA) -->
             <div class="flex justify-between items-center border-b-2 border-emerald-800 pb-2 mb-2">
               <div class="flex items-center gap-3">
                 <div class="w-14 h-14 flex items-center justify-center overflow-hidden">
@@ -545,7 +541,7 @@
                 <div>
                   <h3 class="text-[10px] font-bold uppercase tracking-wider text-slate-700 font-sans">KEMENTERIAN PENDIDIKAN TINGGI, SAINS DAN TEKNOLOGI</h3>
                   <h1 class="text-base font-extrabold uppercase tracking-wide text-emerald-900 font-sans">POLITEKNIK NEGERI SAMARINDA</h1>
-                  <h2 class="text-xs font-bold uppercase tracking-wider text-emerald-700 font-sans">UPA. BAHASA</h2>
+                  <h2 class="text-xs font-bold uppercase tracking-wider text-emerald-700 font-sans">UPA BAHASA</h2>
                 </div>
               </div>
             </div>
@@ -601,10 +597,10 @@
                 <span class="text-[9px] font-mono text-slate-400" id="certHashDisplay">SHA-256: -</span>
               </div>
 
-              <!-- TANDA TANGAN KOSONG MANUAL (NAMA & NIP TETAP ADA) -->
+              <!-- TANDA TANGAN KOSONG MANUAL -->
               <div class="text-center">
                 <p class="text-slate-700">Samarinda, <span id="certIssueDate">05 Oktober 2026</span></p>
-                <p class="font-bold text-slate-800">Head of UPA. Bahasa</p>
+                <p class="font-bold text-slate-800">Head of UPA Bahasa</p>
                 
                 <div class="h-12 my-1"></div>
 
@@ -615,10 +611,10 @@
             </div>
           </div>
 
-          <!-- FOOTER ACTION BUTTONS (NO PRINT) -->
+          <!-- FOOTER ACTION BUTTONS -->
           <div class="no-print mt-4 pt-2 border-t flex justify-end gap-3">
             <button onclick="cetakSertifikatDigital()" class="bg-polnes-dark hover:bg-emerald-950 text-white font-bold px-6 py-2.5 rounded-xl text-xs shadow-md flex items-center gap-2">
-              <span>Cetak / Simpan E-Sertifikat (PDF A4 Landscape)</span>
+              <span>Cetak E-Sertifikat Digital</span>
             </button>
           </div>
 
@@ -767,14 +763,13 @@
       document.getElementById('tab-' + tabId).classList.add('bg-polnes-main', 'text-white');
     }
 
-    // FUNGSI CETAK KHUSUS BERITA ACARA JADWAL (A4 PORTRAIT)
+    /* FUNGSI CETAK SINKRON DIBALIK PROGRAM */
     function cetakBeritaAcaraJadwal() {
       document.body.classList.remove('print-cert-mode');
       document.body.classList.add('print-jadwal-mode');
       window.print();
     }
 
-    // FUNGSI CETAK KHUSUS E-SERTIFIKAT DIGITAL (A4 LANDSCAPE)
     function cetakSertifikatDigital() {
       document.body.classList.remove('print-jadwal-mode');
       document.body.classList.add('print-cert-mode');
@@ -1078,7 +1073,7 @@
 
       filterMahasiswa();
 
-      alert(`Sesi Ujian Berhasil Dikunci!\n- Tanggal: ${tgl}\n- Sesi: ${jam}\n- Lokasi: ${lab}\n- Total Plotting: ${selectedPlotting.length} Mahasiswa Utama.\n\nTampilan tabel sekarang difokuskan pada mahasiswa terpilih saja & Siap Dicetak (Portrait A4)!`);
+      alert(`Sesi Ujian Berhasil Dikunci!\n- Tanggal: ${tgl}\n- Sesi: ${jam}\n- Lokasi: ${lab}\n- Total Plotting: ${selectedPlotting.length} Mahasiswa Utama.\n\nTampilan tabel sekarang difokuskan pada mahasiswa terpilih saja & Siap Dicetak!`);
     }
 
     function jadwalkanSesiBerikutnya() {
@@ -1486,7 +1481,7 @@
       alert(`BERHASIL! ${successCount} dari ${validItems.length} Skor TOEFL Resmi Berhasil Dipublikasikan ke Database Supabase & Web Utama!`);
     }
 
-    // PUBLIK: ALUR CEK LOGIKA FLOWCHART (SEMESTER BAWAH VS AKHIR)
+    // PUBLIK: ALUR CEK LOGIKA FLOWCHART
     async function cariSkorPublik() {
       const input = document.getElementById('cekNimInput').value.trim();
       const certContainer = document.getElementById('hasilCekSkor');
