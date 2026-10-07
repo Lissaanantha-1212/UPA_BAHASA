@@ -37,7 +37,7 @@
   </script>
 
   <style>
-    /* ATURAN DOKUMEN CETAK KETAT PRESISI 1 HALAMAN PAS */
+    /* ATURAN DOKUMEN CETAK KETAT PRESISI 1 HALAMAN PAS (TIDAK DIUBAH) */
     @media print {
       html, body {
         width: 100% !important;
@@ -54,7 +54,6 @@
         visibility: hidden !important; 
       }
 
-      /* KONDISI 1: CETAK BERITA ACARA JADWAL (PORTRAIT A4) */
       body.print-jadwal-mode {
         @page {
           size: A4 portrait !important;
@@ -83,7 +82,6 @@
         display: block !important;
       }
 
-      /* KONDISI 2: CETAK E-SERTIFIKAT DIGITAL (LANDSCAPE A4 EXACT 1 PAGE) */
       body.print-cert-mode {
         @page {
           size: A4 landscape !important;
@@ -175,9 +173,9 @@
         </button>
       </div>
 
-      <!-- MODUL 1: PENJADWALAN & PLOTTING SESI -->
+      <!-- MODUL 1: PENJADWALAN & PLOTTING SESI (REVISI UTAMA FLUID USER-FRIENDLY) -->
       <section id="modul1" class="tab-content">
-        <div id="printableJadwalArea" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
+        <div id="printableJadwalArea" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 space-y-5">
           
           <!-- KOP SURAT RESMI AKADEMIK -->
           <div id="printHeaderTemplate" class="hidden mb-6 text-center pt-2">
@@ -210,10 +208,39 @@
             </div>
           </div>
 
-          <!-- HEADER MODUL 1 -->
-          <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-4 mb-4 border-b border-slate-100 gap-4 no-print">
+          <!-- BANNER ONBOARDING ALUR KERJA STAFF (USER FRIENDLY GUIDANCE) -->
+          <div class="no-print bg-gradient-to-r from-emerald-900 to-polnes-dark text-white p-4 rounded-xl shadow-sm">
+            <div class="flex items-center justify-between mb-2 border-b border-emerald-700/60 pb-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-emerald-200 flex items-center gap-2">
+                <span>💡</span> Panduan Alur Kerja Staff Penjadwalan
+              </span>
+              <span class="text-[10px] bg-emerald-800 text-emerald-100 px-2 py-0.5 rounded font-mono">Sistem Kuota Terintegrasi</span>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-3 text-xs">
+              <div class="bg-white/10 p-2.5 rounded-lg border border-white/10">
+                <span class="font-extrabold text-amber-300 block mb-0.5">1. Upload File Excel</span>
+                <p class="text-[11px] text-emerald-100 leading-snug">Unggah file master mahasiswa per kelas dari tombol kanan atas.</p>
+              </div>
+              <div class="bg-white/10 p-2.5 rounded-lg border border-white/10">
+                <span class="font-extrabold text-amber-300 block mb-0.5">2. Cari / Filter Jurusan</span>
+                <p class="text-[11px] text-emerald-100 leading-snug">Ketik nama Jurusan/Prodi. Cek centang "Pilih All" (Max 25 meja).</p>
+              </div>
+              <div class="bg-white/10 p-2.5 rounded-lg border border-white/10">
+                <span class="font-extrabold text-amber-300 block mb-0.5">3. Tentukan Tanggal & Sesi</span>
+                <p class="text-[11px] text-emerald-100 leading-snug">Pilih tanggal & slot sesi. Maksimal 3 sesi (Pagi, Siang, Sore) per hari.</p>
+              </div>
+              <div class="bg-white/10 p-2.5 rounded-lg border border-white/10">
+                <span class="font-extrabold text-amber-300 block mb-0.5">4. Kunci Plotting Sesi</span>
+                <p class="text-[11px] text-emerald-100 leading-snug">Prodi otomatis terkunci aman agar staff pergantian tidak *double* jadwal.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- HEADER MODUL 1 & KONTROL UTAMA -->
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-2 border-b border-slate-100 gap-4 no-print">
             <div>
               <h2 class="text-base font-bold text-slate-800">Modul 1: Penjadwalan & Penguncian Sesi Ujian</h2>
+              <p class="text-xs text-slate-500">Atur jadwal pelaksanaan ujian dan kunci kuota per kelas/jurusan secara terpusat.</p>
             </div>
 
             <div class="flex items-center gap-2">
@@ -233,6 +260,37 @@
             </div>
           </div>
 
+          <!-- DASHBOARD MONITORING KUOTA & SLOT SESI HARIAN (MULTI-STAFF TRACKER) -->
+          <div class="no-print grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-bold text-slate-500 uppercase block">Status Kuota Tanggal Dipilih:</span>
+                <span id="labelTanggalTerpilih" class="text-xs font-extrabold text-slate-800 font-mono">-</span>
+              </div>
+              <div id="badgeStatusKuotaHari" class="px-3 py-1 rounded-lg text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300">
+                0 / 3 Sesi Terisi
+              </div>
+            </div>
+
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-bold text-slate-500 uppercase block">Total Prodi Terjadwal (Locked):</span>
+                <span id="countProdiLocked" class="text-xs font-extrabold text-emerald-700">0 Jurusan Selesai</span>
+              </div>
+              <span class="text-xs text-slate-400 font-semibold">Otomatis Terkunci</span>
+            </div>
+
+            <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 flex items-center justify-between">
+              <div>
+                <span class="text-[10px] font-bold text-slate-500 uppercase block">Jurusan Belum Terjadwal:</span>
+                <span id="countProdiPending" class="text-xs font-extrabold text-amber-700">0 Jurusan Antrean</span>
+              </div>
+              <button onclick="fokusJurusanPending()" class="bg-amber-600 hover:bg-amber-700 text-white text-[10px] font-bold px-2.5 py-1 rounded-lg shadow-sm">
+                Lihat Antrean
+              </button>
+            </div>
+          </div>
+
           <!-- PROGRESS BAR LOADING -->
           <div id="uploadProgressContainer" class="hidden mb-6 bg-slate-50 p-3.5 rounded-xl border border-slate-200 no-print">
             <div class="flex justify-between text-xs font-bold text-slate-700 mb-1.5">
@@ -244,16 +302,16 @@
             </div>
           </div>
 
-          <!-- KONTROL INPUT PENJADWALAN -->
-          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6 bg-slate-50 p-4 rounded-xl border border-slate-200/80 no-print">
+          <!-- KONTROL INPUT PENJADWALAN & KUOTA LOCKER -->
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200/80 no-print">
             <div>
               <label class="text-[11px] font-bold text-slate-700 mb-1 block uppercase">Tanggal Pelaksanaan Ujian:</label>
-              <input type="date" id="inputTanggalUjian" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none bg-white font-semibold">
+              <input type="date" id="inputTanggalUjian" onchange="cekKuotaTanggal()" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none bg-white font-semibold">
             </div>
 
             <div>
               <label class="text-[11px] font-bold text-slate-700 mb-1 block uppercase">Sesi & Jam Ujian:</label>
-              <select id="selectJamSesi" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none bg-white font-semibold">
+              <select id="selectJamSesi" onchange="cekKuotaTanggal()" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none bg-white font-semibold">
                 <option value="Sesi 1 (Pagi) | 08.00 - 10.00 WITA">Sesi 1 (Pagi) - 08.00 s/d 10.00 WITA</option>
                 <option value="Sesi 2 (Siang) | 11.00 - 13.00 WITA">Sesi 2 (Siang) - 11.00 s/d 13.00 WITA</option>
                 <option value="Sesi 3 (Sore) | 14.00 - 16.00 WITA">Sesi 3 (Sore) - 14.00 s/d 16.00 WITA</option>
@@ -262,7 +320,7 @@
 
             <div>
               <label class="text-[11px] font-bold text-slate-700 mb-1 block uppercase">Lokasi Laboratorium:</label>
-              <select id="labSelect" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none bg-white font-semibold">
+              <select id="labSelect" onchange="cekKuotaTanggal()" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none bg-white font-semibold">
                 <option value="Lab Komputer Bahasa A">Lab Komputer Bahasa A (30 Unit)</option>
                 <option value="Lab Komputer Bahasa B">Lab Komputer Bahasa B (30 Unit)</option>
               </select>
@@ -279,7 +337,7 @@
           </div>
 
           <!-- KONTROL FILTER TAMPILAN DATA SENSITIF DENGAN AUTOCOMPLETE DATALIST -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 no-print">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 no-print">
             <div class="md:col-span-1">
               <label class="text-[10px] font-bold text-slate-500 uppercase mb-1 block">Tampilkan Kategori Data:</label>
               <select id="filterKategoriSelect" onchange="gantiKategoriTampilan()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none bg-white font-bold text-slate-700">
@@ -309,7 +367,7 @@
                   </th>
                   <th class="p-3">NIM & Angkatan</th>
                   <th class="p-3">Nama Mahasiswa</th>
-                  <th class="p-3">Program Studi</th>
+                  <th class="p-3">Program Studi & Status Jadwal</th>
                   <th class="p-3 text-center">ID Meja Komputer</th>
                 </tr>
               </thead>
@@ -318,7 +376,7 @@
           </div>
 
           <!-- FOOTER PAGINATION & TOMBOL CETAK -->
-          <div id="paginationContainer" class="flex flex-col sm:flex-row justify-between items-center mt-4 pt-3 border-t border-slate-100 text-xs text-slate-500 gap-3">
+          <div id="paginationContainer" class="flex flex-col sm:flex-row justify-between items-center pt-2 border-t border-slate-100 text-xs text-slate-500 gap-3">
             <div id="paginationInfo" class="no-print">Menampilkan 0 data</div>
             
             <div id="actionPrintContainer" class="hidden">
@@ -331,6 +389,39 @@
               <button onclick="changePage(-1)" id="btnPrevPage" class="px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-slate-50 font-bold disabled:opacity-40">&larr; SBLM</button>
               <span id="pageIndicator" class="font-bold text-slate-700 px-2">Hal 1 / 1</span>
               <button onclick="changePage(1)" id="btnNextPage" class="px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-slate-50 font-bold disabled:opacity-40">SLJT &rarr;</button>
+            </div>
+          </div>
+
+          <!-- LOG SERAH TERIMA / MONITORING MINGGUAN STAFF PERGANTIAN (INFO SERAH TERIMA TUGAS) -->
+          <div class="no-print pt-4 border-t border-slate-200 space-y-3">
+            <div class="flex justify-between items-center">
+              <div>
+                <h3 class="text-sm font-bold text-slate-800">📋 Log Histori Penjadwalan Staff (Serah-Terima Tugas)</h3>
+                <p class="text-[11px] text-slate-500">Informasi real-time untuk staff pengganti melihat kelas/jurusan yang sudah terjadwal dan slot sesi tersisa.</p>
+              </div>
+              <button onclick="loadScheduleLog()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold px-3 py-1.5 rounded-lg border border-slate-300 flex items-center gap-1">
+                <span>🔄 Refresh Log</span>
+              </button>
+            </div>
+
+            <div class="overflow-x-auto rounded-xl border border-slate-200 max-h-48 overflow-y-auto">
+              <table class="w-full text-left text-xs">
+                <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
+                  <tr>
+                    <th class="p-2.5">Tanggal Ujian</th>
+                    <th class="p-2.5">Sesi & Waktu</th>
+                    <th class="p-2.5">Lokasi Lab</th>
+                    <th class="p-2.5">Program Studi / Kelas Terjadwal</th>
+                    <th class="p-2.5 text-center">Jumlah Mhs</th>
+                    <th class="p-2.5 text-center">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="tableScheduleLog" class="divide-y divide-slate-100 font-mono text-[11px]">
+                  <tr>
+                    <td colspan="6" class="p-4 text-center text-slate-400">Belum ada histori penjadwalan dikunci.</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
 
@@ -614,7 +705,6 @@
               <div class="text-center">
                 <p class="text-slate-700">Samarinda, <span id="certIssueDate">05 Oktober 2026</span></p>
                 <p class="font-bold text-slate-800">Head of UPA Bahasa</p>
-                <!-- KETINGGIAN KOSONG TTD DIMINIMALISIR AGAR TERANGKAT NAIK -->
                 <div class="h-8 my-0.5"></div>
                 <p class="font-bold text-slate-900 underline decoration-1">Dwi Tri Maesaroh, S.Pd., M.Pd.</p>
                 <p class="text-[9.5px] text-slate-600 font-mono">NIP. 198901172024062002</p>
@@ -648,6 +738,9 @@
     let currentPage = 1;
     const pageSize = 20;
     let modeFokusPlotting = false;
+
+    // REVISI DATA PERSISTENT: LOG SERAH TERIMA JADWAL
+    let globalScheduleLogs = [];
 
     let realExcelScores = {};
     let hasExcelUploaded = false;
@@ -725,18 +818,168 @@
           masterMahasiswa = JSON.parse(localMaster);
         }
 
-        const { data, error } = await _supabase.from('master_mahasiswa').select('*');
+        const localLogs = localStorage.getItem('scheduleLogsCache');
+        if (localLogs) {
+          globalScheduleLogs = JSON.parse(localLogs);
+        }
+
+        const { data } = await _supabase.from('master_mahasiswa').select('*');
         if (data && data.length > 0) {
           masterMahasiswa = data;
           localStorage.setItem('masterMahasiswaCache', JSON.stringify(data));
         }
 
+        await loadScheduleLog();
         updateProdiSuggestions();
+        cekKuotaTanggal();
         filterMahasiswa();
         renderModul2();
       } catch (err) {
         console.error('Error Syncing Persistent Data:', err);
       }
+    }
+
+    // FUNGSI LOAD SCHEDULE LOG UNTUK SERAH TERIMA TASK STAFF
+    async function loadScheduleLog() {
+      try {
+        const { data } = await _supabase.from('penjadwalan_log').select('*').order('created_at', { ascending: false });
+        if (data && data.length > 0) {
+          globalScheduleLogs = data;
+          localStorage.setItem('scheduleLogsCache', JSON.stringify(data));
+        }
+      } catch(e) {
+        console.log("Using Local Log Cache");
+      }
+      renderScheduleLog();
+      updateDashboardKuotaStats();
+    }
+
+    function renderScheduleLog() {
+      const tbody = document.getElementById('tableScheduleLog');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      if (globalScheduleLogs.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-4 text-center text-slate-400 font-sans">Belum ada histori penjadwalan dikunci oleh staff.</td></tr>`;
+        return;
+      }
+
+      globalScheduleLogs.forEach(log => {
+        tbody.innerHTML += `
+          <tr class="hover:bg-slate-50">
+            <td class="p-2.5 font-bold text-slate-800">${log.tanggal_ujian}</td>
+            <td class="p-2.5 text-slate-600">${log.sesi_jam}</td>
+            <td class="p-2.5 text-slate-600">${log.lokasi_lab}</td>
+            <td class="p-2.5 font-bold text-polnes-dark">${log.prodi_name}</td>
+            <td class="p-2.5 text-center font-bold">${log.jumlah_mhs} Mhs</td>
+            <td class="p-2.5 text-center">
+              <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded font-bold font-sans">Locked & Terjadwal</span>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    // CEK DAN MONITORING KUOTA DENGAN VISUAL INDIKATOR TIGHT
+    function cekKuotaTanggal() {
+      const inputTgl = document.getElementById('inputTanggalUjian').value;
+      const labSelected = document.getElementById('labSelect').value;
+      const selectJam = document.getElementById('selectJamSesi');
+      const badgeKuota = document.getElementById('badgeStatusKuotaHari');
+      const labelTgl = document.getElementById('labelTanggalTerpilih');
+      const btnKunci = document.getElementById('btnKunciSesi');
+
+      if (!inputTgl) return;
+
+      labelTgl.innerText = inputTgl;
+
+      const normTgl = normalizeDateString(inputTgl);
+      
+      // Filter log per tanggal dan lab yang dipilih
+      const logHariIni = globalScheduleLogs.filter(l => normalizeDateString(l.tanggal_ujian) === normTgl && l.lokasi_lab === labSelected);
+      const usedSessions = logHariIni.map(l => l.sesi_jam);
+
+      const countSesi = usedSessions.length;
+
+      if (countSesi >= 3) {
+        badgeKuota.className = "px-3 py-1 rounded-lg text-xs font-extrabold bg-rose-100 text-rose-800 border border-rose-300";
+        badgeKuota.innerText = "3 / 3 Sesi (HABIS FULL)";
+      } else {
+        badgeKuota.className = "px-3 py-1 rounded-lg text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300";
+        badgeKuota.innerText = `${countSesi} / 3 Sesi Terisi`;
+      }
+
+      // Update Opsi Dropdown Sesi Ujian
+      Array.from(selectJam.options).forEach(opt => {
+        const optVal = opt.value;
+        const isUsed = usedSessions.some(s => s === optVal);
+
+        if (isUsed) {
+          opt.disabled = true;
+          if (!opt.text.includes("[LOCKED / TERISI]")) {
+            opt.text = opt.text + " - [LOCKED / TERISI]";
+          }
+        } else {
+          opt.disabled = false;
+          opt.text = opt.text.replace(" - [LOCKED / TERISI]", "");
+        }
+      });
+
+      // Jika pilihan saat ini terisi, ganti ke yang kosong
+      if (selectJam.selectedOptions[0] && selectJam.selectedOptions[0].disabled) {
+        const availableOpt = Array.from(selectJam.options).find(o => !o.disabled);
+        if (availableOpt) {
+          selectJam.value = availableOpt.value;
+        }
+      }
+
+      if (countSesi >= 3 && Array.from(selectJam.options).every(o => o.disabled)) {
+        btnKunci.disabled = true;
+        btnKunci.classList.add('opacity-50', 'cursor-not-allowed');
+      } else {
+        btnKunci.disabled = false;
+        btnKunci.classList.remove('opacity-50', 'cursor-not-allowed');
+      }
+    }
+
+    function updateDashboardKuotaStats() {
+      const lockedProdiSet = new Set(globalScheduleLogs.map(l => String(l.prodi_name).trim().toUpperCase()));
+      
+      const allProdiSet = new Set();
+      masterMahasiswa.forEach(m => {
+        if (m.prodi && m.prodi.trim() !== '') {
+          allProdiSet.add(m.prodi.trim().toUpperCase());
+        }
+      });
+
+      const totalProdi = allProdiSet.size;
+      const lockedCount = lockedProdiSet.size;
+      const pendingCount = Math.max(0, totalProdi - lockedCount);
+
+      document.getElementById('countProdiLocked').innerText = `${lockedCount} Jurusan Selesai`;
+      document.getElementById('countProdiPending').innerText = `${pendingCount} Jurusan Antrean`;
+    }
+
+    function fokusJurusanPending() {
+      const lockedProdiSet = new Set(globalScheduleLogs.map(l => String(l.prodi_name).trim().toUpperCase()));
+      const pendingProdi = [];
+
+      masterMahasiswa.forEach(m => {
+        if (m.prodi) {
+          const pUpper = m.prodi.trim().toUpperCase();
+          if (!lockedProdiSet.has(pUpper) && !pendingProdi.includes(m.prodi)) {
+            pendingProdi.push(m.prodi);
+          }
+        }
+      });
+
+      if (pendingProdi.length === 0) {
+        alert("Seluruh jurusan/prodi sudah selesai terjadwalkan!");
+        return;
+      }
+
+      document.getElementById('searchInput').value = pendingProdi[0];
+      filterMahasiswa();
     }
 
     function updateProdiSuggestions() {
@@ -759,26 +1002,31 @@
     }
 
     async function hapusSemuaDataMaster() {
-      if (!confirm("Apakah Anda yakin ingin MENGHAPUS SEMUA DATA MAHASISWA dari database? Tindakan ini akan mengosongkan tabel secara permanen!")) {
+      if (!confirm("Apakah Anda yakin ingin MENGHAPUS SEMUA DATA MAHASISWA & LOG PENJADWALAN dari database? Tindakan ini akan mengosongkan tabel secara permanen!")) {
         return;
       }
 
       try {
         localStorage.removeItem('masterMahasiswaCache');
+        localStorage.removeItem('scheduleLogsCache');
         masterMahasiswa = [];
         latestUploadBatch = [];
         filteredMaster = [];
         selectedPlotting = [];
         parsedHasilUjian = [];
+        globalScheduleLogs = [];
 
         await _supabase.from('master_mahasiswa').delete().neq('nim', 'DUMMY_NEQ');
         await _supabase.from('hasil_ujian').delete().neq('nim', 'DUMMY_NEQ');
+        await _supabase.from('penjadwalan_log').delete().neq('id', '00000000-0000-0000-0000-000000000000');
 
         updateProdiSuggestions();
+        renderScheduleLog();
+        updateDashboardKuotaStats();
         renderModul1();
         renderModul2();
 
-        alert("Berhasil! Semua data master mahasiswa dan hasil ujian telah dibersihkan.");
+        alert("Berhasil! Semua data master mahasiswa dan histori penjadwalan telah dibersihkan.");
       } catch (err) {
         console.error("Gagal menghapus data:", err);
         alert("Terjadi kesalahan saat menghapus data!");
@@ -920,6 +1168,7 @@
               
               document.getElementById('filterKategoriSelect').value = 'ALL';
               updateProdiSuggestions();
+              updateDashboardKuotaStats();
               currentPage = 1;
               filterMahasiswa();
             }, 300);
@@ -996,15 +1245,18 @@
       renderModul1();
     }
 
+    // RENDER MODUL 1 DENGAN INDIKATOR STATUS PRODI TERKUNCI / UNLOCKED
     function renderModul1() {
       const tbody = document.getElementById('tableMahasiswa');
       tbody.innerHTML = '';
+
+      const lockedProdiSet = new Set(globalScheduleLogs.map(l => String(l.prodi_name).trim().toUpperCase()));
 
       if (filteredMaster.length === 0) {
         tbody.innerHTML = `
           <tr>
             <td colspan="5" class="p-8 text-center text-slate-400">
-              <p class="font-bold text-slate-600">Tidak ada data mahasiswa yang sesuai dengan kata kunci pencarian.</p>
+              <p class="font-bold text-slate-600">Tidak ada data mahasiswa yang sesuai dengan pencarian.</p>
             </td>
           </tr>
         `;
@@ -1063,17 +1315,24 @@
         const meja = isPlot ? `STUDENT${idx < 10 ? '0' + idx : idx}` : '-';
         const angkInfo = getAngkatanFromNim(m.nim);
 
+        const isProdiLocked = lockedProdiSet.has(String(m.prodi || '').trim().toUpperCase());
+
         tbody.innerHTML += `
-          <tr class="${isPlot ? 'bg-polnes-light' : 'hover:bg-slate-50'} transition-all">
+          <tr class="${isPlot ? 'bg-polnes-light' : (isProdiLocked ? 'bg-slate-50 opacity-75' : 'hover:bg-slate-50')} transition-all">
             <td class="p-3 text-center no-print">
-              <input type="checkbox" ${isPlot ? 'checked' : ''} onchange="togglePlotting('${m.nim}')" class="w-4 h-4 accent-emerald-600 rounded cursor-pointer">
+              <input type="checkbox" ${isPlot ? 'checked' : ''} ${isProdiLocked ? 'disabled' : ''} onchange="togglePlotting('${m.nim}')" class="w-4 h-4 accent-emerald-600 rounded cursor-pointer disabled:opacity-40">
             </td>
             <td class="p-3 font-mono font-semibold text-slate-700">
               ${m.nim}
               <span class="block text-[10px] text-slate-400 font-sans">Angkatan: <b>${angkInfo.angkatan}</b></span>
             </td>
             <td class="p-3 font-medium text-slate-800">${m.nama}</td>
-            <td class="p-3 font-bold text-slate-700">${m.prodi}</td>
+            <td class="p-3">
+              <span class="font-bold text-slate-800 block">${m.prodi}</span>
+              ${isProdiLocked 
+                ? '<span class="inline-block mt-0.5 text-[9.5px] bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-extrabold border border-purple-200">🔒 TERJADWAL & TERKUNCI</span>' 
+                : '<span class="inline-block mt-0.5 text-[9.5px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold border border-amber-200">⌛ Belum Terjadwal</span>'}
+            </td>
             <td class="p-3 text-center">
               ${isPlot ? `<span class="badge-meja-print bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded text-[11px] border border-emerald-300">${meja}</span>` : '<span class="text-slate-300">-</span>'}
             </td>
@@ -1108,7 +1367,8 @@
       else renderModul1();
     }
 
-    function kunciDanFokusJadwal() {
+    // KUNCI DAN FOKUS JADWAL + CATAT KE LOG SUPABASE / PERSISTENT CACHE
+    async function kunciDanFokusJadwal() {
       if(selectedPlotting.length === 0) return alert('Pilih minimal 1 mahasiswa dari tabel!');
 
       const tgl = document.getElementById('inputTanggalUjian').value;
@@ -1116,6 +1376,10 @@
       const lab = document.getElementById('labSelect').value;
 
       if (!tgl) return alert('Harap isi Tanggal Pelaksanaan Ujian!');
+
+      // Ambil Nama Prodi dari Mahasiswa Pertama yang Diplot
+      const sampleM = masterMahasiswa.find(m => m.nim === selectedPlotting[0]);
+      const prodiName = sampleM ? sampleM.prodi : "Lainnya";
 
       document.getElementById('printTanggal').innerText = tgl;
       document.getElementById('printJamSesi').innerText = jam;
@@ -1126,9 +1390,29 @@
       document.getElementById('btnResetFilter').classList.remove('hidden');
       document.getElementById('actionPrintContainer').classList.remove('hidden');
 
+      // SIMPAN KE LOG SERAH TERIMA STAFF
+      const newLogItem = {
+        tanggal_ujian: tgl,
+        sesi_jam: jam,
+        lokasi_lab: lab,
+        prodi_name: prodiName,
+        jumlah_mhs: selectedPlotting.length,
+        created_at: new Date().toISOString()
+      };
+
+      globalScheduleLogs.unshift(newLogItem);
+      localStorage.setItem('scheduleLogsCache', JSON.stringify(globalScheduleLogs));
+
+      try {
+        await _supabase.from('penjadwalan_log').insert([newLogItem]);
+      } catch(e) {}
+
+      renderScheduleLog();
+      updateDashboardKuotaStats();
+      cekKuotaTanggal();
       filterMahasiswa();
 
-      alert(`Sesi Ujian Berhasil Dikunci!\n- Tanggal: ${tgl}\n- Sesi: ${jam}\n- Lokasi: ${lab}\n- Total Plotting: ${selectedPlotting.length} Mahasiswa Utama.`);
+      alert(`Sesi Ujian Berhasil Dikunci!\n\n- Tanggal: ${tgl}\n- Sesi: ${jam}\n- Lab: ${lab}\n- Prodi: ${prodiName}\n- Total Mahasiswa: ${selectedPlotting.length} Terplot.\n\nProdi "${prodiName}" sekarang TERKUNCI dan tidak dapat dijadwalkan ulang di hari lain.`);
     }
 
     function jadwalkanSesiBerikutnya() {
@@ -1140,9 +1424,12 @@
       document.getElementById('actionPrintContainer').classList.add('hidden');
       
       document.getElementById('filterKategoriSelect').value = 'ALL';
+      document.getElementById('searchInput').value = '';
+      
+      cekKuotaTanggal();
       filterMahasiswa();
 
-      alert('Sesi sebelumnya telah dikunci! Silahkan upload file data mahasiswa lagi untuk sesi berikutnya.');
+      alert('Sesi sebelumnya telah tersimpan! Silahkan pilih jurusan/prodi lainnya yang belum terjadwal.');
     }
 
     function handleExcelSectionUpload(event, secNum) {
