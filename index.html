@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PANEL OPERASIONAL STAFF - UPA BAHASA POLNES</title>
+  <title>SISTEM INFORMASI LAYANAN UPA BAHASA - POLNES</title>
 
-  <!-- FONT PLUS JAKARTA SANS, TIMES NEW ROMAN & LIBRARIES VIA CDN -->
+  <!-- LIBRARIES VIA CDN -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
@@ -26,9 +26,9 @@
           },
           colors: {
             polnes: {
-              main: '#10C35D',    // Hijau Utama
-              dark: '#0a8a40',    // Hijau Header
-              light: '#eafbf0'   // Hijau Soft
+              main: '#10C35D',
+              dark: '#0a8a40',
+              light: '#eafbf0'
             }
           }
         }
@@ -37,7 +37,6 @@
   </script>
 
   <style>
-    /* ATURAN DOKUMEN CETAK KETAT PRESISI 1 HALAMAN PAS */
     @media print {
       html, body {
         width: 100% !important;
@@ -50,196 +49,163 @@
         print-color-adjust: exact !important;
       }
 
-      body * { 
-        visibility: hidden !important; 
-      }
-
-      body.print-jadwal-mode {
-        @page {
-          size: A4 portrait !important;
-          margin: 10mm !important;
-        }
-      }
+      body * { visibility: hidden !important; }
 
       body.print-jadwal-mode #printableJadwalArea, 
-      body.print-jadwal-mode #printableJadwalArea * { 
-        visibility: visible !important; 
-      }
+      body.print-jadwal-mode #printableJadwalArea * { visibility: visible !important; }
 
       body.print-jadwal-mode #printableJadwalArea { 
-        position: absolute !important; 
-        left: 0 !important; 
-        top: 0 !important; 
-        width: 100% !important; 
-        margin: 0 !important;
-        padding: 0 !important;
-        box-shadow: none !important;
-        border: none !important;
-        background: #fff !important;
-      }
-
-      body.print-jadwal-mode #printHeaderTemplate {
-        display: block !important;
-      }
-
-      body.print-cert-mode {
-        @page {
-          size: A4 landscape !important;
-          margin: 0 !important;
-        }
+        position: absolute !important; left: 0 !important; top: 0 !important; 
+        width: 100% !important; margin: 0 !important; padding: 0 !important;
+        box-shadow: none !important; border: none !important; background: #fff !important;
       }
 
       body.print-cert-mode #certificatePrintArea, 
-      body.print-cert-mode #certificatePrintArea * { 
-        visibility: visible !important; 
-      }
+      body.print-cert-mode #certificatePrintArea * { visibility: visible !important; }
 
       body.print-cert-mode #certificatePrintArea { 
-        position: absolute !important; 
-        left: 0 !important; 
-        top: 0 !important; 
-        width: 297mm !important; 
-        height: 205mm !important; 
-        padding: 6mm 12mm !important;
-        margin: 0 !important;
-        border: 6px double #cbd5e1 !important;
-        box-shadow: none !important;
-        box-sizing: border-box !important;
-        display: block !important;
-        background: #fff !important;
-        overflow: hidden !important;
-        -webkit-print-color-adjust: exact !important;
-        print-color-adjust: exact !important;
+        position: absolute !important; left: 0 !important; top: 0 !important; 
+        width: 297mm !important; height: 205mm !important; padding: 6mm 12mm !important;
+        margin: 0 !important; border: 6px double #cbd5e1 !important;
+        box-shadow: none !important; box-sizing: border-box !important;
+        display: block !important; background: #fff !important; overflow: hidden !important;
       }
 
-      .no-print { 
-        display: none !important; 
-      }
-    }
-
-    .cert-font-title {
-      font-family: 'Times New Roman', Times, serif;
+      .no-print { display: none !important; }
     }
   </style>
 </head>
 <body class="bg-[#f4f7f6] font-sans text-slate-800 min-h-screen">
 
-  <!-- HEADER DASHBOARD STAFF -->
-  <header class="bg-polnes-dark text-white py-3.5 px-8 shadow-md flex justify-between items-center sticky top-0 z-50 no-print">
-    <div class="flex items-center gap-3">
-      <div id="logoContainer" class="w-10 h-10 flex items-center justify-center bg-white/10 p-1 rounded-lg border border-white/20 shadow-sm overflow-hidden">
-        <img src="logo-removebg-preview.png" alt="POLNES" class="w-full h-full object-contain">
+  <!-- NAVIGATION HEADER UTAMA AKADEMIK -->
+  <header class="bg-polnes-dark text-white shadow-md sticky top-0 z-50 no-print">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
+      <div class="flex items-center gap-3 cursor-pointer" onclick="switchView('publik')">
+        <div class="w-10 h-10 flex items-center justify-center bg-white/10 p-1 rounded-lg border border-white/20 shadow-sm overflow-hidden">
+          <img src="logo-removebg-preview.png" alt="POLNES" class="w-full h-full object-contain">
+        </div>
+        <div>
+          <h1 class="text-base font-bold leading-tight tracking-wide uppercase">UPA BAHASA POLNES</h1>
+          <p class="text-[11px] text-green-100/90">Unit Penunjang Akademik Politeknik Negeri Samarinda</p>
+        </div>
       </div>
-      <div>
-        <h1 class="text-base font-bold leading-tight tracking-wide uppercase">PANEL OPERASIONAL STAFF</h1>
-        <p class="text-[11px] text-green-100/90">UPA Bahasa Politeknik Negeri Samarinda</p>
-      </div>
-    </div>
 
-    <div class="flex items-center gap-4 text-xs">
-      <div class="hidden sm:block text-right">
-        <span class="text-slate-200">Petugas:</span>
-        <span class="font-bold text-amber-300 bg-amber-950/60 px-2 py-0.5 rounded border border-amber-400/40">Staff UPA</span>
-      </div>
-      
-      <button id="btnToPublik" onclick="switchView('publik')" class="bg-white/10 hover:bg-white/20 text-white border border-white/30 font-semibold px-3.5 py-1.5 rounded-lg transition-all flex items-center gap-1.5">
-        <span>Lihat Web Utama</span> &nearr;
-      </button>
+      <!-- HEADER MENU NAVIGASI LAYANAN -->
+      <nav class="hidden md:flex items-center gap-6 text-xs font-semibold">
+        <button onclick="showPublicPage('home')" class="hover:text-amber-300 transition-all">Beranda</button>
+        
+        <!-- DROPDOWN LAYANAN TEST -->
+        <div class="relative group py-2">
+          <button class="hover:text-amber-300 transition-all flex items-center gap-1">
+            <span>Layanan Test</span> &darr;
+          </button>
+          <div class="absolute left-0 top-full hidden group-hover:block bg-white text-slate-800 rounded-xl shadow-xl border border-slate-200 w-48 overflow-hidden z-50 font-medium">
+            <a href="#" onclick="showLayananPage('toefl')" class="block px-4 py-2.5 hover:bg-emerald-50 border-b border-slate-100">TOEFL Prediction</a>
+            <a href="#" onclick="showLayananPage('sspect')" class="block px-4 py-2.5 hover:bg-emerald-50 border-b border-slate-100">SSPECT</a>
+            <a href="#" onclick="showLayananPage('toeic')" class="block px-4 py-2.5 hover:bg-emerald-50">TOEIC</a>
+          </div>
+        </div>
 
-      <button id="btnToStaff" onclick="switchView('staf')" class="hidden bg-polnes-main hover:bg-polnes-dark text-white font-semibold px-3.5 py-1.5 rounded-lg transition-all">
-        Akses Dashboard Staff
-      </button>
+        <!-- DROPDOWN LAYANAN NON TEST -->
+        <div class="relative group py-2">
+          <button class="hover:text-amber-300 transition-all flex items-center gap-1">
+            <span>Layanan Non-Test</span> &darr;
+          </button>
+          <div class="absolute left-0 top-full hidden group-hover:block bg-white text-slate-800 rounded-xl shadow-xl border border-slate-200 w-48 overflow-hidden z-50 font-medium">
+            <a href="#" onclick="showPublicPage('kursus')" class="block px-4 py-2.5 hover:bg-emerald-50 border-b border-slate-100">Kursus Bahasa</a>
+            <a href="#" onclick="showPublicPage('jsst')" class="block px-4 py-2.5 hover:bg-emerald-50">Job Seeking Skills (JSST)</a>
+          </div>
+        </div>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <button id="btnSwitchStaff" onclick="switchView('staf')" class="bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold px-3.5 py-1.5 rounded-xl text-xs transition-all shadow-sm">
+          Akses Dashboard Staff / Kepala UPA
+        </button>
+        <button id="btnSwitchPublik" onclick="switchView('publik')" class="hidden bg-white/20 hover:bg-white/30 text-white font-bold px-3.5 py-1.5 rounded-xl text-xs transition-all">
+          Kembali ke Web Utama
+        </button>
+      </div>
     </div>
   </header>
 
   <main class="max-w-7xl mx-auto py-6 px-4">
 
-    <!-- 1. TAMPILAN DASHBOARD STAFF -->
-    <div id="viewStaf" class="space-y-6">
+    <!-- ==================================================================================== -->
+    <!-- 1. DASHBOARD INTERNAL STAFF & KEPALA UPA Bahasa -->
+    <!-- ==================================================================================== -->
+    <div id="viewStaf" class="hidden space-y-6">
 
-      <!-- PILL TABS MODUL -->
+      <!-- TABS MODUL UTAMA STAFF -->
       <div class="flex gap-2 overflow-x-auto pb-1 border-b border-slate-200 no-print">
-        <button onclick="switchTab('modul1')" id="tab-modul1" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-lg bg-polnes-main text-white shadow-sm flex items-center gap-1.5 whitespace-nowrap">
-          <span>📊</span> Penjadwalan & Plotting Sesi
+        <button onclick="switchTab('modul1')" id="tab-modul1" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-xl bg-polnes-main text-white shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+          <span>📊</span> Modul 1: Penjadwalan Sesi
         </button>
-        <button onclick="switchTab('modul2')" id="tab-modul2" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-lg bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
-          <span>📁</span> Upload Excel S1, S2, S3 & Mapping
+        <button onclick="switchTab('modul2')" id="tab-modul2" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-xl bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+          <span>📁</span> Modul 2: Auto Mapping & Upload Hasil Tes
         </button>
-        <button onclick="switchTab('modul3')" id="tab-modul3" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-lg bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
-          <span>📜</span> Kalkulasi Skor (Tabel C)
+        <button onclick="switchTab('modul3')" id="tab-modul3" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-xl bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+          <span>📜</span> Modul 3: Kalkulasi Skor TOEFL
         </button>
-        <button onclick="switchTab('modul4')" id="tab-modul4" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-lg bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
-          <span>🛠</span> ACC & Approval Kepala UPA
+        <button onclick="switchTab('modul4')" id="tab-modul4" class="tab-btn px-4 py-2.5 text-xs font-bold rounded-xl bg-white text-slate-600 hover:bg-slate-100 border border-slate-200 shadow-sm flex items-center gap-1.5 whitespace-nowrap">
+          <span>🛠</span> Modul 4: Approval Kepala UPA (Gabungan)
         </button>
       </div>
 
-      <!-- MODUL 1: PENJADWALAN & PLOTTING SESI -->
+      <!-- MODUL 1: PENJADWALAN & LOCKING KELAS -->
       <section id="modul1" class="tab-content">
         <div id="printableJadwalArea" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 space-y-4">
           
-          <!-- KOP SURAT RESMI AKADEMIK -->
+          <!-- KOP SURAT CETAK BERITA ACARA JADWAL -->
           <div id="printHeaderTemplate" class="hidden mb-6 text-center pt-2">
             <div class="flex items-center justify-between pb-1">
-              <div class="w-24 h-24 flex items-center justify-start overflow-hidden">
+              <div class="w-20 h-20 flex items-center justify-start overflow-hidden">
                 <img src="logo-removebg-preview.png" class="w-full h-full object-contain">
               </div>
-              
               <div class="text-center flex-1 px-2">
-                <h3 class="text-[11px] font-bold uppercase tracking-[0.18em] text-slate-800 leading-snug">KEMENTERIAN PENDIDIKAN TINGGI, SAINS DAN TEKNOLOGI</h3>
-                <h1 class="text-base font-extrabold uppercase tracking-[0.25em] text-slate-900 mt-1">POLITEKNIK NEGERI SAMARINDA</h1>
-                <h2 class="text-sm font-extrabold uppercase tracking-[0.3em] text-slate-900 mt-0.5">UPA BAHASA</h2>
-                <div class="text-[9.5px] text-slate-700 mt-1.5 leading-tight tracking-wider">
-                  <p class="w-full text-center">Jalan Dr. Ciptomangkunkusumo Kampus Gunung Panjang Samarinda</p>
-                  <p class="w-full text-center">Telepon: PABX(0541)260588-260553-262018 FAX (0541) 260355</p>
-                  <p class="w-full text-center">Website: www.polnes.ac.id &nbsp;|&nbsp; Email: polnes@polnes.ac.id</p>
-                </div>
+                <h3 class="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-800 leading-snug">KEMENTERIAN PENDIDIKAN TINGGI, SAINS DAN TEKNOLOGI</h3>
+                <h1 class="text-sm font-extrabold uppercase tracking-[0.25em] text-slate-900 mt-0.5">POLITEKNIK NEGERI SAMARINDA</h1>
+                <h2 class="text-xs font-extrabold uppercase tracking-[0.3em] text-slate-900 mt-0.5">UPA BAHASA</h2>
               </div>
-
-              <div class="w-24 h-24 opacity-0"></div>
+              <div class="w-20 h-20 opacity-0"></div>
             </div>
-
-            <div class="w-full border-t-[2.5px] border-b border-slate-900 my-1 h-[3px]"></div>
-
-            <h2 class="text-xs font-extrabold uppercase text-slate-900 tracking-wider mt-4 underline decoration-1 underline-offset-2">DAFTAR HADIR & JADWAL RESMI TES TOEFL PREDICTION</h2>
-            <div class="grid grid-cols-3 text-xs text-left mt-3 border border-slate-300 p-2.5 rounded-lg bg-slate-50 gap-2 font-mono">
+            <div class="w-full border-t-[2.5px] border-b border-slate-900 my-1 h-[2px]"></div>
+            <h2 class="text-xs font-extrabold uppercase text-slate-900 tracking-wider mt-3 underline">DAFTAR HADIR & JADWAL RESMI TES KOMPETENSI BAHASA</h2>
+            <div class="grid grid-cols-3 text-xs text-left mt-2 border border-slate-300 p-2 rounded-lg bg-slate-50 font-mono">
               <div><b>Tanggal Ujian:</b> <span id="printTanggal">-</span></div>
               <div><b>Waktu / Sesi:</b> <span id="printJamSesi">-</span></div>
               <div><b>Lokasi Ruangan:</b> <span id="printLab">-</span></div>
             </div>
           </div>
 
-          <!-- HEADER MODUL 1 & KONTROL UTAMA -->
+          <!-- HEADER MODUL 1 -->
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center pb-3 border-b border-slate-100 gap-4 no-print">
             <div>
-              <h2 class="text-base font-bold text-slate-800">Modul 1: Penjadwalan & Penguncian Sesi Ujian</h2>
-              <p class="text-xs text-slate-500">Atur jadwal ujian reguler per kelas atau antrean pendaftar remedial secara terpusat.</p>
+              <h2 class="text-base font-bold text-slate-800">Modul 1: Penjadwalan & Locking Sesi Ujian</h2>
+              <p class="text-xs text-slate-500">Kelas yang sudah dikunci jadwalnya akan <b>otomatis menghilang</b> dari antrean master untuk mencegah duplikasi.</p>
             </div>
 
             <div class="flex items-center gap-2">
-              <button onclick="hapusSemuaDataMaster()" class="bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold px-3 py-2.5 rounded-xl transition-all shadow-sm flex items-center gap-1">
-                <span>Reset Database</span>
-              </button>
-
               <label class="bg-polnes-main hover:bg-polnes-dark text-white text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer shadow-sm transition-all flex items-center gap-2">
-                <span>Upload Master Mhs Baru</span>
+                <span>Upload Master Mhs Kelas (Maks 30)</span>
                 <input type="file" id="excelMasterInput" accept=".xlsx, .xls, .csv" onchange="uploadMasterMahasiswa(event)" class="hidden">
               </label>
 
               <div class="bg-polnes-light border border-green-200 px-3.5 py-1.5 rounded-xl text-right">
                 <span id="selectedCount" class="text-xl font-extrabold text-polnes-dark">0</span>
-                <span class="text-slate-400 text-xs"> / 30 Terplot</span>
+                <span id="maxQuotaLabel" class="text-slate-400 text-xs"> / 30 Terplot</span>
               </div>
             </div>
           </div>
 
-          <!-- SUB-TAB SWITCHER UNTUK MEMISAHKAN UJIAN REGULER VS REMEDIAL -->
+          <!-- SUB-TAB SWITCHER: UJIAN REGULER VS REMEDIAL -->
           <div class="no-print flex justify-between items-center bg-slate-100 p-1.5 rounded-xl text-xs font-bold">
             <div class="flex gap-2">
               <button id="subtabReguler" onclick="switchSubTabJadwal('REGULER')" class="px-4 py-2 rounded-lg bg-white text-polnes-dark shadow-sm transition-all">
-                📚 Ujian Reguler (Per Kelas / Prodi)
+                📚 Ujian Reguler Kelas (Max 30/Sesi)
               </button>
               <button id="subtabRemedial" onclick="switchSubTabJadwal('REMEDIAL')" class="px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5">
-                <span>🔄 Antrean Pendaftar Remedial</span>
+                <span>🔄 Pendaftar Remedial Mandiri</span>
                 <span id="badgeCountRemedial" class="bg-amber-500 text-white text-[10px] px-2 py-0.5 rounded-full font-mono">0</span>
               </button>
             </div>
@@ -249,18 +215,12 @@
             </div>
           </div>
 
-          <!-- PROGRESS BAR LOADING -->
-          <div id="uploadProgressContainer" class="hidden mb-6 bg-slate-50 p-3.5 rounded-xl border border-slate-200 no-print">
-            <div class="flex justify-between text-xs font-bold text-slate-700 mb-1.5">
-              <span id="uploadProgressText">Memproses data...</span>
-              <span id="uploadProgressPercent">0%</span>
-            </div>
-            <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-              <div id="uploadProgressBar" class="bg-polnes-main h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
-            </div>
+          <!-- PERINGATAN SOLUSI MANUAL SOLUSI LAB A & LAB B -->
+          <div id="warningLabBContainer" class="hidden no-print p-3 bg-amber-50 border border-amber-300 text-amber-900 rounded-xl text-xs font-semibold">
+            ⚠️ <b>Solusi Cadangan Lab</b>: Lab A diisi penuh (30 Mahasiswa). Diimbau agar Lab B di sesi yang sama diisi di bawah 30 orang (20-25 PC) untuk mengantisipasi jika ada gangguan PC di Lab A.
           </div>
 
-          <!-- KONTROL INPUT PENJADWALAN & KUOTA LOCKER -->
+          <!-- FORM INPUT PENJADWALAN & LOCKING -->
           <div class="grid grid-cols-1 md:grid-cols-4 gap-4 bg-slate-50 p-4 rounded-xl border border-slate-200/80 no-print">
             <div>
               <label class="text-[11px] font-bold text-slate-700 mb-1 block uppercase">Tanggal Pelaksanaan Ujian:</label>
@@ -279,13 +239,13 @@
             <div>
               <label class="text-[11px] font-bold text-slate-700 mb-1 block uppercase">Lokasi Laboratorium:</label>
               <select id="labSelect" onchange="cekKuotaTanggal()" class="w-full px-3 py-2 border border-slate-300 rounded-xl text-xs outline-none bg-white font-semibold">
-                <option value="Lab Komputer Bahasa A">Lab Komputer Bahasa A (30 Unit)</option>
-                <option value="Lab Komputer Bahasa B">Lab Komputer Bahasa B (30 Unit)</option>
+                <option value="Lab Komputer Bahasa A">Lab Komputer Bahasa A (Kapasitas 30)</option>
+                <option value="Lab Komputer Bahasa B">Lab Komputer Bahasa B (Kapasitas 30)</option>
               </select>
             </div>
 
             <div class="flex items-end gap-2">
-              <button id="btnKunciSesi" onclick="kunciDanFokusJadwal()" class="flex-1 bg-polnes-dark hover:bg-emerald-950 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-sm">
+              <button id="btnKunciSesi" onclick="kunciDanLockJadwal()" class="flex-1 bg-polnes-dark hover:bg-emerald-950 text-white font-bold py-2.5 rounded-xl text-xs transition-all shadow-sm">
                 Kunci Plotting Sesi
               </button>
               <button id="btnResetFilter" onclick="jadwalkanSesiBerikutnya()" class="hidden bg-slate-700 hover:bg-slate-900 text-white font-bold px-3 py-2.5 rounded-xl text-xs transition-all">
@@ -294,37 +254,29 @@
             </div>
           </div>
 
-          <!-- KONTROL FILTER TAMPILAN DATA -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-3 no-print">
-            <div class="md:col-span-1">
-              <label class="text-[10px] font-bold text-slate-500 uppercase mb-1 block">Kategori Program Studi:</label>
-              <select id="filterKategoriSelect" onchange="gantiKategoriTampilan()" class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none bg-white font-bold text-slate-700">
-                <option value="ALL">Semua Tingkat (D3 & D4)</option>
-                <option value="D3">Khusus Mahasiswa Program D3</option>
-                <option value="D4">Khusus Mahasiswa Program D4</option>
-              </select>
+          <!-- KONTROL FILTER & CEK ALL -->
+          <div class="flex flex-wrap justify-between items-center gap-3 no-print">
+            <div class="flex items-center gap-2">
+              <button onclick="toggleSelectAllInView()" class="bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold px-3.5 py-2 rounded-xl shadow-sm transition-all">
+                ☑️ Select All Mhs Kelas (Sesuai Kuota)
+              </button>
+              <span class="text-[11px] text-slate-500 font-medium">Memblok otomatis anggota kelas untuk mempercepat plotting.</span>
             </div>
 
-            <div class="md:col-span-2 flex items-end relative">
-              <input type="text" id="searchInput" list="prodiSuggestions" oninput="filterMahasiswa()" onkeyup="filterMahasiswa()" placeholder="Cari berdasarkan Nama, NIM, atau Nama Jurusan..." class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-polnes-main font-medium">
-              <datalist id="prodiSuggestions"></datalist>
+            <div class="w-full md:w-72">
+              <input type="text" id="searchInput" oninput="filterMahasiswa()" placeholder="Cari Nama, NIM, atau Kelas..." class="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:border-polnes-main font-medium">
             </div>
           </div>
 
-          <!-- TABEL DATA MAHASISWA MASTER / TERPLOT -->
+          <!-- TABEL MAHASISWA MASTER / ANTREAN -->
           <div class="overflow-x-auto rounded-xl border border-slate-200">
             <table class="w-full text-left text-xs">
               <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
                 <tr>
-                  <th class="p-3 text-center no-print w-20">
-                    <div class="flex flex-col items-center gap-0.5">
-                      <input type="checkbox" id="selectAllCheckbox" onchange="toggleSelectAllInView(this)" class="w-4 h-4 accent-emerald-600 rounded cursor-pointer">
-                      <span class="text-[9px] font-bold text-emerald-800 uppercase">Pilih All</span>
-                    </div>
-                  </th>
-                  <th class="p-3">NIM & Percobaan Tes</th>
+                  <th class="p-3 text-center no-print w-16">Pilih</th>
+                  <th class="p-3">NIM</th>
                   <th class="p-3">Nama Mahasiswa</th>
-                  <th class="p-3">Program Studi & Status</th>
+                  <th class="p-3">Program Studi / Kelas</th>
                   <th class="p-3 text-center">ID Meja Komputer</th>
                 </tr>
               </thead>
@@ -332,50 +284,42 @@
             </table>
           </div>
 
-          <!-- FOOTER PAGINATION & TOMBOL CETAK -->
-          <div id="paginationContainer" class="flex flex-col sm:flex-row justify-between items-center pt-2 border-t border-slate-100 text-xs text-slate-500 gap-3">
-            <div id="paginationInfo" class="no-print">Menampilkan 0 data</div>
-            
+          <!-- TOMBOL CETAK & PAGINATION -->
+          <div class="flex justify-between items-center pt-2 border-t border-slate-100 text-xs text-slate-500">
+            <div id="paginationInfo">Menampilkan data antrean</div>
             <div id="actionPrintContainer" class="hidden">
               <button onclick="cetakBeritaAcaraJadwal()" class="bg-polnes-main hover:bg-polnes-dark text-white font-bold px-5 py-2 rounded-xl text-xs shadow-sm flex items-center gap-1.5 no-print">
-                <span>Cetak Berita Acara Jadwal</span>
+                🖨️ Unduh / Print File Jadwal Resmi
               </button>
-            </div>
-
-            <div class="flex items-center gap-2 no-print">
-              <button onclick="changePage(-1)" id="btnPrevPage" class="px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-slate-50 font-bold disabled:opacity-40">&larr; SBLM</button>
-              <span id="pageIndicator" class="font-bold text-slate-700 px-2">Hal 1 / 1</span>
-              <button onclick="changePage(1)" id="btnNextPage" class="px-3 py-1.5 border border-slate-200 rounded-lg hover:bg-slate-50 font-bold disabled:opacity-40">SLJT &rarr;</button>
             </div>
           </div>
 
-          <!-- LOG SERAH TERIMA STAFF -->
+          <!-- LOG HISTORI JADWAL DIKUNCI (TRANSPARAN UNTUK STAFF 1 & STAFF 2) -->
           <div class="no-print pt-4 border-t border-slate-200 space-y-3">
             <div class="flex justify-between items-center">
               <div>
-                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">📋 Log Histori Penjadwalan Sesi Dikunci</h3>
+                <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider">📋 Log Histori Penjadwalan Sesi Dikunci (Terbuka untuk Antar-Staff)</h3>
+                <p class="text-[11px] text-slate-500">Staff 2 dapat langsung melanjutkan pekerjaan Staff 1 dengan melihat log ini.</p>
               </div>
               <button onclick="loadScheduleLog()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-[11px] font-bold px-3 py-1 rounded-lg border border-slate-300">
                 🔄 Refresh Log
               </button>
             </div>
 
-            <div class="overflow-x-auto rounded-xl border border-slate-200 max-h-36 overflow-y-auto">
+            <div class="overflow-x-auto rounded-xl border border-slate-200 max-h-40 overflow-y-auto">
               <table class="w-full text-left text-xs">
                 <thead class="bg-slate-100 text-slate-700 font-bold border-b border-slate-200 sticky top-0 z-10">
                   <tr>
-                    <th class="p-2">Tanggal</th>
+                    <th class="p-2">Tanggal Ujian</th>
                     <th class="p-2">Sesi & Jam</th>
                     <th class="p-2">Ruang Lab</th>
-                    <th class="p-2">Prodi / Kategori</th>
+                    <th class="p-2">Kelas / Kategori</th>
                     <th class="p-2 text-center">Jumlah Mhs</th>
-                    <th class="p-2 text-center">Status</th>
+                    <th class="p-2 text-center">Status Locking</th>
                   </tr>
                 </thead>
                 <tbody id="tableScheduleLog" class="divide-y divide-slate-100 font-mono text-[11px]">
-                  <tr>
-                    <td colspan="6" class="p-3 text-center text-slate-400">Belum ada sesi dikunci.</td>
-                  </tr>
+                  <tr><td colspan="6" class="p-3 text-center text-slate-400 font-sans">Belum ada sesi dikunci.</td></tr>
                 </tbody>
               </table>
             </div>
@@ -384,79 +328,134 @@
         </div>
       </section>
 
-      <!-- MODUL 2: UPLOAD EXCEL AUTO MAPPING & EXCEPTION HANDLING TANPA LIMIT -->
+      <!-- MODUL 2: AUTO MAPPING & UPLOAD EXCEL HASIL TEST (3 SUB-MENU) -->
       <section id="modul2" class="tab-content hidden">
         <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 space-y-6">
           
-          <div class="flex justify-between items-center border-b pb-3">
+          <div class="border-b pb-3 flex justify-between items-center">
             <div>
-              <h2 class="text-base font-bold text-slate-800">Modul 2: Upload Excel Hasil Ujian Lab & Auto-Mapping Engine</h2>
-              <p class="text-xs text-slate-500">Menampilkan seluruh data meja komputer hasil ujian secara real-time (tanpa pemotongan data).</p>
-            </div>
-            <div id="totalMejaCounter" class="bg-emerald-50 border border-emerald-200 px-3.5 py-1.5 rounded-xl text-xs font-bold text-emerald-800">
-              Total Meja Dibaca: <span id="countMejaText" class="text-sm font-extrabold text-emerald-900">0</span>
+              <h2 class="text-base font-bold text-slate-800">Modul 2: Upload Excel Hasil Test & Auto Mapping System</h2>
+              <p class="text-xs text-slate-500">Pilih sub-menu jenis ujian di bawah ini untuk memulai pengunggahan berkas hasil laboratorium.</p>
             </div>
           </div>
 
-          <!-- FORM INPUT UPLOAD 3 FILE EXCEL REAL -->
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2">
-              <span class="text-xs font-bold text-slate-700 block">1. Excel Section 1 / A01 (Listening)</span>
-              <label class="block bg-white hover:bg-emerald-50 border border-polnes-main text-polnes-dark text-xs font-bold py-2 px-3 rounded-lg cursor-pointer transition-all">
-                <span id="labelS1">Pilih File S1 (.xlsx)</span>
-                <input type="file" id="fileSection1" accept=".xlsx, .xls" onchange="handleExcelSectionUpload(event, 1)" class="hidden">
-              </label>
-              <span id="statusS1" class="text-[11px] text-slate-400 block">Belum Diunggah</span>
+          <!-- SUB MENU NAVIGASI: SSPECT, TOEFL, TOEIC -->
+          <div class="flex gap-2 border-b border-slate-200 pb-2 text-xs font-bold">
+            <button id="subModul2TOEFL" onclick="switchSubModul2('TOEFL')" class="px-4 py-2 rounded-xl bg-polnes-main text-white shadow-sm">
+              📘 TOEFL Prediction (3 Section)
+            </button>
+            <button id="subModul2SSPECT" onclick="switchSubModul2('SSPECT')" class="px-4 py-2 rounded-xl bg-white text-slate-600 border border-slate-200 hover:bg-slate-50">
+              📗 SSPECT (Nilai Bersih)
+            </button>
+            <button id="subModul2TOEIC" onclick="switchSubModul2('TOEIC')" class="px-4 py-2 rounded-xl bg-white text-slate-600 border border-slate-200 hover:bg-slate-50">
+              📙 TOEIC (Pengumuman Informasi)
+            </button>
+          </div>
+
+          <!-- 1. AREA UPLOAD UJIAN TOEFL (3 SECTION) -->
+          <div id="areaSubTOEFL" class="space-y-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              
+              <!-- SECTION 1 (PENENTU TANGGAL UJIAN) -->
+              <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2 relative">
+                <span class="text-xs font-bold text-slate-800 block">1. File Section 1 (Listening)</span>
+                <p class="text-[10px] text-slate-500">Menentukan standar tanggal pelaksanaan.</p>
+                
+                <label class="block bg-white hover:bg-emerald-50 border border-polnes-main text-polnes-dark text-xs font-bold py-2 px-3 rounded-lg cursor-pointer transition-all">
+                  <span id="labelS1">Pilih Excel S1 (.xlsx)</span>
+                  <input type="file" id="fileSection1" accept=".xlsx, .xls" onchange="handleExcelSectionUpload(event, 1)" class="hidden">
+                </label>
+                <span id="statusS1" class="text-[11px] text-slate-400 block font-semibold">Belum Diunggah</span>
+
+                <!-- TOMBOL TRASH SAMPAH KECIL UNTUK RESET SECTION 1 -->
+                <button id="btnTrashS1" onclick="resetSection1Upload()" class="hidden absolute top-2 right-2 p-1.5 bg-rose-100 hover:bg-rose-200 text-rose-700 rounded-lg text-xs" title="Hapus / Reset Section 1">
+                  🗑️
+                </button>
+              </div>
+
+              <!-- SECTION 2 -->
+              <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2">
+                <span class="text-xs font-bold text-slate-800 block">2. File Section 2 (Structure)</span>
+                <p class="text-[10px] text-slate-500">Tanggal harus sama dengan Section 1.</p>
+
+                <label class="block bg-white hover:bg-emerald-50 border border-polnes-main text-polnes-dark text-xs font-bold py-2 px-3 rounded-lg cursor-pointer transition-all">
+                  <span id="labelS2">Pilih Excel S2 (.xlsx)</span>
+                  <input type="file" id="fileSection2" accept=".xlsx, .xls" onchange="handleExcelSectionUpload(event, 2)" class="hidden">
+                </label>
+                <span id="statusS2" class="text-[11px] text-slate-400 block font-semibold">Belum Diunggah</span>
+              </div>
+
+              <!-- SECTION 3 -->
+              <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2">
+                <span class="text-xs font-bold text-slate-800 block">3. File Section 3 (Reading)</span>
+                <p class="text-[10px] text-slate-500">Tanggal harus sama dengan Section 1.</p>
+
+                <label class="block bg-white hover:bg-emerald-50 border border-polnes-main text-polnes-dark text-xs font-bold py-2 px-3 rounded-lg cursor-pointer transition-all">
+                  <span id="labelS3">Pilih Excel S3 (.xlsx)</span>
+                  <input type="file" id="fileSection3" accept=".xlsx, .xls" onchange="handleExcelSectionUpload(event, 3)" class="hidden">
+                </label>
+                <span id="statusS3" class="text-[11px] text-slate-400 block font-semibold">Belum Diunggah</span>
+              </div>
+
             </div>
 
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2">
-              <span class="text-xs font-bold text-slate-700 block">2. Excel Section 2 / A02 (Structure)</span>
-              <label class="block bg-white hover:bg-emerald-50 border border-polnes-main text-polnes-dark text-xs font-bold py-2 px-3 rounded-lg cursor-pointer transition-all">
-                <span id="labelS2">Pilih File S2 (.xlsx)</span>
-                <input type="file" id="fileSection2" accept=".xlsx, .xls" onchange="handleExcelSectionUpload(event, 2)" class="hidden">
-              </label>
-              <span id="statusS2" class="text-[11px] text-slate-400 block">Belum Diunggah</span>
-            </div>
-
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center space-y-2">
-              <span class="text-xs font-bold text-slate-700 block">3. Excel Section 3 / A03 (Reading)</span>
-              <label class="block bg-white hover:bg-emerald-50 border border-polnes-main text-polnes-dark text-xs font-bold py-2 px-3 rounded-lg cursor-pointer transition-all">
-                <span id="labelS3">Pilih File S3 (.xlsx)</span>
-                <input type="file" id="fileSection3" accept=".xlsx, .xls" onchange="handleExcelSectionUpload(event, 3)" class="hidden">
-              </label>
-              <span id="statusS3" class="text-[11px] text-slate-400 block">Belum Diunggah</span>
+            <!-- TABEL AUTO MAPPING MENGAMBIL DATA JADWAL SESSIONS -->
+            <div class="overflow-x-auto max-h-[500px] overflow-y-auto rounded-xl border border-slate-200">
+              <table class="w-full text-left text-xs relative">
+                <thead class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200 sticky top-0 z-10">
+                  <tr>
+                    <th class="p-3 w-28">ID Meja Komputer</th>
+                    <th class="p-3">Jawaban Benar Asli (S1 | S2 | S3)</th>
+                    <th class="p-3">Auto Mapping Jadwal</th>
+                    <th class="p-3">NIM & Nama Mahasiswa Terikat</th>
+                    <th class="p-3 text-center">Fast-Add / Bind NIM Susulan</th>
+                  </tr>
+                </thead>
+                <tbody id="tableMapping" class="divide-y divide-slate-100"></tbody>
+              </table>
             </div>
           </div>
 
-          <div id="mappingStatusAlert" class="hidden p-3 bg-amber-50 border border-amber-200 text-amber-800 rounded-xl text-xs">
-            <strong>Peringatan Exception Handling:</strong> Ditemukan meja komputer cadangan / mahasiswa susulan yang belum terikat NIM. Silahkan masukkan NIM secara manual pada kolom "Exception Handling".
+          <!-- 2. AREA UPLOAD SSPECT (NILAI BERSIH) -->
+          <div id="areaSubSSPECT" class="hidden space-y-4">
+            <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 text-center space-y-3 max-w-lg mx-auto">
+              <h3 class="text-xs font-bold text-slate-800 uppercase">Upload File Excel Nilai SSPECT (Data Bersih)</h3>
+              <label class="inline-block bg-polnes-main hover:bg-polnes-dark text-white text-xs font-bold py-2.5 px-5 rounded-xl cursor-pointer shadow-sm transition-all">
+                <span>Pilih File Excel SSPECT (.xlsx)</span>
+                <input type="file" accept=".xlsx, .xls" onchange="handleUploadSSPECT(event)" class="hidden">
+              </label>
+              <p class="text-[11px] text-slate-500">Nilai SSPECT berupa data bersih langsung tanpa perlu melalui kalkulasi konversi skor.</p>
+            </div>
           </div>
 
-          <!-- TABEL HASIL AUTOMAPPING FULL -->
-          <div class="overflow-x-auto max-h-[600px] overflow-y-auto rounded-xl border border-slate-200 shadow-inner">
-            <table class="w-full text-left text-xs relative">
-              <thead class="bg-slate-100 text-slate-800 font-bold border-b border-slate-200 sticky top-0 z-10 shadow-sm">
-                <tr>
-                  <th class="p-3 w-28 bg-slate-100">ID Meja Komputer</th>
-                  <th class="p-3 bg-slate-100">Jawaban Benar Asli (S1 | S2 | S3)</th>
-                  <th class="p-3 bg-slate-100">Status Auto-Mapping</th>
-                  <th class="p-3 bg-slate-100">NIM & Nama Mahasiswa Terikat</th>
-                  <th class="p-3 text-center bg-slate-100">Exception Handling</th>
-                </tr>
-              </thead>
-              <tbody id="tableMapping" class="divide-y divide-slate-100"></tbody>
-            </table>
+          <!-- 3. AREA UPLOAD TOEIC (PENGUMUMAN INFORMASI) -->
+          <div id="areaSubTOEIC" class="hidden space-y-4">
+            <div class="bg-slate-50 p-6 rounded-xl border border-slate-200 space-y-4 max-w-2xl mx-auto">
+              <h3 class="text-xs font-bold text-slate-800 uppercase text-center">Upload File Hasil TOEIC & Kolom Deskripsi Penjelasan</h3>
+              <div>
+                <label class="text-[11px] font-bold text-slate-700 block mb-1">Unggah Excel TOEIC:</label>
+                <input type="file" accept=".xlsx, .xls" class="w-full text-xs p-2 border bg-white rounded-xl">
+              </div>
+              <div>
+                <label class="text-[11px] font-bold text-slate-700 block mb-1">Kolom Deskripsi & Catatan Pengumuman Staff:</label>
+                <textarea id="deskripsiTOEICInput" rows="3" placeholder="Tambahkan penjelasan atau petunjuk pengumuman untuk mahasiswa..." class="w-full p-3 border border-slate-200 rounded-xl text-xs outline-none focus:border-polnes-main"></textarea>
+              </div>
+              <button onclick="simpanTOEICPengumuman()" class="w-full bg-polnes-dark text-white font-bold text-xs py-2.5 rounded-xl shadow-sm">
+                Publikasikan Pengumuman TOEIC
+              </button>
+            </div>
           </div>
 
         </div>
       </section>
 
-      <!-- MODUL 3: CALCULATOR TABEL C -->
+      <!-- MODUL 3: KALKULASI SKOR TOEFL -->
       <section id="modul3" class="tab-content hidden">
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
-          <div class="flex justify-between items-center mb-6">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 space-y-4">
+          <div class="flex justify-between items-center pb-3 border-b">
             <div>
-              <h2 class="text-base font-bold text-slate-800">Modul 3: Conversion Lookup Table Engine (Tabel C Baku Resmi)</h2>
+              <h2 class="text-base font-bold text-slate-800">Modul 3: Kalkulasi Skor TOEFL (Tabel C Baku)</h2>
+              <p class="text-xs text-slate-500">Kalkulasi ini khusus berlaku untuk tes TOEFL. Nilai SSPECT dilewatkan dari kalkulasi ini.</p>
             </div>
             <button onclick="prosesKalkulasiSemua()" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm">
               Jalankan Perhitungan Otomatis
@@ -468,11 +467,11 @@
               <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
                 <tr>
                   <th class="p-3">NIM & Nama Mahasiswa</th>
-                  <th class="p-3 text-center">Listening (Benar &rarr; Konversi)</th>
-                  <th class="p-3 text-center">Structure (Benar &rarr; Konversi)</th>
-                  <th class="p-3 text-center">Reading (Benar &rarr; Konversi)</th>
+                  <th class="p-3 text-center">Listening (Konversi)</th>
+                  <th class="p-3 text-center">Structure (Konversi)</th>
+                  <th class="p-3 text-center">Reading (Konversi)</th>
                   <th class="p-3 text-center">Rumus Kalkulasi</th>
-                  <th class="p-3 text-center">Skor Akhir TOEFL</th>
+                  <th class="p-3 text-center">Total Skor Akhir</th>
                 </tr>
               </thead>
               <tbody id="tableKalkulasi" class="divide-y divide-slate-100"></tbody>
@@ -481,15 +480,16 @@
         </div>
       </section>
 
-      <!-- MODUL 4: APPROVAL KEPALA UPA & PUBLIKASI -->
+      <!-- MODUL 4: APPROVAL KEPALA UPA (GABUNGAN TANPA PEMISAHAN KELAS) -->
       <section id="modul4" class="tab-content hidden">
-        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80">
-          <div class="flex justify-between items-center mb-6">
+        <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200/80 space-y-4">
+          <div class="flex justify-between items-center pb-3 border-b">
             <div>
-              <h2 class="text-base font-bold text-slate-800">Modul 4: Panel Verifikasi & Approval Kepala UPA Bahasa</h2>
+              <h2 class="text-base font-bold text-slate-800">Modul 4: Panel Approval Kepala UPA Bahasa</h2>
+              <p class="text-xs text-slate-500">Menampilkan <b>seluruh data gabungan</b> tanpa dipisah per kelas, jurusan, atau prodi untuk efisiensi persetujuan.</p>
             </div>
-            <button id="btnPublishAll" onclick="approveSemua()" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-4 py-2.5 rounded-xl font-bold shadow-sm flex items-center gap-2">
-              <span>Publish Semua Skor ke Web Utama & Supabase</span>
+            <button id="btnPublishAll" onclick="approveSemua()" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-5 py-2.5 rounded-xl font-bold shadow-sm">
+              Publish Semua Nilai ke Web Utama
             </button>
           </div>
 
@@ -498,10 +498,10 @@
               <thead class="bg-slate-50 text-slate-700 font-bold border-b border-slate-200">
                 <tr>
                   <th class="p-3">NIM & Nama Mahasiswa</th>
-                  <th class="p-3">Prodi</th>
-                  <th class="p-3 text-center">Skor TOEFL</th>
+                  <th class="p-3">Program Studi / Kelas</th>
+                  <th class="p-3 text-center">Skor TOEFL Total</th>
                   <th class="p-3 text-center">Status Approval</th>
-                  <th class="p-3 text-center">Opsi Keputusan</th>
+                  <th class="p-3 text-center">Keputusan Kepala UPA</th>
                 </tr>
               </thead>
               <tbody id="tableApproval" class="divide-y divide-slate-100"></tbody>
@@ -512,181 +512,291 @@
 
     </div>
 
-    <!-- 2. TAMPILAN PUBLIK -->
-    <div id="viewPublik" class="hidden space-y-6">
-      <div class="bg-gradient-to-r from-[#0a8a40] to-emerald-800 text-white rounded-2xl p-8 shadow-sm text-center">
-        <h2 class="text-2xl font-extrabold mb-2">Portal Cek Skor & E-Sertifikat Publik</h2>
-        <p class="text-xs text-emerald-100 max-w-xl mx-auto">
-          Layanan mandiri mahasiswa untuk mengecek rincian hasil ujian TOEFL Prediction dan mengunduh sertifikat digital terenkripsi SHA-256.
-        </p>
-      </div>
+    <!-- ==================================================================================== -->
+    <!-- 2. PORTAL PUBLIK & LAYANAN UPA BAHASA -->
+    <!-- ==================================================================================== -->
+    <div id="viewPublik" class="space-y-6">
 
-      <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
-        <label class="text-xs font-bold text-slate-700 mb-2 block uppercase">Pencarian NIM Mahasiswa:</label>
-        <div class="flex gap-2">
-          <input type="text" id="cekNimInput" placeholder="Ketik NIM Mahasiswa (contoh: 246151048)..." class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-xs outline-none focus:ring-1 focus:ring-polnes-main font-mono">
-          <button onclick="cariSkorPublik()" class="bg-polnes-dark hover:bg-emerald-950 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm">
-            Cari Nilai Ujian
-          </button>
-        </div>
-      </div>
-
-      <!-- KARTU INFORMASI RINCIAN SKOR -->
-      <div id="infoSkorCard" class="hidden max-w-xl mx-auto bg-white p-6 rounded-2xl border border-slate-200 shadow-md space-y-5">
-        <div class="flex justify-between items-center border-b pb-3">
-          <div>
-            <h3 class="text-base font-bold text-slate-800" id="infoStudentName">-</h3>
-            <p class="text-xs text-slate-500 font-mono" id="infoStudentNimProdi">-</p>
-            <div id="infoKategoriAngkatan" class="mt-1 inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
-              -
-            </div>
-          </div>
-          <div id="infoBadgeKelulusan" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold shadow-sm border">
-            -
-          </div>
-        </div>
-
-        <div class="grid grid-cols-3 gap-3 text-center">
-          <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-            <span class="text-[10px] text-slate-400 font-bold block uppercase">Listening</span>
-            <span class="text-xs text-slate-600 block mt-0.5">Benar: <b id="infoRawL">0</b></span>
-            <span class="text-sm font-extrabold text-emerald-700 block mt-1">Konversi: <span id="infoConvL">0</span></span>
-          </div>
-
-          <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-            <span class="text-[10px] text-slate-400 font-bold block uppercase">Structure</span>
-            <span class="text-xs text-slate-600 block mt-0.5">Benar: <b id="infoRawS">0</b></span>
-            <span class="text-sm font-extrabold text-emerald-700 block mt-1">Konversi: <span id="infoConvS">0</span></span>
-          </div>
-
-          <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-            <span class="text-[10px] text-slate-400 font-bold block uppercase">Reading</span>
-            <span class="text-xs text-slate-600 block mt-0.5">Benar: <b id="infoRawR">0</b></span>
-            <span class="text-sm font-extrabold text-emerald-700 block mt-1">Konversi: <span id="infoConvR">0</span></span>
-          </div>
-        </div>
-
-        <div class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-xl text-center">
-          <span class="text-xs text-emerald-800 font-bold uppercase block">Total Skor TOEFL Prediction</span>
-          <span class="text-2xl font-black text-emerald-900 block mt-0.5" id="infoTotalScore">0</span>
-        </div>
-
-        <!-- TOMBOL UNDUH E-SERTIFIKAT -->
-        <button id="btnDownloadCert" onclick="tampilkanSertifikatLengkap()" class="w-full bg-polnes-dark hover:bg-emerald-950 text-white font-bold py-3 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-2">
-          <span>Unduh / Preview E-Sertifikat Resmi</span>
-        </button>
-
-        <!-- PESAN UNTUK MAHASISWA SEMESTER BAWAH -->
-        <div id="semesterBawahNotice" class="hidden bg-sky-50 border border-sky-200 p-4 rounded-xl text-center text-xs text-sky-800 leading-relaxed font-semibold">
-          Anda terdeteksi sebagai <b>Mahasiswa Semester Bawah</b>. Sesuai ketentuan UPA Bahasa POLNES, nilai Anda telah tercatat, namun E-Sertifikat Digital hanya dapat diunduh saat Anda berada di <b>Semester Akhir</b>.
-        </div>
-
-        <!-- FORM DAFTAR REMEDIAL OTOMATIS JIKA TIDAK LULUS -->
-        <div id="remedialNotice" class="hidden bg-rose-50 border border-rose-200 p-4 rounded-xl text-center space-y-3">
-          <p class="text-xs text-rose-800 font-semibold leading-relaxed">
-            Mohon maaf, Anda belum mencapai batas nilai minimum kelulusan TOEFL (400).
+      <!-- HOMEPAGE UTAMA / HERO -->
+      <div id="publicPageHome" class="space-y-6">
+        <div class="bg-gradient-to-r from-[#0a8a40] to-emerald-800 text-white rounded-2xl p-8 shadow-sm text-center">
+          <h2 class="text-2xl font-extrabold mb-2">Selamat Datang di Portal Layanan UPA Bahasa POLNES</h2>
+          <p class="text-xs text-emerald-100 max-w-xl mx-auto">
+            Pusat informasi resmi tes TOEFL Prediction, SSPECT, TOEIC, pendaftaran remedial mandiri, serta pengunduhan E-Sertifikat digital terenkripsi SHA-256.
           </p>
-          <button id="btnDaftarRemedialMandiri" onclick="daftarRemedialMandiri()" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-sm transition-all">
-            📝 Klik Untuk Mendaftar Remedial Test
-          </button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div onclick="showLayananPage('toefl')" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-polnes-main cursor-pointer transition-all space-y-2">
+            <span class="text-2xl">📘</span>
+            <h3 class="text-sm font-bold text-slate-800">TOEFL Prediction</h3>
+            <p class="text-xs text-slate-500">Cek jadwal, daftar remedial mandiri, cek skor latihan/kelulusan, dan unduh sertifikat.</p>
+          </div>
+
+          <div onclick="showLayananPage('sspect')" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-polnes-main cursor-pointer transition-all space-y-2">
+            <span class="text-2xl">📗</span>
+            <h3 class="text-sm font-bold text-slate-800">SSPECT</h3>
+            <p class="text-xs text-slate-500">Pemeriksaan hasil skor tes SSPECT untuk mahasiswa baru / semester 2.</p>
+          </div>
+
+          <div onclick="showLayananPage('toeic')" class="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm hover:border-polnes-main cursor-pointer transition-all space-y-2">
+            <span class="text-2xl">📙</span>
+            <h3 class="text-sm font-bold text-slate-800">TOEIC</h3>
+            <p class="text-xs text-slate-500">Pengumuman informasi pelaksanaan dan hasil tes TOEIC.</p>
+          </div>
         </div>
       </div>
 
-      <!-- TEMPLATE SERTIFIKAT FISIK -->
-      <div id="hasilCekSkor" class="hidden max-w-5xl mx-auto">
-        <div id="certificatePrintArea" class="bg-white border-8 border-double border-slate-300 p-5 md:p-6 shadow-2xl rounded-sm relative text-slate-900 font-serif my-2 overflow-hidden box-sizing-border">
-          
-          <img src="polnes2.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none z-0">
+      <!-- PAGE LAYANAN TOEFL PREDICTION -->
+      <div id="publicLayananTOEFL" class="hidden space-y-6">
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-wrap gap-2 text-xs font-bold">
+          <button onclick="switchSubLayananTOEFL('info')" id="btnSubLayananInfo" class="px-4 py-2 rounded-lg bg-polnes-main text-white">Informasi TOEFL</button>
+          <button onclick="switchSubLayananTOEFL('jadwalTest')" id="btnSubLayananJadwalTest" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-700">Jadwal Test</button>
+          <button onclick="switchSubLayananTOEFL('jadwalRemedial')" id="btnSubLayananJadwalRemedial" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-700">Jadwal Remedial</button>
+          <button onclick="switchSubLayananTOEFL('daftarRemedial')" id="btnSubLayananDaftarRemedial" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-700">Pendaftaran Remedial Mandiri</button>
+          <button onclick="switchSubLayananTOEFL('cekSkor')" id="btnSubLayananCekSkor" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-700">Cek Skor & Sertifikat</button>
+        </div>
 
-          <div class="relative z-10 flex flex-col justify-between h-full">
-            
-            <!-- HEADER KOP -->
-            <div class="flex justify-between items-center border-b-2 border-emerald-800 pb-1.5 mb-1">
-              <div class="flex items-center gap-3">
-                <div class="w-12 h-12 flex items-center justify-center overflow-hidden">
-                  <img id="certLogoImg" src="logo-removebg-preview.png" class="w-full h-full object-contain">
-                </div>
-                <div>
-                  <h3 class="text-[9.5px] font-bold uppercase tracking-wider text-slate-700 font-sans">KEMENTERIAN PENDIDIKAN TINGGI, SAINS DAN TEKNOLOGI</h3>
-                  <h1 class="text-sm md:text-base font-extrabold uppercase tracking-wide text-emerald-900 font-sans">POLITEKNIK NEGERI SAMARINDA</h1>
-                  <h2 class="text-xs font-bold uppercase tracking-wider text-emerald-700 font-sans">UPA BAHASA</h2>
-                </div>
-              </div>
+        <!-- 1. INFORMASI TOEFL -->
+        <div id="subLayananTOEFLInfo" class="bg-white p-6 rounded-2xl border border-slate-200 space-y-3">
+          <h3 class="text-base font-bold text-slate-800">Ketentuan & Alur Tes TOEFL Prediction UPA Bahasa</h3>
+          <p class="text-xs text-slate-600 leading-relaxed">
+            Tes TOEFL Prediction dilaksanakan berjenjang bagi mahasiswa D3 (Semester 4 Latihan, Semester 6 Kelulusan Min. 400) dan D4 (Semester 4 Latihan, Semester 8 Kelulusan Min. 430).
+          </p>
+        </div>
+
+        <!-- 2. JADWAL TEST PUBLIK TRANSPARAN -->
+        <div id="subLayananTOEFLJadwalTest" class="hidden bg-white p-6 rounded-2xl border border-slate-200 space-y-4">
+          <h3 class="text-base font-bold text-slate-800">Jadwal Resmi Pelaksanaan Ujian TOEFL</h3>
+          <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 font-bold border-b">
+                <tr><th class="p-3">Tanggal Ujian</th><th class="p-3">Sesi / Jam</th><th class="p-3">Ruang Lab</th><th class="p-3">Kelas / Kategori</th></tr>
+              </thead>
+              <tbody id="tablePublikJadwalTest" class="divide-y font-mono">
+                <tr><td colspan="4" class="p-3 text-center text-slate-400">Belum ada jadwal terpublikasi.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 3. JADWAL REMEDIAL PUBLIK -->
+        <div id="subLayananTOEFLJadwalRemedial" class="hidden bg-white p-6 rounded-2xl border border-slate-200 space-y-4">
+          <h3 class="text-base font-bold text-slate-800">Jadwal Pelaksanaan Remedial Test</h3>
+          <div class="overflow-x-auto rounded-xl border border-slate-200">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 font-bold border-b">
+                <tr><th class="p-3">Tanggal Ujian</th><th class="p-3">Sesi / Jam</th><th class="p-3">Ruang Lab</th><th class="p-3">Sesi Remedial</th></tr>
+              </thead>
+              <tbody id="tablePublikJadwalRemedial" class="divide-y font-mono">
+                <tr><td colspan="4" class="p-3 text-center text-slate-400">Belum ada jadwal remedial terpublikasi.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 4. FORM PENDAFTARAN REMEDIAL MANDIRI -->
+        <div id="subLayananTOEFLDaftarRemedial" class="hidden bg-white p-6 rounded-2xl border border-slate-200 space-y-4 max-w-xl mx-auto">
+          <h3 class="text-base font-bold text-slate-800 text-center">Form Pendaftaran Remedial Test Mandiri</h3>
+          <div class="space-y-3">
+            <div>
+              <label class="text-[11px] font-bold text-slate-700 block mb-1">Nama Lengkap Mahasiswa:</label>
+              <input type="text" id="regRemedialNama" class="w-full px-3.5 py-2 border rounded-xl text-xs outline-none">
             </div>
-
-            <!-- JUDUL SERTIFIKAT -->
-            <div class="text-center my-0.5">
-              <h2 class="text-base font-bold tracking-widest text-slate-900 uppercase underline decoration-1 underline-offset-2 cert-font-title">CERTIFICATE OF ACHIEVEMENT</h2>
-              <p class="text-[10px] font-sans text-slate-600 mt-0.5" id="certNoRef">No : 0885/ PL19 / UPA.BAHASA / TOEFL-P / 2026</p>
-              <p class="text-[10px] italic mt-0.5 text-slate-700">This is presented to</p>
-              <h3 class="text-base font-bold uppercase tracking-wide text-slate-900 my-0.5 border-b border-dashed border-slate-300 inline-block px-5 py-0.5" id="certStudentName">-</h3>
+            <div>
+              <label class="text-[11px] font-bold text-slate-700 block mb-1">NIM Mahasiswa:</label>
+              <input type="text" id="regRemedialNim" class="w-full px-3.5 py-2 border rounded-xl text-xs font-mono outline-none">
             </div>
-
-            <!-- IDENTITAS -->
-            <div class="max-w-md mx-auto text-[11px] font-sans space-y-0.5 my-1 text-slate-800">
-              <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">NIM</span><span class="col-span-8">: <span id="certNim" class="font-mono font-bold">-</span></span></div>
-              <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Place, date of birth</span><span class="col-span-8">: <span id="certPobDob">Samarinda, 01 Januari 2004</span></span></div>
-              <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Program Study</span><span class="col-span-8">: <span id="certProdi">-</span></span></div>
-              <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Date of test taken</span><span class="col-span-8">: <span id="certTestDate">-</span></span></div>
+            <div>
+              <label class="text-[11px] font-bold text-slate-700 block mb-1">Program Studi / Jurusan:</label>
+              <input type="text" id="regRemedialProdi" class="w-full px-3.5 py-2 border rounded-xl text-xs outline-none">
             </div>
+            <button onclick="submitPendaftaranRemedialForm()" class="w-full bg-polnes-dark text-white font-bold text-xs py-2.5 rounded-xl shadow-sm">
+              Kirim Pendaftaran Remedial
+            </button>
+          </div>
+        </div>
 
-            <p class="text-center text-[10.5px] italic font-serif my-0.5 text-slate-700">Achieved the following score on TOEFL Prediction Test</p>
-
-            <!-- TABEL SKOR -->
-            <div class="max-w-lg mx-auto my-1 font-sans">
-              <table class="w-full border-collapse border border-slate-800 text-center text-[11px]">
-                <thead>
-                  <tr class="bg-slate-100 border-b border-slate-800 text-slate-900 font-bold">
-                    <th class="border border-slate-800 p-1 w-1/3">Listening Comprehension</th>
-                    <th class="border border-slate-800 p-1 w-1/3">Structure and Written Expression</th>
-                    <th class="border border-slate-800 p-1 w-1/3">Reading Comprehension</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td class="border border-slate-800 p-1 font-bold text-xs" id="certScoreL">-</td>
-                    <td class="border border-slate-800 p-1 font-bold text-xs" id="certScoreS">-</td>
-                    <td class="border border-slate-800 p-1 font-bold text-xs" id="certScoreR">-</td>
-                  </tr>
-                  <tr class="bg-slate-50 font-bold border-t-2 border-slate-800">
-                    <td colspan="2" class="border border-slate-800 p-0.5 text-right uppercase">Total Score</td>
-                    <td class="border border-slate-800 p-0.5 text-xs text-emerald-900 font-extrabold" id="certScoreTotal">-</td>
-                  </tr>
-                </tbody>
-              </table>
+        <!-- 5. CEK SKOR & UNDUH SERTIFIKAT DETAIL (Sesuai Semester D3/D4) -->
+        <div id="subLayananTOEFLCekSkor" class="hidden space-y-6">
+          <div class="max-w-xl mx-auto bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <label class="text-xs font-bold text-slate-700 mb-2 block uppercase">Pencarian NIM Mahasiswa:</label>
+            <div class="flex gap-2">
+              <input type="text" id="cekNimInput" placeholder="Ketik NIM Mahasiswa (contoh: 246151048)..." class="flex-1 px-4 py-2.5 border border-slate-200 rounded-xl text-xs outline-none focus:ring-1 focus:ring-polnes-main font-mono">
+              <button onclick="cariSkorPublik()" class="bg-polnes-dark hover:bg-emerald-950 text-white text-xs font-bold px-5 py-2.5 rounded-xl shadow-sm">
+                Cari Nilai Ujian
+              </button>
             </div>
-
-            <!-- TANDA TANGAN & QR CODE -->
-            <div class="mt-1 pt-1 grid grid-cols-2 items-end font-sans text-[11px]">
-              <div class="flex flex-col items-start gap-1">
-                <div id="certQrContainer" class="p-1 border border-slate-300 rounded bg-white"></div>
-                <span class="text-[8.5px] font-mono text-slate-400" id="certHashDisplay">SHA-256: -</span>
-              </div>
-
-              <div class="text-center">
-                <p class="text-slate-700">Samarinda, <span id="certIssueDate">11 Oktober 2026</span></p>
-                <p class="font-bold text-slate-800">Head of UPA Bahasa</p>
-                <div class="h-8 my-0.5"></div>
-                <p class="font-bold text-slate-900 underline decoration-1">Dwi Tri Maesaroh, S.Pd., M.Pd.</p>
-                <p class="text-[9.5px] text-slate-600 font-mono">NIP. 198901172024062002</p>
-              </div>
-            </div>
-
           </div>
 
-          <div class="no-print mt-3 pt-2 border-t flex justify-end gap-3">
-            <button onclick="cetakSertifikatDigital()" class="bg-polnes-dark hover:bg-emerald-950 text-white font-bold px-6 py-2 rounded-xl text-xs shadow-md flex items-center gap-2">
-              <span>Cetak E-Sertifikat Digital</span>
+          <!-- KARTU INFORMASI HASIL SKOR DETIL -->
+          <div id="infoSkorCard" class="hidden max-w-xl mx-auto bg-white p-6 rounded-2xl border border-slate-200 shadow-md space-y-5">
+            <div class="flex justify-between items-center border-b pb-3">
+              <div>
+                <h3 class="text-base font-bold text-slate-800" id="infoStudentName">-</h3>
+                <p class="text-xs text-slate-500 font-mono" id="infoStudentNimProdi">-</p>
+                <div id="infoKategoriAngkatan" class="mt-1 inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-slate-100 text-slate-600 border border-slate-200">
+                  -
+                </div>
+              </div>
+              <div id="infoBadgeKelulusan" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold shadow-sm border">
+                -
+              </div>
+            </div>
+
+            <!-- RINCIAN PERHITUNGAN SKOR TRANSPARAN -->
+            <div class="grid grid-cols-3 gap-3 text-center">
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                <span class="text-[10px] text-slate-400 font-bold block uppercase">Listening</span>
+                <span class="text-xs text-slate-600 block mt-0.5">Benar: <b id="infoRawL">0</b></span>
+                <span class="text-sm font-extrabold text-emerald-700 block mt-1">Konversi: <span id="infoConvL">0</span></span>
+              </div>
+
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                <span class="text-[10px] text-slate-400 font-bold block uppercase">Structure</span>
+                <span class="text-xs text-slate-600 block mt-0.5">Benar: <b id="infoRawS">0</b></span>
+                <span class="text-sm font-extrabold text-emerald-700 block mt-1">Konversi: <span id="infoConvS">0</span></span>
+              </div>
+
+              <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                <span class="text-[10px] text-slate-400 font-bold block uppercase">Reading</span>
+                <span class="text-xs text-slate-600 block mt-0.5">Benar: <b id="infoRawR">0</b></span>
+                <span class="text-sm font-extrabold text-emerald-700 block mt-1">Konversi: <span id="infoConvR">0</span></span>
+              </div>
+            </div>
+
+            <div class="bg-emerald-50 border border-emerald-200 p-3.5 rounded-xl text-center">
+              <span class="text-xs text-emerald-800 font-bold uppercase block">Total Skor TOEFL Prediction</span>
+              <span class="text-2xl font-black text-emerald-900 block mt-0.5" id="infoTotalScore">0</span>
+            </div>
+
+            <!-- REMINDER REMEDIAL JIKA TIDAK LULUS -->
+            <div id="remedialNotice" class="hidden bg-rose-50 border border-rose-200 p-4 rounded-xl text-center space-y-3">
+              <p class="text-xs text-rose-800 font-semibold leading-relaxed" id="textFailureReminder">
+                Skor Anda belum mencapai batas standar kelulusan. Silahkan melakukan pendaftaran remedial test.
+              </p>
+              <button onclick="switchSubLayananTOEFL('daftarRemedial')" class="bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-sm transition-all">
+                📝 Klik Pendaftaran Remedial Test
+              </button>
+            </div>
+
+            <!-- TOMBOL UNDUH E-SERTIFIKAT (JIKA LULUS TINGKAT AKHIR) -->
+            <button id="btnDownloadCert" onclick="tampilkanSertifikatLengkap()" class="hidden w-full bg-polnes-dark hover:bg-emerald-950 text-white font-bold py-3 rounded-xl text-xs shadow-md transition-all flex items-center justify-center gap-2">
+              <span>Unduh / Preview E-Sertifikat Resmi (A4 Lanskap)</span>
             </button>
           </div>
 
+          <!-- TEMPLATE PREVIEW E-SERTIFIKAT -->
+          <div id="hasilCekSkor" class="hidden max-w-5xl mx-auto">
+            <div id="certificatePrintArea" class="bg-white border-8 border-double border-slate-300 p-5 md:p-6 shadow-2xl rounded-sm relative text-slate-900 font-serif my-2 overflow-hidden">
+              <img src="polnes2.jpg" class="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none z-0">
+              <div class="relative z-10 flex flex-col justify-between h-full">
+                
+                <div class="flex justify-between items-center border-b-2 border-emerald-800 pb-1.5 mb-1">
+                  <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 flex items-center justify-center overflow-hidden">
+                      <img src="logo-removebg-preview.png" class="w-full h-full object-contain">
+                    </div>
+                    <div>
+                      <h3 class="text-[9.5px] font-bold uppercase tracking-wider text-slate-700 font-sans">KEMENTERIAN PENDIDIKAN TINGGI, SAINS DAN TEKNOLOGI</h3>
+                      <h1 class="text-sm font-extrabold uppercase tracking-wide text-emerald-900 font-sans">POLITEKNIK NEGERI SAMARINDA</h1>
+                      <h2 class="text-xs font-bold uppercase tracking-wider text-emerald-700 font-sans">UPA BAHASA</h2>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="text-center my-0.5">
+                  <h2 class="text-base font-bold tracking-widest text-slate-900 uppercase underline">CERTIFICATE OF ACHIEVEMENT</h2>
+                  <p class="text-[10px] font-sans text-slate-600 mt-0.5" id="certNoRef">No : 0885/ PL19 / UPA.BAHASA / TOEFL-P / 2026</p>
+                  <p class="text-[10px] italic mt-0.5 text-slate-700">This is presented to</p>
+                  <h3 class="text-base font-bold uppercase tracking-wide text-slate-900 my-0.5 border-b border-dashed border-slate-300 inline-block px-5 py-0.5" id="certStudentName">-</h3>
+                </div>
+
+                <div class="max-w-md mx-auto text-[11px] font-sans space-y-0.5 my-1 text-slate-800">
+                  <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">NIM</span><span class="col-span-8">: <span id="certNim" class="font-mono font-bold">-</span></span></div>
+                  <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Program Study</span><span class="col-span-8">: <span id="certProdi">-</span></span></div>
+                  <div class="grid grid-cols-12"><span class="col-span-4 font-semibold">Date of test taken</span><span class="col-span-8">: <span id="certTestDate">-</span></span></div>
+                </div>
+
+                <div class="max-w-lg mx-auto my-1 font-sans">
+                  <table class="w-full border-collapse border border-slate-800 text-center text-[11px]">
+                    <thead>
+                      <tr class="bg-slate-100 font-bold">
+                        <th class="border border-slate-800 p-1">Listening</th>
+                        <th class="border border-slate-800 p-1">Structure</th>
+                        <th class="border border-slate-800 p-1">Reading</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td class="border border-slate-800 p-1 font-bold" id="certScoreL">-</td>
+                        <td class="border border-slate-800 p-1 font-bold" id="certScoreS">-</td>
+                        <td class="border border-slate-800 p-1 font-bold" id="certScoreR">-</td>
+                      </tr>
+                      <tr class="bg-slate-50 font-bold">
+                        <td colspan="2" class="border border-slate-800 p-0.5 text-right uppercase">Total Score</td>
+                        <td class="border border-slate-800 p-0.5 text-xs text-emerald-900 font-extrabold" id="certScoreTotal">-</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="mt-1 pt-1 grid grid-cols-2 items-end font-sans text-[11px]">
+                  <div class="flex flex-col items-start gap-1">
+                    <div id="certQrContainer" class="p-1 border border-slate-300 rounded bg-white"></div>
+                    <span class="text-[8.5px] font-mono text-slate-400" id="certHashDisplay">SHA-256: -</span>
+                  </div>
+                  <div class="text-center">
+                    <p class="text-slate-700">Samarinda, <span id="certIssueDate">20 Oktober 2026</span></p>
+                    <p class="font-bold text-slate-800">Head of UPA Bahasa</p>
+                    <div class="h-8 my-0.5"></div>
+                    <p class="font-bold text-slate-900 underline">Dwi Tri Maesaroh, S.Pd., M.Pd.</p>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="no-print mt-3 pt-2 border-t flex justify-end">
+                <button onclick="cetakSertifikatDigital()" class="bg-polnes-dark text-white font-bold px-6 py-2 rounded-xl text-xs shadow-md">
+                  🖨️ Cetak E-Sertifikat Digital (A4 Lanskap)
+                </button>
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
+
+      <!-- PAGE LAYANAN SSPECT -->
+      <div id="publicLayananSSPECT" class="hidden space-y-4">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 text-center space-y-3">
+          <h2 class="text-base font-bold text-slate-800">Hasil Tes SSPECT (Mahasiswa Baru / Semester 2)</h2>
+          <p class="text-xs text-slate-500 max-w-md mx-auto">Nilai tes SSPECT ditampilkan langsung dari data bersih tanpa kalkulasi konversi skor.</p>
+        </div>
+      </div>
+
+      <!-- PAGE LAYANAN TOEIC -->
+      <div id="publicLayananTOEIC" class="hidden space-y-4">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 space-y-3">
+          <h2 class="text-base font-bold text-slate-800">Pengumuman & Hasil Tes TOEIC</h2>
+          <div id="areaTOEICPengumumanText" class="p-4 bg-slate-50 rounded-xl text-xs text-slate-700 leading-relaxed font-mono border">
+            Belum ada pengumuman TOEIC yang dipublikasikan oleh Staff.
+          </div>
+        </div>
+      </div>
+
+      <!-- HALAMAN KOSONG LAYANAN LAIN -->
+      <div id="publicPageEmpty" class="hidden bg-white p-12 rounded-2xl border border-slate-200 text-center space-y-3">
+        <span class="text-3xl">📌</span>
+        <h3 class="text-base font-bold text-slate-800" id="emptyPageTitle">Halaman Layanan</h3>
+        <p class="text-xs text-slate-500">Halaman ini sedang dalam tahap pengembangan informasi.</p>
+      </div>
+
     </div>
 
   </main>
 
-  <!-- JAVASCRIPT SYSTEM ENGINE LOGIC -->
+  <!-- SCRIPT SYSTEM ENGINE -->
   <script>
     const SUPABASE_URL = 'https://ztgjmyjrtrlyrgntvtny.supabase.co';
     const SUPABASE_ANON_KEY = 'sb_publishable_GGh8txjx_3OFYwmTGdccjQ_zkxRYqep';
@@ -694,20 +804,16 @@
     const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
     let masterMahasiswa = [];
-    let latestUploadBatch = []; 
-    let filteredMaster = [];
-    let currentPage = 1;
-    const pageSize = 20;
-    let modeFokusPlotting = false;
+    let selectedPlotting = [];
+    let subTabActive = 'REGULER'; 
 
-    let subTabActive = 'REGULER'; // 'REGULER' ATAU 'REMEDIAL'
-    let remedialRegistrations = []; 
     let globalScheduleLogs = [];
+    let remedialRegistrations = [];
 
     let realExcelScores = {};
-    let hasExcelUploaded = false;
-    let sectionDates = { 1: null, 2: null, 3: null };
+    let dateSection1 = null; 
 
+    let parsedHasilUjian = [];
     let currentPublicMatch = null;
     let currentPublicMInfo = null;
 
@@ -732,112 +838,214 @@
     };
 
     function getConvertedScore(raw, section) {
-      if (raw > 50) raw = 50;
-      if (raw < 0) raw = 0;
-      if (tableC[raw]) {
-        return tableC[raw][section];
-      }
-      return 20;
+      if (raw > 50) raw = 50; if (raw < 0) raw = 0;
+      return tableC[raw] ? tableC[raw][section] : 20;
     }
 
-    function getAngkatanFromNim(nim) {
-      if (!nim) return { angkatan: 2024, isSemesterAkhir: false };
-      const nimStr = String(nim).trim();
-      const prefixTwo = nimStr.substring(0, 2);
-      const year = parseInt("20" + prefixTwo) || 2024;
-      
-      const isSemesterAkhir = (year <= 2023);
-
-      return {
-        angkatan: year,
-        isSemesterAkhir: isSemesterAkhir
-      };
-    }
-
-    function normalizeDateString(dateInput) {
-      if (!dateInput) return "";
-      let d = String(dateInput).trim();
-      d = d.replace(/\//g, '-');
-      
-      const parts = d.split('-');
-      if (parts.length === 3) {
-        if (parts[0].length === 4) {
-          return `${parts[0]}-${parts[1].padStart(2, '0')}-${parts[2].padStart(2, '0')}`;
-        } else if (parts[2].length === 4) {
-          return `${parts[2]}-${parts[1].padStart(2, '0')}-${parts[0].padStart(2, '0')}`;
-        }
-      }
-      return d;
-    }
-
-    let selectedPlotting = [];
-    let parsedHasilUjian = [];
-
-    async function initPersistentData() {
-      try {
-        const localMaster = localStorage.getItem('masterMahasiswaCache');
-        if (localMaster) masterMahasiswa = JSON.parse(localMaster);
-
-        const localLogs = localStorage.getItem('scheduleLogsCache');
-        if (localLogs) globalScheduleLogs = JSON.parse(localLogs);
-
-        const localRemedial = localStorage.getItem('remedialRegsCache');
-        if (localRemedial) remedialRegistrations = JSON.parse(localRemedial);
-
-        const { data } = await _supabase.from('master_mahasiswa').select('*');
-        if (data && data.length > 0) {
-          masterMahasiswa = data;
-          localStorage.setItem('masterMahasiswaCache', JSON.stringify(data));
-        }
-
-        try {
-          const { data: remData } = await _supabase.from('pendaftaran_remedial').select('*');
-          if (remData && remData.length > 0) {
-            remedialRegistrations = remData.map(r => String(r.nim).trim());
-            localStorage.setItem('remedialRegsCache', JSON.stringify(remedialRegistrations));
-          }
-        } catch(e) {}
-
-        await loadScheduleLog();
-        updateProdiSuggestions();
-        cekKuotaTanggal();
+    function switchView(target) {
+      if(target === 'staf') {
+        document.getElementById('viewPublik').classList.add('hidden');
+        document.getElementById('viewStaf').classList.remove('hidden');
+        document.getElementById('btnSwitchStaff').classList.add('hidden');
+        document.getElementById('btnSwitchPublik').classList.remove('hidden');
         filterMahasiswa();
-        renderModul2();
-      } catch (err) {
-        console.error('Error Syncing Persistent Data:', err);
+      } else {
+        document.getElementById('viewStaf').classList.add('hidden');
+        document.getElementById('viewPublik').classList.remove('hidden');
+        document.getElementById('btnSwitchPublik').classList.add('hidden');
+        document.getElementById('btnSwitchStaff').classList.remove('hidden');
       }
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-polnes-main', 'text-white');
+        btn.classList.add('bg-white', 'text-slate-600');
+      });
+      document.getElementById(tabId).classList.remove('hidden');
+      document.getElementById('tab-' + tabId).classList.remove('bg-white', 'text-slate-600');
+      document.getElementById('tab-' + tabId).classList.add('bg-polnes-main', 'text-white');
     }
 
     function switchSubTabJadwal(mode) {
       subTabActive = mode;
       const btnReg = document.getElementById('subtabReguler');
       const btnRem = document.getElementById('subtabRemedial');
+      const maxQuotaLabel = document.getElementById('maxQuotaLabel');
 
       if (mode === 'REGULER') {
         btnReg.className = "px-4 py-2 rounded-lg bg-white text-polnes-dark shadow-sm transition-all";
         btnRem.className = "px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5";
+        maxQuotaLabel.innerText = " / 30 Terplot";
       } else {
         btnRem.className = "px-4 py-2 rounded-lg bg-amber-600 text-white shadow-sm transition-all flex items-center gap-1.5";
         btnReg.className = "px-4 py-2 rounded-lg text-slate-600 hover:text-slate-900 transition-all";
+        maxQuotaLabel.innerText = " / 25 Terplot (Remedial)";
       }
 
+      selectedPlotting = [];
       filterMahasiswa();
     }
 
-    async function loadScheduleLog() {
-      try {
-        const { data } = await _supabase.from('penjadwalan_log').select('*').order('created_at', { ascending: false });
-        if (data && data.length > 0) {
-          globalScheduleLogs = data;
-          localStorage.setItem('scheduleLogsCache', JSON.stringify(data));
+    function toggleSelectAllInView() {
+      const limit = subTabActive === 'REMEDIAL' ? 25 : 30;
+      let availableMhs = [];
+
+      if (subTabActive === 'REMEDIAL') {
+        availableMhs = masterMahasiswa.filter(m => remedialRegistrations.includes(String(m.nim).trim()));
+      } else {
+        const lockedNims = new Set();
+        globalScheduleLogs.forEach(l => {
+          if(l.nims) l.nims.forEach(n => lockedNims.add(n));
+        });
+        availableMhs = masterMahasiswa.filter(m => !lockedNims.has(m.nim));
+      }
+
+      selectedPlotting = availableMhs.slice(0, limit).map(m => m.nim);
+      filterMahasiswa();
+    }
+
+    function filterMahasiswa() {
+      const q = document.getElementById('searchInput').value.toLowerCase().trim();
+      const tbody = document.getElementById('tableMahasiswa');
+      tbody.innerHTML = '';
+
+      const lockedNims = new Set();
+      globalScheduleLogs.forEach(l => {
+        if(l.nims) l.nims.forEach(n => lockedNims.add(n));
+      });
+
+      let displayList = [];
+
+      if (subTabActive === 'REMEDIAL') {
+        displayList = masterMahasiswa.filter(m => remedialRegistrations.includes(String(m.nim).trim()));
+      } else {
+        // FITUR AUTO HIDE KELAS/MAHASISWA YANG SUDAH DIKUNCI JADWALNYA
+        displayList = masterMahasiswa.filter(m => !lockedNims.has(m.nim));
+      }
+
+      document.getElementById('badgeCountRemedial').innerText = remedialRegistrations.length;
+
+      if (q) {
+        displayList = displayList.filter(m => 
+          String(m.nama).toLowerCase().includes(q) || 
+          String(m.nim).toLowerCase().includes(q) || 
+          String(m.prodi).toLowerCase().includes(q)
+        );
+      }
+
+      if (displayList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 font-bold">Tidak ada data antrean mahasiswa. Semua kelas telah dikunci jadwalnya atau belum ada pendaftar.</td></tr>`;
+        document.getElementById('selectedCount').innerText = selectedPlotting.length;
+        return;
+      }
+
+      displayList.forEach(m => {
+        const isPlot = selectedPlotting.includes(m.nim);
+        const idx = selectedPlotting.indexOf(m.nim) + 1;
+        const meja = isPlot ? `STUDENT${idx < 10 ? '0' + idx : idx}` : '-';
+
+        tbody.innerHTML += `
+          <tr class="${isPlot ? 'bg-polnes-light' : 'hover:bg-slate-50'} transition-all">
+            <td class="p-3 text-center no-print">
+              <input type="checkbox" ${isPlot ? 'checked' : ''} onchange="togglePlotting('${m.nim}')" class="w-4 h-4 accent-emerald-600 rounded cursor-pointer">
+            </td>
+            <td class="p-3 font-mono font-semibold text-slate-700">${m.nim}</td>
+            <td class="p-3 font-medium text-slate-800">${m.nama}</td>
+            <td class="p-3 font-bold text-slate-800">
+              ${m.prodi}
+              ${subTabActive === 'REMEDIAL' ? '<span class="ml-2 text-[9.5px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-extrabold border border-amber-300">Remedial</span>' : ''}
+            </td>
+            <td class="p-3 text-center">
+              ${isPlot ? `<span class="bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded text-[11px] border border-emerald-300">${meja}</span>` : '<span class="text-slate-300">-</span>'}
+            </td>
+          </tr>
+        `;
+      });
+
+      document.getElementById('selectedCount').innerText = selectedPlotting.length;
+    }
+
+    function togglePlotting(nim) {
+      const limit = subTabActive === 'REMEDIAL' ? 25 : 30;
+
+      if(selectedPlotting.includes(nim)) {
+        selectedPlotting = selectedPlotting.filter(n => n !== nim);
+      } else {
+        if(selectedPlotting.length >= limit) {
+          alert(`Kuota Maksimal Sesi (${limit} Mahasiswa) telah penuh!`);
+          return;
         }
-      } catch(e) {}
+        selectedPlotting.push(nim);
+      }
+      filterMahasiswa();
+    }
+
+    function cekKuotaTanggal() {
+      const lab = document.getElementById('labSelect').value;
+      const warningLabB = document.getElementById('warningLabBContainer');
+
+      if (lab.includes("Lab Komputer Bahasa A") && selectedPlotting.length >= 30) {
+        warningLabB.classList.remove('hidden');
+      } else {
+        warningLabB.classList.add('hidden');
+      }
+    }
+
+    async function kunciDanLockJadwal() {
+      if(selectedPlotting.length === 0) return alert('Pilih minimal 1 mahasiswa!');
+
+      const tgl = document.getElementById('inputTanggalUjian').value;
+      const jam = document.getElementById('selectJamSesi').value;
+      const lab = document.getElementById('labSelect').value;
+
+      if (!tgl) return alert('Pilih Tanggal Pelaksanaan Ujian!');
+
+      const sampleM = masterMahasiswa.find(m => m.nim === selectedPlotting[0]);
+      const prodiName = subTabActive === 'REMEDIAL' ? 'Sesi Remedial Campuran' : (sampleM ? sampleM.prodi : "Lainnya");
+
+      document.getElementById('printTanggal').innerText = tgl;
+      document.getElementById('printJamSesi').innerText = jam;
+      document.getElementById('printLab').innerText = lab;
+
+      document.getElementById('btnKunciSesi').classList.add('hidden');
+      document.getElementById('btnResetFilter').classList.remove('hidden');
+      document.getElementById('actionPrintContainer').classList.remove('hidden');
+
+      const newLogItem = {
+        tanggal_ujian: tgl,
+        sesi_jam: jam,
+        lokasi_lab: lab,
+        prodi_name: prodiName,
+        jumlah_mhs: selectedPlotting.length,
+        nims: [...selectedPlotting],
+        created_at: new Date().toISOString()
+      };
+
+      globalScheduleLogs.unshift(newLogItem);
+      localStorage.setItem('scheduleLogsCache', JSON.stringify(globalScheduleLogs));
+
+      try { await _supabase.from('penjadwalan_log').insert([newLogItem]); } catch(e) {}
+
       renderScheduleLog();
+      renderPublikJadwal();
+      filterMahasiswa(); 
+
+      alert(`BERHASIL MENGLOCK JADWAL!\n- Tanggal: ${tgl}\n- Sesi: ${jam}\n- Lab: ${lab}\n\nData kelas terplot otomatis di-lock dan menghilang dari antrean master.`);
+    }
+
+    function jadwalkanSesiBerikutnya() {
+      selectedPlotting = [];
+      document.getElementById('btnKunciSesi').classList.remove('hidden');
+      document.getElementById('btnResetFilter').classList.add('hidden');
+      document.getElementById('actionPrintContainer').classList.add('hidden');
+      filterMahasiswa();
     }
 
     function renderScheduleLog() {
       const tbody = document.getElementById('tableScheduleLog');
-      if (!tbody) return;
+      if(!tbody) return;
       tbody.innerHTML = '';
 
       if (globalScheduleLogs.length === 0) {
@@ -853,135 +1061,431 @@
             <td class="p-2 text-slate-600">${log.lokasi_lab}</td>
             <td class="p-2 font-bold text-polnes-dark">${log.prodi_name}</td>
             <td class="p-2 text-center font-bold">${log.jumlah_mhs} Mhs</td>
-            <td class="p-2 text-center">
-              <span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded font-bold font-sans">Locked</span>
+            <td class="p-2 text-center"><span class="bg-emerald-100 text-emerald-800 text-[10px] px-2 py-0.5 rounded font-bold">Locked</span></td>
+          </tr>
+        `;
+      });
+    }
+
+    function switchSubModul2(sub) {
+      document.getElementById('areaSubTOEFL').classList.add('hidden');
+      document.getElementById('areaSubSSPECT').classList.add('hidden');
+      document.getElementById('areaSubTOEIC').classList.add('hidden');
+
+      document.getElementById('subModul2TOEFL').className = "px-4 py-2 rounded-xl bg-white text-slate-600 border border-slate-200 hover:bg-slate-50";
+      document.getElementById('subModul2SSPECT').className = "px-4 py-2 rounded-xl bg-white text-slate-600 border border-slate-200 hover:bg-slate-50";
+      document.getElementById('subModul2TOEIC').className = "px-4 py-2 rounded-xl bg-white text-slate-600 border border-slate-200 hover:bg-slate-50";
+
+      if(sub === 'TOEFL') {
+        document.getElementById('areaSubTOEFL').classList.remove('hidden');
+        document.getElementById('subModul2TOEFL').className = "px-4 py-2 rounded-xl bg-polnes-main text-white shadow-sm";
+      } else if(sub === 'SSPECT') {
+        document.getElementById('areaSubSSPECT').classList.remove('hidden');
+        document.getElementById('subModul2SSPECT').className = "px-4 py-2 rounded-xl bg-polnes-main text-white shadow-sm";
+      } else {
+        document.getElementById('areaSubTOEIC').classList.remove('hidden');
+        document.getElementById('subModul2TOEIC').className = "px-4 py-2 rounded-xl bg-polnes-main text-white shadow-sm";
+      }
+    }
+
+    function handleExcelSectionUpload(event, secNum) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const sheetName = workbook.SheetNames[0];
+          const rawRows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1, defval: "" });
+
+          let detectedDateStr = "";
+          if (rawRows.length > 1 && rawRows[1][3]) detectedDateStr = String(rawRows[1][3]).trim();
+          if (!detectedDateStr) {
+            const dateMatch = file.name.match(/\d{2}[-\/]\d{2}[-\/]\d{4}/) || file.name.match(/\d{4}[-\/]\d{2}[-\/]\d{2}/);
+            if (dateMatch) detectedDateStr = dateMatch[0];
+          }
+
+          // PROTEKSI TANGGAL: JIKA SECTION 1 SUDAH UPLOAD DAN SECTION 2/3 BERBEDA TANGGAL
+          if (secNum === 1) {
+            dateSection1 = detectedDateStr;
+            document.getElementById('btnTrashS1').classList.remove('hidden');
+          } else {
+            if (dateSection1 && detectedDateStr && dateSection1 !== detectedDateStr) {
+              alert(`❌ TANGGAL FILE BERBEDA / SALAH SECTION!\n\nFile Section 1 bertanggal (${dateSection1}), sedangkan file Section ${secNum} bertanggal (${detectedDateStr}).\n\nSistem menolak file ini agar data tidak tertukar.`);
+              event.target.value = "";
+              return;
+            }
+          }
+
+          let countParsed = 0;
+          rawRows.forEach(row => {
+            if (!row || row.length === 0) return;
+            const colA = String(row[0] || "").trim().toUpperCase();
+            const colD = String(row[3] || "").trim();
+
+            if (colA.includes("STUDENT")) {
+              const matchNum = colA.match(/\d+/);
+              if (matchNum) {
+                const num = parseInt(matchNum[0]);
+                const mejaKey = `STUDENT${num < 10 ? '0' + num : num}`;
+
+                let scoreVal = 0;
+                if (colD.includes("/")) scoreVal = parseInt(colD.split("/")[0].trim()) || 0;
+                else if (/^\d+$/.test(colD)) scoreVal = parseInt(colD) || 0;
+
+                if (!realExcelScores[mejaKey]) realExcelScores[mejaKey] = { s1: 0, s2: 0, s3: 0 };
+                realExcelScores[mejaKey][`s${secNum}`] = scoreVal;
+                countParsed++;
+              }
+            }
+          });
+
+          document.getElementById(`statusS${secNum}`).className = "text-[11px] text-green-600 font-bold block";
+          document.getElementById(`statusS${secNum}`).innerText = `✓ Sukses (${countParsed} Meja)`;
+          document.getElementById(`labelS${secNum}`).innerText = file.name.substring(0, 15) + '...';
+
+          initParsedData();
+
+        } catch (err) {
+          alert(`Gagal membaca Excel Section ${secNum}!`);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    }
+
+    function resetSection1Upload() {
+      dateSection1 = null;
+      document.getElementById('fileSection1').value = "";
+      document.getElementById('statusS1').className = "text-[11px] text-slate-400 block font-semibold";
+      document.getElementById('statusS1').innerText = "Belum Diunggah";
+      document.getElementById('labelS1').innerText = "Pilih Excel S1 (.xlsx)";
+      document.getElementById('btnTrashS1').classList.add('hidden');
+      alert("Section 1 Berhasil Dihapus/Direset.");
+    }
+
+    function initParsedData() {
+      parsedHasilUjian = [];
+      const keys = Object.keys(realExcelScores).sort((a,b) => parseInt(a.match(/\d+/)[0]) - parseInt(b.match(/\d+/)[0]));
+
+      keys.forEach(mejaKey => {
+        const uData = realExcelScores[mejaKey];
+        const matchNum = mejaKey.match(/\d+/);
+        let assignedNim = null;
+
+        if (matchNum && selectedPlotting.length > 0) {
+          const idx = parseInt(matchNum[0]) - 1;
+          if (idx >= 0 && idx < selectedPlotting.length) assignedNim = selectedPlotting[idx];
+        }
+
+        parsedHasilUjian.push({
+          meja: mejaKey,
+          nim: assignedNim,
+          s1: uData.s1, s2: uData.s2, s3: uData.s3,
+          statusMapping: assignedNim ? 'MATCHED' : 'UNMAPPED'
+        });
+      });
+
+      renderModul2Mapping();
+    }
+
+    function renderModul2Mapping() {
+      const tbody = document.getElementById('tableMapping');
+      tbody.innerHTML = '';
+
+      if(parsedHasilUjian.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 font-bold">Belum ada file section diunggah.</td></tr>`;
+        return;
+      }
+
+      parsedHasilUjian.forEach((item, idx) => {
+        const mInfo = item.nim ? masterMahasiswa.find(m => String(m.nim) === String(item.nim)) : null;
+
+        tbody.innerHTML += `
+          <tr class="${item.statusMapping === 'UNMAPPED' ? 'bg-amber-50' : 'hover:bg-slate-50'}">
+            <td class="p-3 font-bold text-slate-700">${item.meja}</td>
+            <td class="p-3 font-mono">S1: <b>${item.s1}</b> | S2: <b>${item.s2}</b> | S3: <b>${item.s3}</b></td>
+            <td class="p-3">${item.statusMapping === 'MATCHED' ? '<span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded">Auto-Fetched</span>' : '<span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded">Belum Terikat</span>'}</td>
+            <td class="p-3">${mInfo ? `<b>${mInfo.nama}</b> (${mInfo.nim})` : '<span class="text-slate-400 italic">Meja Susulan / Tanpa Plotting</span>'}</td>
+            <td class="p-3 text-center">
+              ${!item.nim 
+                ? `<div class="flex gap-1 justify-center">
+                    <input type="text" id="fastAddNim-${idx}" placeholder="Ketik NIM..." class="px-2 py-1 border text-xs rounded w-28 font-mono">
+                    <button onclick="execFastAdd(${idx})" class="bg-amber-600 text-white text-xs px-2 py-1 rounded font-bold">Bind NIM</button>
+                   </div>`
+                : '<span class="text-emerald-700 font-bold">&check; Valid</span>'}
             </td>
           </tr>
         `;
       });
     }
 
-    function cekKuotaTanggal() {
-      const inputTgl = document.getElementById('inputTanggalUjian').value;
-      const labSelected = document.getElementById('labSelect').value;
-      const selectJam = document.getElementById('selectJamSesi');
-      const textKuota = document.getElementById('textKuotaStatus');
-      const btnKunci = document.getElementById('btnKunciSesi');
-
-      if (!inputTgl) return;
-
-      const normTgl = normalizeDateString(inputTgl);
-      const logHariIni = globalScheduleLogs.filter(l => normalizeDateString(l.tanggal_ujian) === normTgl && l.lokasi_lab === labSelected);
-      const usedSessions = logHariIni.map(l => l.sesi_jam);
-
-      const countSesi = usedSessions.length;
-
-      if (countSesi >= 3) {
-        textKuota.className = "text-rose-600 font-extrabold";
-        textKuota.innerText = "3 / 3 Sesi (Penuh)";
-      } else {
-        textKuota.className = "text-emerald-700 font-extrabold";
-        textKuota.innerText = `${countSesi} / 3 Sesi Terisi`;
-      }
-
-      Array.from(selectJam.options).forEach(opt => {
-        const optVal = opt.value;
-        const isUsed = usedSessions.some(s => s === optVal);
-
-        if (isUsed) {
-          opt.disabled = true;
-          if (!opt.text.includes("[TERISI]")) opt.text = opt.text + " - [TERISI]";
-        } else {
-          opt.disabled = false;
-          opt.text = opt.text.replace(" - [TERISI]", "");
-        }
-      });
-
-      if (selectJam.selectedOptions[0] && selectJam.selectedOptions[0].disabled) {
-        const availableOpt = Array.from(selectJam.options).find(o => !o.disabled);
-        if (availableOpt) selectJam.value = availableOpt.value;
-      }
-
-      if (countSesi >= 3 && Array.from(selectJam.options).every(o => o.disabled)) {
-        btnKunci.disabled = true;
-        btnKunci.classList.add('opacity-50', 'cursor-not-allowed');
-      } else {
-        btnKunci.disabled = false;
-        btnKunci.classList.remove('opacity-50', 'cursor-not-allowed');
-      }
+    function execFastAdd(index) {
+      const inputNim = document.getElementById(`fastAddNim-${index}`).value.trim();
+      if(!inputNim) return alert('Masukkan NIM Mahasiswa!');
+      parsedHasilUjian[index].nim = inputNim;
+      parsedHasilUjian[index].statusMapping = 'MATCHED';
+      renderModul2Mapping();
     }
 
-    function updateProdiSuggestions() {
-      const datalist = document.getElementById('prodiSuggestions');
-      if (!datalist) return;
-      datalist.innerHTML = '';
+    function prosesKalkulasiSemua() {
+      const tbody = document.getElementById('tableKalkulasi');
+      tbody.innerHTML = '';
 
-      const prodiSet = new Set();
-      masterMahasiswa.forEach(m => {
-        if (m.prodi && m.prodi.trim() !== '') {
-          prodiSet.add(m.prodi.trim());
-        }
-      });
+      const validEntries = parsedHasilUjian.filter(i => i.nim);
+      if(validEntries.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400 font-bold">Belum ada data meja terikat NIM untuk dikalkulasi.</td></tr>`;
+        return;
+      }
 
-      prodiSet.forEach(pName => {
-        const opt = document.createElement('option');
-        opt.value = pName;
-        datalist.appendChild(opt);
+      validEntries.forEach(item => {
+        const mInfo = masterMahasiswa.find(m => String(m.nim) === String(item.nim));
+        const conv1 = getConvertedScore(item.s1, 'l');
+        const conv2 = getConvertedScore(item.s2, 's');
+        const conv3 = getConvertedScore(item.s3, 'r');
+        const total = Math.round(((conv1 + conv2 + conv3) * 10) / 3);
+
+        item.conv1 = conv1; item.conv2 = conv2; item.conv3 = conv3;
+        item.totalScore = total;
+        item.statusApproval = item.statusApproval || 'PENDING';
+
+        tbody.innerHTML += `
+          <tr>
+            <td class="p-3"><b>${mInfo ? mInfo.nama : 'Mahasiswa'}</b><br><span class="text-slate-400 font-mono">${item.nim}</span></td>
+            <td class="p-3 text-center">${item.s1} &rarr; <b class="text-emerald-700 font-extrabold">${conv1}</b></td>
+            <td class="p-3 text-center">${item.s2} &rarr; <b class="text-emerald-700 font-extrabold">${conv2}</b></td>
+            <td class="p-3 text-center">${item.s3} &rarr; <b class="text-emerald-700 font-extrabold">${conv3}</b></td>
+            <td class="p-3 text-center font-mono text-slate-400">(${conv1}+${conv2}+${conv3}) &times; 10 / 3</td>
+            <td class="p-3 text-center"><span class="bg-emerald-100 text-emerald-900 font-black px-3 py-1 rounded text-sm">${total}</span></td>
+          </tr>
+        `;
       });
     }
 
-    async function hapusSemuaDataMaster() {
-      if (!confirm("Apakah Anda yakin ingin MERESET KESELURUHAN DATABASE MAHASISWA & LOG PENJADWALAN?")) return;
+    function renderModul4() {
+      const tbody = document.getElementById('tableApproval');
+      tbody.innerHTML = '';
+
+      const validEntries = parsedHasilUjian.filter(i => i.nim && i.totalScore);
+      if(validEntries.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center text-slate-400 font-bold">Belum ada nilai terproses.</td></tr>`;
+        return;
+      }
+
+      validEntries.forEach((item, idx) => {
+        const mInfo = masterMahasiswa.find(m => String(m.nim) === String(item.nim));
+        if(!item.hash) item.hash = CryptoJS.SHA256(`${item.nim}-${item.totalScore}-POLNES-SECRET`).toString().substring(0,24);
+
+        tbody.innerHTML += `
+          <tr>
+            <td class="p-3"><b>${mInfo ? mInfo.nama : 'Mahasiswa'}</b><br><span class="text-slate-400 font-mono">${item.nim}</span></td>
+            <td class="p-3 font-bold text-slate-700">${mInfo ? mInfo.prodi : '-'}</td>
+            <td class="p-3 text-center font-extrabold text-emerald-800 text-sm">${item.totalScore}</td>
+            <td class="p-3 text-center">${item.statusApproval === 'PUBLISHED' ? '<span class="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-2 py-0.5 rounded">PUBLISHED</span>' : '<span class="bg-amber-100 text-amber-800 text-[10px] font-bold px-2 py-0.5 rounded">STAGING</span>'}</td>
+            <td class="p-3 text-center">
+              <div class="flex gap-1 justify-center">
+                <button onclick="approveSingle(${idx})" class="bg-polnes-main text-white text-xs px-2.5 py-1 rounded font-bold shadow-sm">ACC Approval</button>
+                <button onclick="revisiSingle(${idx})" class="bg-rose-600 text-white text-xs px-2.5 py-1 rounded font-bold shadow-sm">Revisi Staff</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      });
+    }
+
+    function approveSingle(idx) {
+      parsedHasilUjian[idx].statusApproval = 'PUBLISHED';
+      renderModul4();
+    }
+
+    function revisiSingle(idx) {
+      parsedHasilUjian[idx].statusApproval = 'REVISED';
+      alert(`Data NIM ${parsedHasilUjian[idx].nim} dikembalikan ke Staff untuk perbaikan.`);
+      renderModul4();
+    }
+
+    async function approveSemua() {
+      const validItems = parsedHasilUjian.filter(i => i.nim && i.totalScore);
+      if(validItems.length === 0) return alert('Tidak ada data nilai untuk dipublikasikan!');
+
+      validItems.forEach(i => i.statusApproval = 'PUBLISHED');
+
+      for (const i of validItems) {
+        const payload = {
+          nim: String(i.nim).trim(),
+          listening_raw: i.s1, listening_converted: i.conv1,
+          structure_raw: i.s2, structure_converted: i.conv2,
+          reading_raw: i.s3, reading_converted: i.conv3,
+          total_score: i.totalScore,
+          status_approval: 'PUBLISHED',
+          certificate_hash: i.hash,
+          created_at: new Date().toISOString()
+        };
+        try { await _supabase.from('hasil_ujian').insert([payload]); } catch(e) {}
+      }
+
+      renderModul4();
+      alert(`BERHASIL! Seluruh Nilai TOEFL Resmi Dipublikasikan ke Web Utama.`);
+    }
+
+    function showLayananPage(type) {
+      document.getElementById('publicPageHome').classList.add('hidden');
+      document.getElementById('publicLayananTOEFL').classList.add('hidden');
+      document.getElementById('publicLayananSSPECT').classList.add('hidden');
+      document.getElementById('publicLayananTOEIC').classList.add('hidden');
+      document.getElementById('publicPageEmpty').classList.add('hidden');
+
+      if(type === 'toefl') document.getElementById('publicLayananTOEFL').classList.remove('hidden');
+      else if(type === 'sspect') document.getElementById('publicLayananSSPECT').classList.remove('hidden');
+      else if(type === 'toeic') document.getElementById('publicLayananTOEIC').classList.remove('hidden');
+    }
+
+    function showPublicPage(pageName) {
+      document.getElementById('publicPageHome').classList.add('hidden');
+      document.getElementById('publicLayananTOEFL').classList.add('hidden');
+      document.getElementById('publicLayananSSPECT').classList.add('hidden');
+      document.getElementById('publicLayananTOEIC').classList.add('hidden');
+      
+      const emptyPage = document.getElementById('publicPageEmpty');
+      emptyPage.classList.remove('hidden');
+
+      if(pageName === 'home') {
+        emptyPage.classList.add('hidden');
+        document.getElementById('publicPageHome').classList.remove('hidden');
+      } else if(pageName === 'kursus') {
+        document.getElementById('emptyPageTitle').innerText = "Layanan Kursus Bahasa (Inggris & Mandarin)";
+      } else if(pageName === 'jsst') {
+        document.getElementById('emptyPageTitle').innerText = "Layanan Job Seeking Skills Training (JSST)";
+      }
+    }
+
+    function switchSubLayananTOEFL(sub) {
+      document.getElementById('subLayananTOEFLInfo').classList.add('hidden');
+      document.getElementById('subLayananTOEFLJadwalTest').classList.add('hidden');
+      document.getElementById('subLayananTOEFLJadwalRemedial').classList.add('hidden');
+      document.getElementById('subLayananTOEFLDaftarRemedial').classList.add('hidden');
+      document.getElementById('subLayananTOEFLCekSkor').classList.add('hidden');
+
+      if(sub === 'info') document.getElementById('subLayananTOEFLInfo').classList.remove('hidden');
+      else if(sub === 'jadwalTest') document.getElementById('subLayananTOEFLJadwalTest').classList.remove('hidden');
+      else if(sub === 'jadwalRemedial') document.getElementById('subLayananTOEFLJadwalRemedial').classList.remove('hidden');
+      else if(sub === 'daftarRemedial') document.getElementById('subLayananTOEFLDaftarRemedial').classList.remove('hidden');
+      else if(sub === 'cekSkor') document.getElementById('subLayananTOEFLCekSkor').classList.remove('hidden');
+    }
+
+    async function submitPendaftaranRemedialForm() {
+      const nama = document.getElementById('regRemedialNama').value.trim();
+      const nim = document.getElementById('regRemedialNim').value.trim();
+      const prodi = document.getElementById('regRemedialProdi').value.trim();
+
+      if(!nama || !nim) return alert('Lengkapi Nama dan NIM Anda!');
+
+      if(!remedialRegistrations.includes(nim)) {
+        remedialRegistrations.push(nim);
+        localStorage.setItem('remedialRegsCache', JSON.stringify(remedialRegistrations));
+      }
+
+      if(!masterMahasiswa.some(m => String(m.nim) === nim)) {
+        masterMahasiswa.push({ nim: nim, nama: nama, prodi: prodi });
+        localStorage.setItem('masterMahasiswaCache', JSON.stringify(masterMahasiswa));
+      }
+
+      try { await _supabase.from('pendaftaran_remedial').insert([{ nim: nim, created_at: new Date().toISOString() }]); } catch(e) {}
+
+      alert(`BERHASIL MENDAFTAR REMEDIAL!\n\nNama: ${nama}\nNIM: ${nim}\n\nData Anda otomatis masuk ke antrean Modul Penjadwalan Staff.`);
+      switchSubLayananTOEFL('jadwalRemedial');
+    }
+
+    async function cariSkorPublik() {
+      const input = document.getElementById('cekNimInput').value.trim();
+      const infoCard = document.getElementById('infoSkorCard');
+      const certContainer = document.getElementById('hasilCekSkor');
+
+      if(!input) return alert('Masukkan NIM Mahasiswa!');
+
+      certContainer.classList.add('hidden');
+      infoCard.classList.add('hidden');
+
+      let match = null; let mInfo = null;
 
       try {
-        localStorage.clear();
-        masterMahasiswa = [];
-        latestUploadBatch = [];
-        filteredMaster = [];
-        selectedPlotting = [];
-        parsedHasilUjian = [];
-        globalScheduleLogs = [];
-        remedialRegistrations = [];
+        const { data } = await _supabase.from('hasil_ujian').select('*').ilike('nim', input).eq('status_approval', 'PUBLISHED');
+        if(data && data.length > 0) {
+          const row = data[0];
+          match = { nim: String(row.nim).trim(), s1: row.listening_raw, s2: row.structure_raw, s3: row.reading_raw, conv1: row.listening_converted, conv2: row.structure_converted, conv3: row.reading_converted, totalScore: row.total_score, hash: row.certificate_hash };
+        }
+      } catch(e) {}
 
-        await _supabase.from('master_mahasiswa').delete().neq('nim', 'DUMMY_NEQ');
-        await _supabase.from('hasil_ujian').delete().neq('nim', 'DUMMY_NEQ');
-        await _supabase.from('penjadwalan_log').delete().neq('id', '00000000-0000-0000-0000-000000000000');
-
-        updateProdiSuggestions();
-        renderScheduleLog();
-        renderModul1();
-        renderModul2();
-
-        alert("Database Berhasil Direset Bersih!");
-      } catch (err) {
-        console.error(err);
+      if(!match) {
+        const local = parsedHasilUjian.find(i => String(i.nim).trim().toLowerCase() === input.toLowerCase() && i.statusApproval === 'PUBLISHED');
+        if(local) match = { nim: input, s1: local.s1, s2: local.s2, s3: local.s3, conv1: local.conv1, conv2: local.conv2, conv3: local.conv3, totalScore: local.totalScore, hash: local.hash };
       }
-    }
 
-    function switchView(target) {
-      if(target === 'staf') {
-        document.getElementById('viewPublik').classList.add('hidden');
-        document.getElementById('viewStaf').classList.remove('hidden');
-        document.getElementById('btnToStaff').classList.add('hidden');
-        document.getElementById('btnToPublik').classList.remove('hidden');
-        filterMahasiswa();
+      mInfo = masterMahasiswa.find(m => String(m.nim).trim().toLowerCase() === input.toLowerCase());
+
+      if(!match) return alert(`Nilai TOEFL untuk NIM '${input}' tidak ditemukan atau belum disetujui Kepala UPA.`);
+
+      currentPublicMatch = match; currentPublicMInfo = mInfo;
+
+      document.getElementById('infoStudentName').innerText = mInfo ? mInfo.nama : "MAHASISWA UPA BAHASA";
+      document.getElementById('infoStudentNimProdi').innerText = `NIM: ${match.nim} | ${mInfo ? mInfo.prodi : 'POLNES'}`;
+
+      document.getElementById('infoRawL').innerText = match.s1; document.getElementById('infoConvL').innerText = match.conv1;
+      document.getElementById('infoRawS').innerText = match.s2; document.getElementById('infoConvS').innerText = match.conv2;
+      document.getElementById('infoRawR').innerText = match.s3; document.getElementById('infoConvR').innerText = match.conv3;
+      document.getElementById('infoTotalScore').innerText = match.totalScore;
+
+      // LOGIKA DETAIL SEMESTER D3 (SEM 6 - MIN 400) VS D4 (SEM 8 - MIN 430)
+      const prodiStr = mInfo ? String(mInfo.prodi).toUpperCase() : '';
+      const isD4 = prodiStr.includes('D4') || prodiStr.includes('SARJANA TERAPAN');
+      const passingScore = isD4 ? 430 : 400;
+
+      const isPassed = (match.totalScore >= passingScore);
+      const badgeEl = document.getElementById('infoBadgeKelulusan');
+      const remedialNotice = document.getElementById('remedialNotice');
+      const btnCert = document.getElementById('btnDownloadCert');
+
+      if (isPassed) {
+        badgeEl.className = "px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-300";
+        badgeEl.innerText = `LULUS (Min. ${passingScore})`;
+        remedialNotice.classList.add('hidden');
+        btnCert.classList.remove('hidden');
       } else {
-        document.getElementById('viewStaf').classList.add('hidden');
-        document.getElementById('viewPublik').classList.remove('hidden');
-        document.getElementById('btnToPublik').classList.add('hidden');
-        document.getElementById('btnToStaff').classList.remove('hidden');
+        badgeEl.className = "px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-rose-100 text-rose-800 border border-rose-300";
+        badgeEl.innerText = `TIDAK LULUS (Min. ${passingScore})`;
+        document.getElementById('textFailureReminder').innerText = `Skor Anda (${match.totalScore}) belum mencapai batas standar kelulusan minimum ${isD4 ? 'D4 (430)' : 'D3 (400)'}. Silahkan melakukan pendaftaran remedial test.`;
+        remedialNotice.classList.remove('hidden');
+        btnCert.classList.add('hidden');
       }
+
+      infoCard.classList.remove('hidden');
     }
 
-    function switchTab(tabId) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('bg-polnes-main', 'text-white');
-        btn.classList.add('bg-white', 'text-slate-600');
-      });
-      document.getElementById(tabId).classList.remove('hidden');
-      document.getElementById('tab-' + tabId).classList.remove('bg-white', 'text-slate-600');
-      document.getElementById('tab-' + tabId).classList.add('bg-polnes-main', 'text-white');
+    function tampilkanSertifikatLengkap() {
+      if(!currentPublicMatch) return;
+      const certContainer = document.getElementById('hasilCekSkor');
+      const match = currentPublicMatch; const mInfo = currentPublicMInfo;
+
+      document.getElementById('certStudentName').innerText = mInfo ? mInfo.nama : "MAHASISWA UPA BAHASA";
+      document.getElementById('certNim').innerText = match.nim;
+      document.getElementById('certProdi').innerText = mInfo ? mInfo.prodi : "Teknik Informatika";
+      document.getElementById('certTestDate').innerText = "20 Oktober 2026";
+
+      document.getElementById('certScoreL').innerText = match.conv1;
+      document.getElementById('certScoreS').innerText = match.conv2;
+      document.getElementById('certScoreR').innerText = match.conv3;
+      document.getElementById('certScoreTotal').innerText = match.totalScore;
+      document.getElementById('certHashDisplay').innerText = `SHA-256: ${match.hash}`;
+
+      try {
+        const qr = document.getElementById('certQrContainer');
+        qr.innerHTML = '';
+        new QRCode(qr, { text: `https://upaabahasa.vercel.app/?verify=${match.hash}`, width: 55, height: 55 });
+      } catch(e) {}
+
+      certContainer.classList.remove('hidden');
+      certContainer.scrollIntoView({ behavior: 'smooth' });
     }
 
     function cetakBeritaAcaraJadwal() {
@@ -996,942 +1500,82 @@
       window.print();
     }
 
+    function renderPublikJadwal() {
+      const tbodyTest = document.getElementById('tablePublikJadwalTest');
+      const tbodyRem = document.getElementById('tablePublikJadwalRemedial');
+      if(tbodyTest) tbodyTest.innerHTML = '';
+      if(tbodyRem) tbodyRem.innerHTML = '';
+
+      globalScheduleLogs.forEach(log => {
+        const rowHTML = `
+          <tr>
+            <td class="p-3 font-bold text-slate-800">${log.tanggal_ujian}</td>
+            <td class="p-3 text-slate-600">${log.sesi_jam}</td>
+            <td class="p-3 text-slate-600">${log.lokasi_lab}</td>
+            <td class="p-3 font-bold text-polnes-dark">${log.prodi_name}</td>
+          </tr>
+        `;
+        if(log.prodi_name.includes('Remedial')) {
+          if(tbodyRem) tbodyRem.innerHTML += rowHTML;
+        } else {
+          if(tbodyTest) tbodyTest.innerHTML += rowHTML;
+        }
+      });
+    }
+
     async function uploadMasterMahasiswa(event) {
       const file = event.target.files[0];
-      if (!file) return;
-
-      let fileNameProdi = file.name.replace(/\.[^/.]+$/, "").trim();
-
-      const progressContainer = document.getElementById('uploadProgressContainer');
-      const progressBar = document.getElementById('uploadProgressBar');
-      const progressPercent = document.getElementById('uploadProgressPercent');
-      const progressText = document.getElementById('uploadProgressText');
-
-      progressContainer.classList.remove('hidden');
-      progressBar.style.width = '10%';
-      progressPercent.innerText = '10%';
-      progressText.innerText = 'Membaca file Excel...';
-
-      setTimeout(() => {
-        const reader = new FileReader();
-        reader.onload = async function(e) {
-          try {
-            const data = new Uint8Array(e.target.result);
-            const workbook = XLSX.read(data, { type: 'array' });
-            const sheetName = workbook.SheetNames[0];
-            const worksheet = workbook.Sheets[sheetName];
-            const json = XLSX.utils.sheet_to_json(worksheet);
-
-            if (json.length === 0) {
-              alert('File Excel kosong!');
-              progressContainer.classList.add('hidden');
-              return;
-            }
-
-            const firstRowKeys = Object.keys(json[0]);
-            
-            const nimKey = firstRowKeys.find(k => /^(nim|npm|no_induk|id_mahasiswa|id)$/i.test(k.trim().toLowerCase())) 
-                          || firstRowKeys.find(k => /nim|npm|id/i.test(k.trim().toLowerCase())) 
-                          || firstRowKeys[0];
-
-            const namaKey = firstRowKeys.find(k => /^(nama|nama_mahasiswa|student_name|nama_lengkap)$/i.test(k.trim().toLowerCase())) 
-                          || firstRowKeys.find(k => /nama|student/i.test(k.trim().toLowerCase()) && !/prodi|studi|jurusan/i.test(k.trim().toLowerCase())) 
-                          || firstRowKeys[1];
-
-            const prodiKey = firstRowKeys.find(k => /^(prodi|program_studi|program studi|jurusan|kelas|proglat)$/i.test(k.trim().toLowerCase())) 
-                           || firstRowKeys.find(k => /prodi|studi|jurusan|program|kelas/i.test(k.trim().toLowerCase()));
-
-            const newUploadedList = json.map(row => {
-              const nimVal = String(row[nimKey] || '').trim();
-              const namaVal = String(row[namaKey] || '').trim();
-              
-              let prodiVal = prodiKey ? String(row[prodiKey] || '').trim() : '';
-              if (!prodiVal || prodiVal.toLowerCase() === namaVal.toLowerCase() || prodiVal.toLowerCase().includes('polnes')) {
-                prodiVal = fileNameProdi;
-              }
-
-              return { nim: nimVal, nama: namaVal, prodi: prodiVal };
-            }).filter(m => m.nim !== '' && m.nama !== '');
-
-            latestUploadBatch = newUploadedList.map(m => m.nim);
-
-            newUploadedList.forEach(newM => {
-              const idx = masterMahasiswa.findIndex(m => String(m.nim) === String(newM.nim));
-              if (idx >= 0) {
-                masterMahasiswa[idx] = newM;
-              } else {
-                masterMahasiswa.push(newM);
-              }
-            });
-
-            localStorage.setItem('masterMahasiswaCache', JSON.stringify(masterMahasiswa));
-
-            progressBar.style.width = '40%';
-            progressPercent.innerText = '40%';
-            progressText.innerText = `Mengunggah ${newUploadedList.length} data file baru ke Supabase...`;
-
-            for (let i = 0; i < newUploadedList.length; i++) {
-              const mRow = newUploadedList[i];
-              try {
-                const { data: exist } = await _supabase.from('master_mahasiswa').select('nim').eq('nim', mRow.nim);
-                if (exist && exist.length > 0) {
-                  await _supabase.from('master_mahasiswa').update({ nama: mRow.nama, prodi: mRow.prodi }).eq('nim', mRow.nim);
-                } else {
-                  await _supabase.from('master_mahasiswa').insert([mRow]);
-                }
-              } catch(e) {}
-
-              const currentPct = Math.round(40 + ((i + 1) / newUploadedList.length) * 60);
-              progressBar.style.width = `${currentPct}%`;
-              progressPercent.innerText = `${currentPct}%`;
-            }
-
-            progressText.innerText = 'Selesai!';
-            setTimeout(() => {
-              progressContainer.classList.add('hidden');
-              alert(`Sukses! ${newUploadedList.length} Data Mahasiswa Berhasil Diunggah untuk Prodi "${fileNameProdi}"!`);
-              
-              document.getElementById('filterKategoriSelect').value = 'ALL';
-              updateProdiSuggestions();
-              currentPage = 1;
-              filterMahasiswa();
-            }, 300);
-
-          } catch (err) {
-            alert('Gagal membaca file Excel. Pastikan format file .xlsx atau .xls!');
-            progressContainer.classList.add('hidden');
-            console.error(err);
-          }
-        };
-        reader.readAsArrayBuffer(file);
-      }, 50);
-    }
-
-    function gantiKategoriTampilan() {
-      currentPage = 1;
-      filterMahasiswa();
-    }
-
-    function filterMahasiswa() {
-      const q = document.getElementById('searchInput').value.toLowerCase().trim();
-      const kat = document.getElementById('filterKategoriSelect').value;
-      
-      let baseData = masterMahasiswa;
-
-      if (subTabActive === 'REMEDIAL') {
-        baseData = masterMahasiswa.filter(m => remedialRegistrations.includes(String(m.nim).trim()));
-      }
-
-      document.getElementById('badgeCountRemedial').innerText = remedialRegistrations.length;
-
-      if (modeFokusPlotting) {
-        baseData = masterMahasiswa.filter(m => selectedPlotting.includes(m.nim));
-      } else {
-        if (!q) {
-          if (kat === 'D3') {
-            baseData = baseData.filter(m => String(m.prodi).toUpperCase().includes('D3'));
-          } else if (kat === 'D4') {
-            baseData = baseData.filter(m => String(m.prodi).toUpperCase().includes('D4'));
-          }
-        }
-      }
-
-      filteredMaster = baseData.filter(m => {
-        if (!q) return true;
-        const pStr = String(m.prodi || '').toLowerCase();
-        const nStr = String(m.nama || '').toLowerCase();
-        const nimStr = String(m.nim || '').toLowerCase();
-
-        return pStr.includes(q) || nStr.includes(q) || nimStr.includes(q);
-      });
-
-      currentPage = 1;
-      renderModul1();
-    }
-
-    function toggleSelectAllInView(masterCheckbox) {
-      const isChecked = masterCheckbox.checked;
-
-      const currentDisplayedData = modeFokusPlotting 
-        ? masterMahasiswa.filter(m => selectedPlotting.includes(m.nim)) 
-        : filteredMaster;
-
-      currentDisplayedData.forEach(m => {
-        if (isChecked) {
-          if (!selectedPlotting.includes(m.nim)) {
-            if (selectedPlotting.length < 30) {
-              selectedPlotting.push(m.nim);
-            }
-          }
-        } else {
-          selectedPlotting = selectedPlotting.filter(n => n !== m.nim);
-        }
-      });
-
-      if (selectedPlotting.length >= 30 && isChecked) {
-        alert('Batas maksimum per sesi adalah 30 mahasiswa.');
-      }
-
-      renderModul1();
-    }
-
-    function renderModul1() {
-      const tbody = document.getElementById('tableMahasiswa');
-      tbody.innerHTML = '';
-
-      const lockedProdiSet = new Set(globalScheduleLogs.map(l => String(l.prodi_name).trim().toUpperCase()));
-
-      if (filteredMaster.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="5" class="p-8 text-center text-slate-400">
-              <p class="font-bold text-slate-600">${subTabActive === 'REMEDIAL' ? 'Belum Ada Mahasiswa yang Mendaftar Remedial' : 'Tidak ada data mahasiswa yang sesuai.'}</p>
-            </td>
-          </tr>
-        `;
-        document.getElementById('paginationInfo').innerText = 'Menampilkan 0 data';
-        document.getElementById('pageIndicator').innerText = 'Hal 1 / 1';
-        document.getElementById('btnPrevPage').disabled = true;
-        document.getElementById('btnNextPage').disabled = true;
-        document.getElementById('selectedCount').innerText = selectedPlotting.length;
-        document.getElementById('selectAllCheckbox').checked = false;
-        return;
-      }
-
-      if (modeFokusPlotting) {
-        const selectedData = masterMahasiswa.filter(m => selectedPlotting.includes(m.nim));
-        selectedData.forEach((m, idx) => {
-          const meja = `STUDENT${(idx + 1) < 10 ? '0' + (idx + 1) : (idx + 1)}`;
-
-          tbody.innerHTML += `
-            <tr class="bg-polnes-light print-all-rows">
-              <td class="p-3 text-center no-print">
-                <input type="checkbox" checked onchange="togglePlotting('${m.nim}')" class="w-4 h-4 accent-emerald-600 rounded cursor-pointer">
-              </td>
-              <td class="p-3 font-mono font-semibold text-slate-700">${m.nim}</td>
-              <td class="p-3 font-medium text-slate-800">${m.nama}</td>
-              <td class="p-3 font-bold text-emerald-800">${m.prodi}</td>
-              <td class="p-3 text-center">
-                <span class="badge-meja-print bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded text-[11px] border border-emerald-300">${meja}</span>
-              </td>
-            </tr>
-          `;
-        });
-        document.getElementById('selectedCount').innerText = selectedPlotting.length;
-        document.getElementById('paginationInfo').innerText = `Menampilkan seluruh ${selectedData.length} data terplot (Siap Cetak)`;
-        return;
-      }
-
-      const totalPages = Math.ceil(filteredMaster.length / pageSize) || 1;
-      if (currentPage > totalPages) currentPage = totalPages;
-      if (currentPage < 1) currentPage = 1;
-
-      const startIndex = (currentPage - 1) * pageSize;
-      const endIndex = Math.min(startIndex + pageSize, filteredMaster.length);
-      const pageData = filteredMaster.slice(startIndex, endIndex);
-
-      let allInPageSelected = pageData.length > 0;
-
-      pageData.forEach(m => {
-        const isPlot = selectedPlotting.includes(m.nim);
-        if (!isPlot) allInPageSelected = false;
-
-        const idx = selectedPlotting.indexOf(m.nim) + 1;
-        const meja = isPlot ? `STUDENT${idx < 10 ? '0' + idx : idx}` : '-';
-
-        const isProdiLocked = (subTabActive === 'REGULER') && lockedProdiSet.has(String(m.prodi || '').trim().toUpperCase());
-        const isRegisteredRemedial = remedialRegistrations.includes(String(m.nim).trim());
-
-        tbody.innerHTML += `
-          <tr class="${isPlot ? 'bg-polnes-light' : (isProdiLocked ? 'bg-slate-50 opacity-75' : 'hover:bg-slate-50')} transition-all">
-            <td class="p-3 text-center no-print">
-              <input type="checkbox" ${isPlot ? 'checked' : ''} ${isProdiLocked ? 'disabled' : ''} onchange="togglePlotting('${m.nim}')" class="w-4 h-4 accent-emerald-600 rounded cursor-pointer disabled:opacity-40">
-            </td>
-            <td class="p-3 font-mono font-semibold text-slate-700">
-              ${m.nim}
-              <span class="block text-[10px] text-slate-400 font-sans">Percobaan: <b>Tes Utama</b></span>
-            </td>
-            <td class="p-3 font-medium text-slate-800">${m.nama}</td>
-            <td class="p-3">
-              <span class="font-bold text-slate-800 block">${m.prodi}</span>
-              ${isRegisteredRemedial 
-                ? '<span class="inline-block mt-0.5 text-[9.5px] bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-extrabold border border-amber-300">📝 Terdaftar Remedial</span>' 
-                : (isProdiLocked ? '<span class="inline-block mt-0.5 text-[9.5px] bg-purple-100 text-purple-800 px-2 py-0.5 rounded font-extrabold border border-purple-200">🔒 Terjadwal</span>' : '<span class="inline-block mt-0.5 text-[9.5px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded font-bold border border-emerald-200">Siap Plot</span>')}
-            </td>
-            <td class="p-3 text-center">
-              ${isPlot ? `<span class="badge-meja-print bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded text-[11px] border border-emerald-300">${meja}</span>` : '<span class="text-slate-300">-</span>'}
-            </td>
-          </tr>
-        `;
-      });
-
-      document.getElementById('selectAllCheckbox').checked = allInPageSelected;
-      document.getElementById('selectedCount').innerText = selectedPlotting.length;
-      document.getElementById('paginationInfo').innerText = `Menampilkan ${startIndex + 1} - ${endIndex} dari total ${filteredMaster.length} data`;
-      document.getElementById('pageIndicator').innerText = `Hal ${currentPage} / ${totalPages}`;
-      document.getElementById('btnPrevPage').disabled = (currentPage === 1);
-      document.getElementById('btnNextPage').disabled = (currentPage === totalPages);
-    }
-
-    function changePage(direction) {
-      currentPage += direction;
-      renderModul1();
-    }
-
-    function togglePlotting(nim) {
-      if(selectedPlotting.includes(nim)) {
-        selectedPlotting = selectedPlotting.filter(n => n !== nim);
-      } else {
-        if(selectedPlotting.length >= 30) {
-          alert('Kuota per Sesi Ujian (30 Mahasiswa) telah penuh!');
-          return;
-        }
-        selectedPlotting.push(nim);
-      }
-      if (modeFokusPlotting) filterMahasiswa();
-      else renderModul1();
-    }
-
-    async function kunciDanFokusJadwal() {
-      if(selectedPlotting.length === 0) return alert('Pilih minimal 1 mahasiswa dari tabel!');
-
-      const tgl = document.getElementById('inputTanggalUjian').value;
-      const jam = document.getElementById('selectJamSesi').value;
-      const lab = document.getElementById('labSelect').value;
-
-      if (!tgl) return alert('Harap isi Tanggal Pelaksanaan Ujian!');
-
-      const sampleM = masterMahasiswa.find(m => m.nim === selectedPlotting[0]);
-      const prodiName = subTabActive === 'REMEDIAL' ? 'Sesi Remedial Campuran' : (sampleM ? sampleM.prodi : "Lainnya");
-
-      document.getElementById('printTanggal').innerText = tgl;
-      document.getElementById('printJamSesi').innerText = jam;
-      document.getElementById('printLab').innerText = lab;
-
-      modeFokusPlotting = true;
-      document.getElementById('btnKunciSesi').classList.add('hidden');
-      document.getElementById('btnResetFilter').classList.remove('hidden');
-      document.getElementById('actionPrintContainer').classList.remove('hidden');
-
-      const newLogItem = {
-        tanggal_ujian: tgl,
-        sesi_jam: jam,
-        lokasi_lab: lab,
-        prodi_name: prodiName,
-        jumlah_mhs: selectedPlotting.length,
-        created_at: new Date().toISOString()
-      };
-
-      globalScheduleLogs.unshift(newLogItem);
-      localStorage.setItem('scheduleLogsCache', JSON.stringify(globalScheduleLogs));
-
-      try {
-        await _supabase.from('penjadwalan_log').insert([newLogItem]);
-      } catch(e) {}
-
-      renderScheduleLog();
-      cekKuotaTanggal();
-      filterMahasiswa();
-
-      alert(`Sesi Ujian Berhasil Dikunci!\n\n- Tanggal: ${tgl}\n- Sesi: ${jam}\n- Lab: ${lab}\n- Kategori: ${prodiName}\n- Total Mahasiswa: ${selectedPlotting.length} Mhs.`);
-    }
-
-    function jadwalkanSesiBerikutnya() {
-      modeFokusPlotting = false;
-      selectedPlotting = [];
-
-      document.getElementById('btnKunciSesi').classList.remove('hidden');
-      document.getElementById('btnResetFilter').classList.add('hidden');
-      document.getElementById('actionPrintContainer').classList.add('hidden');
-      
-      document.getElementById('filterKategoriSelect').value = 'ALL';
-      document.getElementById('searchInput').value = '';
-      
-      cekKuotaTanggal();
-      filterMahasiswa();
-    }
-
-    function handleExcelSectionUpload(event, secNum) {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      const lockedDateInput = document.getElementById('inputTanggalUjian').value;
-      const normalizedLockedDate = normalizeDateString(lockedDateInput);
+      if(!file) return;
 
       const reader = new FileReader();
       reader.onload = function(e) {
-        try {
-          const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: 'array' });
-          const sheetName = workbook.SheetNames[0];
-          const worksheet = workbook.Sheets[sheetName];
-          
-          const rawRows = XLSX.utils.sheet_to_json(worksheet, { header: 1, defval: "" });
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
 
-          let detectedDateStr = "";
+        const newMhs = json.map(row => {
+          const keys = Object.keys(row);
+          return {
+            nim: String(row[keys[0]] || '').trim(),
+            nama: String(row[keys[1]] || '').trim(),
+            prodi: String(row[keys[2]] || file.name.replace(/\.[^/.]+$/, "")).trim()
+          };
+        }).filter(m => m.nim && m.nama);
 
-          if (rawRows.length > 1) {
-            const row2 = rawRows[1] || [];
-            if (row2[3]) detectedDateStr = String(row2[3]).trim();
-          }
-
-          const fileNameUpper = file.name.toUpperCase();
-
-          if (!detectedDateStr) {
-            const dateMatch = fileNameUpper.match(/\d{2}[-\/]\d{2}[-\/]\d{4}/) || fileNameUpper.match(/\d{4}[-\/]\d{2}[-\/]\d{2}/);
-            if (dateMatch) detectedDateStr = dateMatch[0];
-          }
-
-          let normalizedFileDate = normalizeDateString(detectedDateStr);
-
-          if (normalizedLockedDate && normalizedFileDate && (normalizedLockedDate !== normalizedFileDate)) {
-            alert(`⚠️ BELUM ADA PENJADWALAN UNTUK TANGGAL TERSEBUT!\n\nSesi Ujian di Modul 1 dijadwalkan pada Tanggal (${normalizedLockedDate}), tetapi file Excel yang diunggah bertanggal (${normalizedFileDate}).\n\nSilahkan pilih/sesuaikan tanggal pelaksanaan ujian yang tepat di Modul 1.`);
-            event.target.value = "";
-            return;
-          }
-
-          let countParsed = 0;
-
-          rawRows.forEach(row => {
-            if (!row || row.length === 0) return;
-
-            const colA = String(row[0] || "").trim().toUpperCase();
-            const colD = String(row[3] || "").trim();
-
-            if (colA.includes("STUDENT")) {
-              const matchNum = colA.match(/\d+/);
-              if (matchNum) {
-                const num = parseInt(matchNum[0]);
-                const mejaKey = `STUDENT${num < 10 ? '0' + num : num}`;
-
-                let scoreVal = 0;
-                if (colD.includes("/")) {
-                  const parts = colD.split("/");
-                  scoreVal = parseInt(parts[0].trim()) || 0;
-                } else if (/^\d+$/.test(colD)) {
-                  scoreVal = parseInt(colD) || 0;
-                }
-
-                if (!realExcelScores[mejaKey]) {
-                  realExcelScores[mejaKey] = { s1: 0, s2: 0, s3: 0 };
-                }
-
-                realExcelScores[mejaKey][`s${secNum}`] = scoreVal;
-                countParsed++;
-              }
-            }
-          });
-
-          hasExcelUploaded = true;
-          sectionDates[secNum] = normalizedFileDate;
-
-          document.getElementById(`statusS${secNum}`).className = "text-[11px] text-green-600 font-bold block";
-          document.getElementById(`statusS${secNum}`).innerText = `✓ Sukses (${countParsed} Meja Dibaca)`;
-          document.getElementById(`labelS${secNum}`).innerText = file.name.substring(0, 15) + '...';
-
-          initParsedData();
-
-        } catch (err) {
-          alert(`Gagal membaca Excel Section ${secNum}! Pastikan format file .xlsx/.xls valid.`);
-          console.error(err);
+        if(newMhs.length > 30) {
+          alert('⚠️ PERINGATAN BATCH KELAS!\n\nUkuran file kelas ini melebihi 30 mahasiswa. Hanya 30 mahasiswa pertama yang akan diproses.');
         }
+
+        const validBatch = newMhs.slice(0, 30);
+        validBatch.forEach(nM => {
+          const idx = masterMahasiswa.findIndex(m => String(m.nim) === String(nM.nim));
+          if(idx >= 0) masterMahasiswa[idx] = nM;
+          else masterMahasiswa.push(nM);
+        });
+
+        localStorage.setItem('masterMahasiswaCache', JSON.stringify(masterMahasiswa));
+        alert(`Berhasil mengimpor Data Kelas (${validBatch.length} Mahasiswa).`);
+        filterMahasiswa();
       };
       reader.readAsArrayBuffer(file);
     }
 
-    function initParsedData() {
-      parsedHasilUjian = [];
-
-      const sortedMejaKeys = Object.keys(realExcelScores).sort((a, b) => {
-        const numA = parseInt(a.match(/\d+/)?.[0] || "0");
-        const numB = parseInt(b.match(/\d+/)?.[0] || "0");
-        return numA - numB;
-      });
-
-      sortedMejaKeys.forEach(mejaKey => {
-        const uData = realExcelScores[mejaKey];
-        const matchNum = mejaKey.match(/\d+/);
-        let assignedNim = null;
-
-        if (matchNum && modeFokusPlotting) {
-          const idx = parseInt(matchNum[0]) - 1;
-          if (idx >= 0 && idx < selectedPlotting.length) {
-            assignedNim = selectedPlotting[idx];
-          }
-        }
-
-        if (assignedNim) {
-          parsedHasilUjian.push({
-            meja: mejaKey,
-            nim: assignedNim,
-            s1: uData.s1,
-            s2: uData.s2,
-            s3: uData.s3,
-            statusMapping: 'MATCHED'
-          });
-        } else {
-          parsedHasilUjian.push({
-            meja: mejaKey,
-            nim: null,
-            s1: uData.s1,
-            s2: uData.s2,
-            s3: uData.s3,
-            statusMapping: 'UNMAPPED'
-          });
-        }
-      });
-
-      renderModul2();
-    }
-
-    function renderModul2() {
-      const tbody = document.getElementById('tableMapping');
-      tbody.innerHTML = '';
-
-      const countText = document.getElementById('countMejaText');
-      countText.innerText = parsedHasilUjian.length;
-
-      if (!hasExcelUploaded || parsedHasilUjian.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="5" class="p-8 text-center text-slate-400">
-              <p class="font-bold text-slate-600">Belum Ada Data Hasil Ujian</p>
-            </td>
-          </tr>
-        `;
-        document.getElementById('mappingStatusAlert').classList.add('hidden');
-        return;
-      }
-
-      let hasUnmapped = false;
-
-      parsedHasilUjian.forEach((item, idx) => {
-        if(item.statusMapping === 'UNMAPPED') hasUnmapped = true;
-        const mInfo = item.nim ? masterMahasiswa.find(m => String(m.nim) === String(item.nim)) : null;
-
-        const isZeroScore = (item.s1 === 0 && item.s2 === 0 && item.s3 === 0);
-
-        tbody.innerHTML += `
-          <tr class="${isZeroScore ? 'bg-red-50/80 border-l-4 border-l-red-500' : (item.statusMapping === 'UNMAPPED' ? 'bg-amber-50/70' : 'hover:bg-slate-50')} transition-all">
-            <td class="p-3 font-bold text-slate-700">${item.meja}</td>
-            <td class="p-3 font-mono">
-              S1: <b class="${item.s1 === 0 ? 'text-red-500' : 'text-polnes-dark'} font-extrabold text-sm">${item.s1}</b> | 
-              S2: <b class="${item.s2 === 0 ? 'text-red-500' : 'text-polnes-dark'} font-extrabold text-sm">${item.s2}</b> | 
-              S3: <b class="${item.s3 === 0 ? 'text-red-500' : 'text-polnes-dark'} font-extrabold text-sm">${item.s3}</b>
-            </td>
-            <td class="p-3">
-              ${isZeroScore 
-                ? '<span class="bg-red-100 text-red-800 text-[11px] px-2 py-0.5 rounded font-bold border border-red-300">Komputer Rusak / Kosong</span>' 
-                : (item.statusMapping === 'MATCHED' 
-                  ? '<span class="bg-emerald-100 text-emerald-800 text-[11px] px-2 py-0.5 rounded font-bold">Terikat Otomatis</span>' 
-                  : '<span class="bg-amber-100 text-amber-800 text-[11px] px-2 py-0.5 rounded font-bold">Unmapped / Cadangan</span>')}
-            </td>
-            <td class="p-3">
-              ${mInfo 
-                ? `<b>${mInfo.nama}</b> (${mInfo.nim})` 
-                : '<span class="text-slate-400 italic font-semibold">Belum Terhubung / Kosong</span>'}
-            </td>
-            <td class="p-3 text-center">
-              ${item.statusMapping === 'UNMAPPED' || !item.nim
-                ? `<div class="flex gap-1 justify-center">
-                    <input type="text" id="fastAddNim-${idx}" placeholder="Ketik NIM..." class="px-2 py-1 border text-xs rounded w-28 font-mono">
-                    <button onclick="execFastAdd(${idx})" class="bg-amber-600 hover:bg-amber-700 text-white text-xs px-2.5 py-1 rounded font-bold shadow-sm transition-all">Bind NIM</button>
-                   </div>`
-                : '<span class="text-emerald-700 font-bold">&check; Valid</span>'}
-            </td>
-          </tr>
-        `;
-      });
-
-      document.getElementById('mappingStatusAlert').classList.toggle('hidden', !hasUnmapped);
-    }
-
-    function execFastAdd(index) {
-      const inputNim = document.getElementById(`fastAddNim-${index}`).value.trim();
-      if(!inputNim) return alert('Masukkan NIM Mahasiswa!');
-      
-      const exist = masterMahasiswa.find(m => String(m.nim) === inputNim);
-      if(!exist) {
-        if (!confirm(`NIM '${inputNim}' belum ada di Master Data. Lanjutkan memasangkan NIM ini?`)) return;
-      }
-
-      parsedHasilUjian[index].nim = inputNim;
-      parsedHasilUjian[index].statusMapping = 'MATCHED';
-
-      renderModul2();
-    }
-
-    function prosesKalkulasiSemua() {
-      const tbody = document.getElementById('tableKalkulasi');
-      tbody.innerHTML = '';
-
-      if (parsedHasilUjian.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="6" class="p-8 text-center text-slate-400">
-              <p class="font-bold text-slate-600">Belum Ada Data Hasil Ujian untuk Dikalkulasi</p>
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
-      const validEntries = parsedHasilUjian.filter(item => item.nim && (item.s1 > 0 || item.s2 > 0 || item.s3 > 0));
-
-      if (validEntries.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="6" class="p-8 text-center text-slate-400">
-              <p class="font-bold text-slate-600">Belum ada meja yang terikat NIM. Harap bind NIM terlebih dahulu di Modul 2.</p>
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
-      validEntries.forEach(item => {
-        const mInfo = masterMahasiswa.find(m => String(m.nim) === String(item.nim));
-
-        const conv1 = getConvertedScore(item.s1, 'l');
-        const conv2 = getConvertedScore(item.s2, 's');
-        const conv3 = getConvertedScore(item.s3, 'r');
-        const total = Math.round(((conv1 + conv2 + conv3) * 10) / 3);
-
-        item.conv1 = conv1; item.conv2 = conv2; item.conv3 = conv3;
-        item.totalScore = total;
-        item.statusApproval = item.statusApproval || 'PENDING';
-
-        tbody.innerHTML += `
-          <tr>
-            <td class="p-3"><b>${mInfo ? mInfo.nama : 'Mahasiswa'}</b><br><span class="text-slate-400 font-mono">${item.nim}</span></td>
-            <td class="p-3 text-center">${item.s1} &rarr; <b class="text-emerald-700 font-extrabold text-sm">${conv1}</b></td>
-            <td class="p-3 text-center">${item.s2} &rarr; <b class="text-emerald-700 font-extrabold text-sm">${conv2}</b></td>
-            <td class="p-3 text-center">${item.s3} &rarr; <b class="text-emerald-700 font-extrabold text-sm">${conv3}</b></td>
-            <td class="p-3 text-center font-mono text-slate-500">(${conv1}+${conv2}+${conv3}) &times; 10 / 3</td>
-            <td class="p-3 text-center"><span class="bg-emerald-100 text-emerald-900 font-extrabold px-3 py-1 rounded text-sm border border-emerald-300">${total}</span></td>
-          </tr>
-        `;
-      });
-    }
-
-    function renderModul4() {
-      const tbody = document.getElementById('tableApproval');
-      tbody.innerHTML = '';
-
-      const validEntries = parsedHasilUjian.filter(item => item.nim && (item.s1 > 0 || item.s2 > 0 || item.s3 > 0));
-
-      if (validEntries.length === 0) {
-        tbody.innerHTML = `
-          <tr>
-            <td colspan="5" class="p-8 text-center text-slate-400">
-              <p class="font-bold text-slate-600">Belum Ada Data Nilai Siap Approval</p>
-            </td>
-          </tr>
-        `;
-        return;
-      }
-
-      validEntries.forEach((item, idx) => {
-        if(!item.totalScore) return;
-        const mInfo = masterMahasiswa.find(m => String(m.nim) === String(item.nim));
-
-        if(!item.hash) {
-          item.hash = CryptoJS.SHA256(`${item.nim}-${item.totalScore}-POLNES-SECRET`).toString().substring(0, 24);
-        }
-
-        tbody.innerHTML += `
-          <tr>
-            <td class="p-3"><b>${mInfo ? mInfo.nama : 'Mahasiswa'}</b><br><span class="text-slate-400 font-mono">${item.nim}</span></td>
-            <td class="p-3 text-slate-500">${mInfo ? mInfo.prodi : '-'}</td>
-            <td class="p-3 text-center font-bold text-emerald-800">${item.totalScore}</td>
-            <td class="p-3 text-center">
-              ${item.statusApproval === 'PUBLISHED' 
-                ? '<span class="bg-emerald-100 text-emerald-800 text-[11px] px-2 py-0.5 rounded font-bold">TERPUBLIKASI</span>' 
-                : '<span class="bg-amber-100 text-amber-800 text-[11px] px-2 py-0.5 rounded font-bold">STAGING</span>'}
-            </td>
-            <td class="p-3 text-center">
-              ${item.statusApproval === 'PUBLISHED' 
-                ? '<span class="text-slate-400 font-semibold">Disetujui</span>' 
-                : `<button onclick="approveSingle(${idx})" class="bg-polnes-main hover:bg-polnes-dark text-white text-xs px-3 py-1 rounded-lg font-bold shadow-sm transition-all">ACC</button>`}
-            </td>
-          </tr>
-        `;
-      });
-    }
-
-    function approveSingle(idx) {
-      parsedHasilUjian[idx].statusApproval = 'PUBLISHED';
-      renderModul4();
-    }
-
-    async function approveSemua() {
-      const validItems = parsedHasilUjian.filter(i => i.nim && (i.s1 > 0 || i.s2 > 0 || i.s3 > 0));
-      if (validItems.length === 0) return alert('Tidak ada data nilai yang siap untuk dipublikasikan!');
-
-      const btn = document.getElementById('btnPublishAll');
-      btn.innerText = 'Mempublikasi ke Supabase Database...';
-      btn.disabled = true;
-
-      validItems.forEach(i => i.statusApproval = 'PUBLISHED');
-
-      let successCount = 0;
-
-      for (const i of validItems) {
-        const payload = {
-          nim: String(i.nim).trim(),
-          student_id_meja: i.meja,
-          listening_raw: i.s1,
-          listening_converted: i.conv1,
-          structure_raw: i.s2,
-          structure_converted: i.conv2,
-          reading_raw: i.s3,
-          reading_converted: i.conv3,
-          total_score: i.totalScore,
-          status_approval: 'PUBLISHED',
-          certificate_hash: i.hash,
-          created_at: new Date().toISOString()
-        };
-
-        try {
-          await _supabase.from('hasil_ujian').insert([payload]);
-          successCount++;
-        } catch (err) {
-          console.error(`Error publishing NIM ${payload.nim}:`, err);
-        }
-      }
-
-      btn.innerText = 'Publish Semua Skor ke Web Utama & Supabase';
-      btn.disabled = false;
-      renderModul4();
-
-      alert(`BERHASIL! ${successCount} Skor TOEFL Resmi Ditambahkan ke Database Supabase!`);
-    }
-
-    async function daftarRemedialMandiri() {
-      if (!currentPublicMatch || !currentPublicMatch.nim) return;
-
-      const nimTarget = String(currentPublicMatch.nim).trim();
-
-      if (remedialRegistrations.includes(nimTarget)) {
-        alert(`Anda (${nimTarget}) SUDAH TERDAFTAR dalam antrean pendaftaran remedial test.`);
-        return;
-      }
-
-      remedialRegistrations.push(nimTarget);
-      localStorage.setItem('remedialRegsCache', JSON.stringify(remedialRegistrations));
-
-      try {
-        await _supabase.from('pendaftaran_remedial').insert([{ nim: nimTarget, created_at: new Date().toISOString() }]);
-      } catch(e) {}
-
-      alert(`BERHASIL MENDAFTAR REMEDIAL!\nNIM: ${nimTarget}\n\nNama Anda telah otomatis masuk ke antrean Penjadwalan Remedial Staff. Silahkan mengecek jadwal secara berkala.`);
-      
-      const btn = document.getElementById('btnDaftarRemedialMandiri');
-      btn.innerText = "✓ Sudah Terdaftar Remedial";
-      btn.disabled = true;
-      btn.className = "bg-slate-400 text-white font-bold text-xs px-5 py-2.5 rounded-xl cursor-not-allowed";
-    }
-
-    async function cariSkorPublik() {
-      const input = document.getElementById('cekNimInput').value.trim();
-      const certContainer = document.getElementById('hasilCekSkor');
-      const infoCard = document.getElementById('infoSkorCard');
-
-      if (!input) {
-        alert('Harap masukkan NIM Mahasiswa!');
-        return;
-      }
-
-      certContainer.classList.add('hidden');
-      infoCard.classList.add('hidden');
-
-      let match = null;
-      let mInfo = null;
-
-      try {
-        const { data } = await _supabase
-          .from('hasil_ujian')
-          .select('*')
-          .ilike('nim', input)
-          .eq('status_approval', 'PUBLISHED')
-          .order('created_at', { ascending: false });
-
-        if (data && data.length > 0) {
-          const row = data[0];
-          match = {
-            nim: String(row.nim).trim(),
-            s1: row.listening_raw || 0,
-            s2: row.structure_raw || 0,
-            s3: row.reading_raw || 0,
-            conv1: row.listening_converted || getConvertedScore(row.listening_raw || 0, 'l'),
-            conv2: row.structure_converted || getConvertedScore(row.structure_raw || 0, 's'),
-            conv3: row.reading_converted || getConvertedScore(row.reading_raw || 0, 'r'),
-            totalScore: row.total_score || 0,
-            hash: row.certificate_hash || ''
-          };
-        }
-      } catch(e) {}
-
-      try {
-        const { data: mData } = await _supabase
-          .from('master_mahasiswa')
-          .select('*')
-          .ilike('nim', input);
-
-        if (mData && mData.length > 0) {
-          mInfo = { nama: mData[0].nama, prodi: mData[0].prodi, nim: String(mData[0].nim).trim() };
-        }
-      } catch(e) {}
-
-      if (!match) {
-        const localMatch = parsedHasilUjian.find(i => String(i.nim).trim().toLowerCase() === input.toLowerCase() && i.statusApproval === 'PUBLISHED');
-        if (localMatch) {
-          match = {
-            nim: input,
-            s1: localMatch.s1 || 0,
-            s2: localMatch.s2 || 0,
-            s3: localMatch.s3 || 0,
-            conv1: localMatch.conv1,
-            conv2: localMatch.conv2,
-            conv3: localMatch.conv3,
-            totalScore: localMatch.totalScore,
-            hash: localMatch.hash
-          };
-        }
-      }
-
-      if (!mInfo) {
-        const localMInfo = masterMahasiswa.find(m => String(m.nim).trim().toLowerCase() === input.toLowerCase());
-        if (localMInfo) {
-          mInfo = { nama: localMInfo.nama, prodi: localMInfo.prodi, nim: input };
-        }
-      }
-
-      if (!match) {
-        alert(`AKSES DITOLAK: Nilai TOEFL untuk NIM '${input}' tidak ditemukan atau belum dipublikasikan.`);
-        return;
-      }
-
-      const angkatanInfo = getAngkatanFromNim(match.nim);
-
-      currentPublicMatch = match;
-      currentPublicMInfo = mInfo;
-
-      document.getElementById('infoStudentName').innerText = mInfo ? mInfo.nama : "MAHASISWA UPA BAHASA";
-      document.getElementById('infoStudentNimProdi').innerText = `NIM: ${match.nim} | ${mInfo ? mInfo.prodi : 'POLNES'}`;
-      
-      const katEl = document.getElementById('infoKategoriAngkatan');
-      if (angkatanInfo.isSemesterAkhir) {
-        katEl.className = "mt-1 inline-block text-[10px] font-extrabold px-2 py-0.5 rounded bg-purple-100 text-purple-800 border border-purple-300";
-        katEl.innerText = `Angkatan ${angkatanInfo.angkatan} - Mahasiswa Semester Akhir`;
-      } else {
-        katEl.className = "mt-1 inline-block text-[10px] font-extrabold px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300";
-        katEl.innerText = `Angkatan ${angkatanInfo.angkatan} - Mahasiswa Semester Bawah`;
-      }
-
-      document.getElementById('infoRawL').innerText = match.s1;
-      document.getElementById('infoConvL').innerText = match.conv1;
-
-      document.getElementById('infoRawS').innerText = match.s2;
-      document.getElementById('infoConvS').innerText = match.conv2;
-
-      document.getElementById('infoRawR').innerText = match.s3;
-      document.getElementById('infoConvR').innerText = match.conv3;
-
-      document.getElementById('infoTotalScore').innerText = match.totalScore;
-
-      const badgeEl = document.getElementById('infoBadgeKelulusan');
-      const btnCert = document.getElementById('btnDownloadCert');
-      const semBawahNotice = document.getElementById('semesterBawahNotice');
-      const remedialNotice = document.getElementById('remedialNotice');
-
-      const isPassed = (match.totalScore >= 400);
-
-      if (isPassed) {
-        badgeEl.className = "px-3.5 py-1.5 rounded-xl text-xs font-extrabold shadow-sm border bg-emerald-100 text-emerald-800 border-emerald-200";
-        badgeEl.innerText = "LULUS (PASSED)";
-      } else {
-        badgeEl.className = "px-3.5 py-1.5 rounded-xl text-xs font-extrabold shadow-sm border bg-rose-100 text-rose-800 border-rose-200";
-        badgeEl.innerText = "TIDAK LULUS (FAILED)";
-      }
-
-      if (angkatanInfo.isSemesterAkhir) {
-        semBawahNotice.classList.add('hidden');
-        if (isPassed) {
-          btnCert.classList.remove('hidden');
-          remedialNotice.classList.add('hidden');
-        } else {
-          btnCert.classList.add('hidden');
-          remedialNotice.classList.remove('hidden');
-
-          const btnRem = document.getElementById('btnDaftarRemedialMandiri');
-          if (remedialRegistrations.includes(String(match.nim).trim())) {
-            btnRem.innerText = "✓ Sudah Terdaftar Remedial";
-            btnRem.disabled = true;
-            btnRem.className = "bg-slate-400 text-white font-bold text-xs px-5 py-2.5 rounded-xl cursor-not-allowed";
-          } else {
-            btnRem.innerText = "📝 Klik Untuk Mendaftar Remedial Test";
-            btnRem.disabled = false;
-            btnRem.className = "bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs px-5 py-2.5 rounded-xl shadow-sm transition-all";
-          }
-        }
-      } else {
-        btnCert.classList.add('hidden');
-        remedialNotice.classList.add('hidden');
-        semBawahNotice.classList.remove('hidden');
-      }
-
-      infoCard.classList.remove('hidden');
-      infoCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-
-    function tampilkanSertifikatLengkap() {
-      if (!currentPublicMatch || currentPublicMatch.totalScore < 400) return;
-
-      const certContainer = document.getElementById('hasilCekSkor');
-      const match = currentPublicMatch;
-      const mInfo = currentPublicMInfo;
-
-      document.getElementById('certStudentName').innerText = mInfo ? mInfo.nama : "MAHASISWA UPA BAHASA";
-      document.getElementById('certNim').innerText = match.nim;
-      document.getElementById('certProdi').innerText = (mInfo && mInfo.prodi) ? mInfo.prodi : "D3 - Teknik Informatika";
-      
-      const todayFormatted = new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'long', year: 'numeric' });
-      document.getElementById('certTestDate').innerText = todayFormatted;
-
-      document.getElementById('certScoreL').innerText = match.conv1 || "20";
-      document.getElementById('certScoreS').innerText = match.conv2 || "20";
-      document.getElementById('certScoreR').innerText = match.conv3 || "20";
-      document.getElementById('certScoreTotal').innerText = match.totalScore || "200";
-
-      document.getElementById('certHashDisplay').innerText = `SHA-256: ${match.hash || 'N/A'}`;
-
-      try {
-        const qrContainer = document.getElementById('certQrContainer');
-        qrContainer.innerHTML = '';
-        if (typeof QRCode !== 'undefined') {
-          new QRCode(qrContainer, {
-            text: `https://upaabahasa.vercel.app/?verify=${match.hash}`,
-            width: 58,
-            height: 58
-          });
-        }
-      } catch (err) {
-        console.error("QR Code Error:", err);
-      }
-
-      certContainer.classList.remove('hidden');
-      setTimeout(() => {
-        certContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
-    }
-
-    // INITIAL LOAD
     document.addEventListener('DOMContentLoaded', () => {
       const today = new Date().toISOString().split('T')[0];
       document.getElementById('inputTanggalUjian').value = today;
 
-      initPersistentData();
+      const localM = localStorage.getItem('masterMahasiswaCache');
+      if(localM) masterMahasiswa = JSON.parse(localM);
+
+      const localL = localStorage.getItem('scheduleLogsCache');
+      if(localL) globalScheduleLogs = JSON.parse(localL);
+
+      const localR = localStorage.getItem('remedialRegsCache');
+      if(localR) remedialRegistrations = JSON.parse(localR);
+
+      renderScheduleLog();
+      renderPublikJadwal();
+      filterMahasiswa();
 
       document.getElementById('tab-modul3').addEventListener('click', prosesKalkulasiSemua);
       document.getElementById('tab-modul4').addEventListener('click', renderModul4);
